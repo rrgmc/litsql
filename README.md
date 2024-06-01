@@ -5,7 +5,10 @@
 Ok, it really is an SQL query builder, but it aims to be an **easier-to-use replacement for raw SQL strings**.
 
 Each `litsql` statement must be directly related to an SQL output, **including whitespace**, which must be obvious to
-the user of the library.
+the user of the library. The output will be exactly the passed values, so the library won't prevent invalid SQL from
+being generated.
+
+The library tests **includes testing for exact string and whitespace output** to ensure this.
 
 ```go
 func ExampleSelect_literalSimple() {

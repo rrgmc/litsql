@@ -36,3 +36,27 @@ func ExampleSelect_literalSimple() {
 	// WHERE u.age > 40 AND u.deleted_at IS NOT NULL
 	// ORDER BY u.name ASC, u.age DESC
 }
+
+func ExampleSelect_literalSimpleInvalid() {
+	// the library won't prevent invalid SQL from being generated, like when using raw string.
+
+	// SELECT
+	q := psql.Select(
+		// u.id, u.name of user
+		sm.Columns("u.id", "u.name of user"),
+		// FROM users AND NOT users
+		sm.From("users AND NOT users"),
+		// WHERE CREATE TABLE users
+		sm.Where("CREATE TABLE users"),
+	)
+	qs, _, err := sq.Build(q)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(qs)
+
+	// Output:
+	// SELECT u.id, u.name of user
+	// FROM users AND NOT users
+	// WHERE CREATE TABLE users
+}
