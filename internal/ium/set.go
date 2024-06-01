@@ -1,0 +1,38 @@
+package ium
+
+import (
+	"github.com/rrgmc/litsql"
+	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal/iclause"
+	"github.com/rrgmc/litsql/internal/isq"
+	"github.com/rrgmc/litsql/sq"
+)
+
+func Set[T any](column string, arg any) sq.QueryMod[T] {
+	return SetRE[T](expr.JS(" = ", expr.S(column), expr.Arg(arg)))
+}
+
+func SetE[T any](column string, value litsql.Expression) sq.QueryMod[T] {
+	return SetRE[T](expr.JS(" = ", expr.S(column), value))
+}
+
+func SetQ[T, A any](column string, q isq.Query[A]) sq.QueryMod[T] {
+	return SetE[T](column, q)
+}
+
+func SetS[T any](column string, right string) sq.QueryMod[T] {
+	return SetE[T](column, expr.S(right))
+}
+
+func SetR[T any](raw string) sq.QueryMod[T] {
+	return SetRE[T](expr.S(raw))
+}
+
+func SetRE[T any](assignment litsql.Expression) sq.QueryMod[T] {
+	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
+		a.Add(&iclause.Set{
+			Set:     []litsql.Expression{assignment},
+			Starter: true,
+		})
+	})
+}
