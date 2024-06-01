@@ -1,8 +1,12 @@
-package litsql
+package sq
 
-import "bytes"
+import (
+	"bytes"
 
-func Build(q Query, writerOptions ...WriterOption) (string, []any, error) {
+	"github.com/rrgmc/litsql"
+)
+
+func Build(q litsql.Query, writerOptions ...WriterOption) (string, []any, error) {
 	var b bytes.Buffer
 	w := NewWriter(&b, writerOptions...)
 	args, err := q.WriteQuery(w, 1)

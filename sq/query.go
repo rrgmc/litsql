@@ -6,5 +6,9 @@ type Query[T any] interface {
 	litsql.QueryBuilder
 	litsql.Query
 	QueryModApply[T]
-	litsql.BuildQuery
+	BuildQuery
+}
+
+type BuildQuery interface {
+	Build(writerOptions ...WriterOption) (string, []any, error)
 }

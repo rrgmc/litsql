@@ -10,10 +10,6 @@ type QueryBuilder interface {
 	Add(q QueryClause)
 }
 
-type BuildQuery interface {
-	Build(writerOptions ...WriterOption) (string, []any, error)
-}
-
 type QueryClause interface {
 	Expression
 	ClauseID() string
