@@ -2,7 +2,6 @@ package sq
 
 import (
 	"cmp"
-	"reflect"
 	"slices"
 
 	"github.com/rrgmc/litsql"
@@ -10,13 +9,13 @@ import (
 
 type Builder struct {
 	d     litsql.Dialect
-	mlist map[reflect.Type][]litsql.QueryClause
+	mlist map[string][]litsql.QueryClause
 }
 
 func NewQueryBuilder(d litsql.Dialect) *Builder {
 	return &Builder{
 		d:     d,
-		mlist: make(map[reflect.Type][]litsql.QueryClause),
+		mlist: make(map[string][]litsql.QueryClause),
 	}
 }
 
@@ -28,21 +27,21 @@ func (s *Builder) Add(q litsql.QueryClause) {
 	if w, ok := q.(litsql.QueryClauseWrapper); ok {
 		q = w.WrappedQueryClause()
 	}
-	tp := reflect.TypeOf(q)
-	if e, ok := s.mlist[tp]; ok {
+	cid := q.ClauseID()
+	if e, ok := s.mlist[cid]; ok {
 		if len(e) == 0 {
 			panic("should never be 0")
 		}
 		if em, ok := e[0].(litsql.QueryClauseMerge); ok {
 			em.ClauseMerge(q)
 		} else if em, ok := e[0].(litsql.QueryClauseMultiple); ok {
-			s.mlist[tp] = append(s.mlist[tp], em)
+			s.mlist[cid] = append(s.mlist[cid], em)
 		} else {
-			s.mlist[tp][0] = q
+			s.mlist[cid][0] = q
 		}
 		return
 	}
-	s.mlist[tp] = []litsql.QueryClause{q}
+	s.mlist[cid] = []litsql.QueryClause{q}
 }
 
 func (s *Builder) ClauseList() []litsql.QueryClause {
