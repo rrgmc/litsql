@@ -7,26 +7,32 @@ import (
 	"github.com/rrgmc/litsql"
 )
 
+// Arg adds a named argument.
 func Arg(name string) litsql.Argument {
 	return namedArgument{name: name}
 }
 
+// ArgDefault adds a named argument with a default value.
 func ArgDefault(name string, defaultValue any) litsql.Argument {
 	return namedArgumentWithDefault{name: name, defaultValue: defaultValue}
 }
 
-func DBArg(name string) litsql.DBNamedArgument {
+// DBArg adds a DB named argument.
+func DBArg(name string) litsql.Argument {
 	return dbNamedArgument{name: name}
 }
 
+// ArgFunc returns the argument value in a callback.
 func ArgFunc(fn func() (any, error)) litsql.Argument {
 	return funcArgument{fn: fn}
 }
 
+// ArgValues is the supplier of values for named arguments.
 type ArgValues interface {
 	Get(string) (any, bool)
 }
 
+// ParseArgs replaces all [litsql.Argument] instances in args with named values.
 func ParseArgs(args []any, values ...ArgValues) ([]any, error) {
 	var ret []any
 	for _, arg := range args {
@@ -92,6 +98,7 @@ func ParseArgs(args []any, values ...ArgValues) ([]any, error) {
 
 // implementation
 
+// MapArgValues is an ArgValues backed from a map[string]any.
 type MapArgValues map[string]any
 
 func (m MapArgValues) Get(s string) (any, bool) {
