@@ -38,6 +38,10 @@ func (g *GroupBy) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any,
 
 var _ litsql.QueryClauseMerge = (*GroupBy)(nil)
 
+func (c *GroupBy) ClauseID() string {
+	return "fc5be717-8bed-4350-bcfe-4d6a0b362506"
+}
+
 func (c *GroupBy) ClauseOrder() int {
 	return clause.OrderGroupBy
 }

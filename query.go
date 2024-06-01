@@ -16,6 +16,7 @@ type BuildQuery interface {
 
 type QueryClause interface {
 	Expression
+	ClauseID() string
 	ClauseOrder() int
 }
 

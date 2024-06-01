@@ -33,6 +33,10 @@ func (c InsertConflict) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) (
 
 var _ litsql.QueryClause = (*InsertConflict)(nil)
 
+func (c *InsertConflict) ClauseID() string {
+	return "4ba79d92-d9f8-4806-b62d-7ba1c3974d1f"
+}
+
 func (c *InsertConflict) ClauseOrder() int {
 	return clause.OrderInsertConflict
 }

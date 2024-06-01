@@ -20,6 +20,10 @@ func (c *Where) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, e
 
 var _ litsql.QueryClauseMerge = (*Where)(nil)
 
+func (c *Where) ClauseID() string {
+	return "b3298776-3415-41a9-b8df-fa65a838fb47"
+}
+
 func (c *Where) ClauseOrder() int {
 	return clause.OrderWhere
 }

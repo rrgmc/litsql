@@ -20,6 +20,10 @@ func (c *Limit) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, e
 
 var _ litsql.QueryClause = (*Limit)(nil)
 
+func (c *Limit) ClauseID() string {
+	return "d98d3da4-1013-43d8-8211-80b9eb0b2ed3"
+}
+
 func (c *Limit) ClauseOrder() int {
 	return clause.OrderLimit
 }

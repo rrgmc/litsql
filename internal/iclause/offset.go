@@ -20,6 +20,10 @@ func (c *Offset) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, 
 
 var _ litsql.QueryClause = (*Offset)(nil)
 
+func (c *Offset) ClauseID() string {
+	return "4a893d65-4f97-435c-8f5d-cb34021afb41"
+}
+
 func (c *Offset) ClauseOrder() int {
 	return clause.OrderOffset
 }

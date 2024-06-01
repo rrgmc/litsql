@@ -80,6 +80,10 @@ func (wi *Windows) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any
 
 var _ litsql.QueryClauseMerge = (*Windows)(nil)
 
+func (c *Windows) ClauseID() string {
+	return "d8c54a38-29e2-4205-a991-e24c8238ae00"
+}
+
 func (wi *Windows) ClauseOrder() int {
 	return clause.OrderWindow
 }

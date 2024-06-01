@@ -37,6 +37,10 @@ func (t *Table) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, e
 
 var _ litsql.QueryClause = (*Table)(nil)
 
+func (c *Table) ClauseID() string {
+	return "5775ce83-1e73-4a20-856b-f3d1aac8d4a2"
+}
+
 func (c *Table) ClauseOrder() int {
 	return clause.OrderTable
 }

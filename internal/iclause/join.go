@@ -45,6 +45,10 @@ func (c *Join) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, er
 
 var _ litsql.QueryClauseMultiple = (*Join)(nil)
 
+func (c *Join) ClauseID() string {
+	return "2a863df4-21ec-4d9b-939c-7a2ec211c9b8"
+}
+
 func (c *Join) ClauseOrder() int {
 	return clause.OrderJoin
 }

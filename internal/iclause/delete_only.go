@@ -18,6 +18,10 @@ func (c *DeleteOnly) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]a
 
 var _ litsql.QueryClause = (*DeleteOnly)(nil)
 
+func (c *DeleteOnly) ClauseID() string {
+	return "f1c07cf2-1b54-4f83-91a4-b5420514b373"
+}
+
 func (c *DeleteOnly) ClauseOrder() int {
 	return clause.OrderDeleteOnly
 }
