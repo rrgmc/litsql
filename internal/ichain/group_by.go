@@ -25,7 +25,3 @@ func (c *GroupByChain[T]) With(with string) chain.GroupBy[T] {
 	c.SetGroupWith(with)
 	return c
 }
-
-func (f *GroupByChain[T]) WrappedQueryClause() litsql.QueryClause {
-	return f.GroupBy
-}

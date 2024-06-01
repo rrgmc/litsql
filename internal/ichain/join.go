@@ -69,7 +69,3 @@ func (c *JoinChain[T]) Using(using ...string) chain.Join[T] {
 	c.SetUsing(using...)
 	return c
 }
-
-func (c *JoinChain[T]) WrappedQueryClause() litsql.QueryClause {
-	return c.Join
-}

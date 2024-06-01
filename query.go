@@ -29,7 +29,3 @@ type QueryClauseMultiple interface {
 	QueryClause
 	ClauseMultiple()
 }
-
-type QueryClauseWrapper interface {
-	WrappedQueryClause() QueryClause
-}

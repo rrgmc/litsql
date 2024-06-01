@@ -35,7 +35,3 @@ func (f *FromChain[T]) WithOrdinality() chain.From[T] {
 	f.SetWithOrdinality()
 	return f
 }
-
-func (f *FromChain[T]) WrappedQueryClause() litsql.QueryClause {
-	return f.From
-}

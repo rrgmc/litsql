@@ -24,9 +24,6 @@ func (s *Builder) Dialect() litsql.Dialect {
 }
 
 func (s *Builder) Add(q litsql.QueryClause) {
-	if w, ok := q.(litsql.QueryClauseWrapper); ok {
-		q = w.WrappedQueryClause()
-	}
 	cid := q.ClauseID()
 	if e, ok := s.mlist[cid]; ok {
 		if len(e) == 0 {
