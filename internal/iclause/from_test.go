@@ -14,10 +14,9 @@ func TestFrom(t *testing.T) {
 	}
 
 	o := testutils.NewTestBuffer()
-	o.WriteTestClausePrefix()
 	o.WriteSeparator()
 	o.Write("FROM users")
-	testutils.TestExpression(t, testutils.TestClausePrefix(clause), o)
+	testutils.TestExpression(t, clause, o)
 }
 
 func TestFromEmpty(t *testing.T) {
@@ -27,10 +26,9 @@ func TestFromEmpty(t *testing.T) {
 	}
 
 	o := testutils.NewTestBuffer()
-	o.WriteTestClausePrefix()
 	o.WriteSeparator()
 	o.Write("FROM ")
-	testutils.TestExpression(t, testutils.TestClausePrefix(clause), o)
+	testutils.TestExpression(t, clause, o)
 }
 
 func TestFromNonStarter(t *testing.T) {
@@ -40,9 +38,8 @@ func TestFromNonStarter(t *testing.T) {
 	}
 
 	o := testutils.NewTestBuffer()
-	o.WriteTestClausePrefix()
 	o.Write("users")
-	testutils.TestExpression(t, testutils.TestClausePrefix(clause), o)
+	testutils.TestExpression(t, clause, o)
 }
 
 func TestFromClause(t *testing.T) {
@@ -53,10 +50,9 @@ func TestFromClause(t *testing.T) {
 	}
 
 	o := testutils.NewTestBuffer()
-	o.WriteTestClausePrefix()
 	o.WriteSeparator()
 	o.Write("USING users")
-	testutils.TestExpression(t, testutils.TestClausePrefix(clause), o)
+	testutils.TestExpression(t, clause, o)
 }
 
 func TestFromFlags(t *testing.T) {
@@ -70,10 +66,9 @@ func TestFromFlags(t *testing.T) {
 	}
 
 	o := testutils.NewTestBuffer()
-	o.WriteTestClausePrefix()
 	o.WriteSeparator()
 	o.Write("FROM ONLY LATERAL users WITH ORDINALITY AS u")
-	testutils.TestExpression(t, testutils.TestClausePrefix(clause), o)
+	testutils.TestExpression(t, clause, o)
 }
 
 func TestFromColumns(t *testing.T) {
@@ -85,8 +80,7 @@ func TestFromColumns(t *testing.T) {
 	}
 
 	o := testutils.NewTestBuffer()
-	o.WriteTestClausePrefix()
 	o.WriteSeparator()
 	o.Write("FROM users AS u(id, name)")
-	testutils.TestExpression(t, testutils.TestClausePrefix(clause), o)
+	testutils.TestExpression(t, clause, o)
 }

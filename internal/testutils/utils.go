@@ -10,15 +10,37 @@ import (
 )
 
 type TestBuffer struct {
-	b   bytes.Buffer
-	bnl bytes.Buffer
+	hasTestClausePrefix bool
+	b                   bytes.Buffer
+	bnl                 bytes.Buffer
 }
 
-func NewTestBuffer() *TestBuffer {
-	return &TestBuffer{}
+func NewTestBuffer(options ...TestBufferOption) *TestBuffer {
+	var optns testBufferOptions
+	for _, opt := range options {
+		opt(&optns)
+	}
+	ret := &TestBuffer{}
+	if !optns.withoutTestClausePrefix {
+		ret.WriteTestClausePrefix()
+	}
+	return ret
+}
+
+type TestBufferOption func(options *testBufferOptions)
+
+type testBufferOptions struct {
+	withoutTestClausePrefix bool
+}
+
+func WithoutTestClausePrefix() TestBufferOption {
+	return func(options *testBufferOptions) {
+		options.withoutTestClausePrefix = true
+	}
 }
 
 func (b *TestBuffer) WriteTestClausePrefix() {
+	b.hasTestClausePrefix = true
 	_, _ = b.b.WriteString("@")
 	_, _ = b.bnl.WriteString("@")
 }

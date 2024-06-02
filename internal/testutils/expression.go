@@ -12,6 +12,10 @@ import (
 func TestExpression(t *testing.T, e litsql.Expression, output *TestBuffer, args ...any) {
 	t.Helper()
 
+	if output.hasTestClausePrefix {
+		e = TestClausePrefix(e)
+	}
+
 	for _, useNewLine := range []bool{false, true} {
 		var buf bytes.Buffer
 		w := sq.NewWriter(&buf,
