@@ -87,11 +87,13 @@ func ExampleSelect_literalJoin() {
 		// ORDER BY order.date DESC, u.name ASC
 		sm.OrderBy("orders.date DESC", "u.name ASC"),
 	)
-	qs, _, err := q.Build()
+	qs, args, err := q.Build()
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println(qs)
+	fmt.Println("===")
+	fmt.Println(args)
 
 	// Output:
 	// SELECT orders.id AS order_id, orders.date, u.id AS user_id, u.name AS user_name
@@ -99,6 +101,8 @@ func ExampleSelect_literalJoin() {
 	// INNER JOIN users AS u ON orders.user_id = u.id
 	// WHERE u.age > $1 AND u.deleted_at IS NOT NULL
 	// ORDER BY orders.date DESC, u.name ASC
+	// ===
+	// [32]
 }
 
 func ExampleSelect_literalWith() {
