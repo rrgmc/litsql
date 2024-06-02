@@ -75,13 +75,11 @@ func ExampleSelect_literalJoin() {
         // INNER JOIN users AS u ON orders.user_id = u.id
         sm.InnerJoin("users AS u").On("orders.user_id = u.id"),
         // WHERE u.age > $1
-        sm.WhereC("u.age ?", expr.F(func() (litsql.Expression, error) {
+        sm.WhereC("u.age ?",
             // example to use either IS NULL or a comparison
-            if true { // some condition
-                return expr.C("> ?", 32), nil
-            }
-            return expr.S("IS NULL"), nil
-        })),
+            expr.ExprIfElse(true, // some condition
+                expr.C("> ?", 32),
+                expr.S("IS NULL"))),
         // AND u.deleted_at IS NOT NULL
         sm.Where("u.deleted_at IS NOT NULL"),
         // ORDER BY order.date DESC, u.name ASC
