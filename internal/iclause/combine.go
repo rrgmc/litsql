@@ -20,18 +20,18 @@ type Combine struct {
 	All      bool
 }
 
-func (s *Combine) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
-	if s.Strategy == "" {
+func (c *Combine) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
+	if c.Strategy == "" {
 		return nil, ErrNoCombinationStrategy
 	}
 	w.AddSeparator(true)
-	w.Write(s.Strategy)
-	if s.All {
+	w.Write(c.Strategy)
+	if c.All {
 		w.Write(" ALL ")
 	} else {
 		w.Write(" ")
 	}
-	return litsql.Express(w, d, start, s.Query)
+	return litsql.Express(w, d, start, c.Query)
 }
 
 var _ litsql.QueryClauseMultiple = (*Combine)(nil)
@@ -40,10 +40,10 @@ func (c *Combine) ClauseID() string {
 	return "143a4da4-4963-4cc9-ade3-b7437f93b660"
 }
 
-func (s *Combine) ClauseOrder() int {
+func (c *Combine) ClauseOrder() int {
 	return clause.OrderUnion
 }
 
-func (s *Combine) ClauseMultiple() {
+func (c *Combine) ClauseMultiple() {
 
 }
