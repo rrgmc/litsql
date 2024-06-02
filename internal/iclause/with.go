@@ -11,13 +11,13 @@ type With struct {
 	CTEs      []*CTE
 }
 
-func (w *With) WriteSQL(wr litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
+func (c *With) WriteSQL(wr litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
 	wr.AddSeparator(true)
 	prefix := "WITH "
-	if w.Recursive {
+	if c.Recursive {
 		prefix = "WITH RECURSIVE "
 	}
-	return litsql.ExpressSlice(wr, d, start, expr.CastSlice(w.CTEs), expr.Raw(prefix), expr.CommaWriterNewLine, nil)
+	return litsql.ExpressSlice(wr, d, start, expr.CastSlice(c.CTEs), expr.Raw(prefix), expr.CommaWriterSeparator, nil)
 }
 
 var _ litsql.QueryClauseMerge = (*With)(nil)
@@ -41,6 +41,6 @@ func (c *With) ClauseMerge(other litsql.QueryClause) {
 	c.CTEs = append(c.CTEs, o.CTEs...)
 }
 
-func (w *With) SetRecursive(r bool) {
-	w.Recursive = r
+func (c *With) SetRecursive(r bool) {
+	c.Recursive = r
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 )
 
 type CTE struct {
@@ -17,6 +18,10 @@ type CTE struct {
 }
 
 func (c *CTE) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
+	if c.Name == "" {
+		return nil, internal.NewClauseError("'WITH' CTE name is required")
+	}
+
 	b := litsql.NewExpressBuilder(w, d, start)
 
 	w.Write(c.Name)
