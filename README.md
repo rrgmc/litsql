@@ -41,7 +41,6 @@ func ExampleSelect_literalSimple() {
 }
 ```
 
-
 The library will do:
 
  * ensure clause ordering
@@ -55,6 +54,86 @@ The library won't do:
 
 ```shell
 go get -u github.com/rrgmc/litsql
+```
+
+## Examples
+
+```go
+func ExampleSelect_literalWith() {
+    q := psql.Select(
+        // WITH regional_sales AS (
+        sm.With("regional_sales").As(
+            // SELECT
+            psql.Select(
+                // region, SUM(amount) AS total_sales
+                sm.Columns("region", "SUM(amount) AS total_sales"),
+                // FROM orders
+                sm.From("orders"),
+                // GROUP BY region
+                sm.GroupBy("region"),
+            ),
+        ),
+        // ), top_regions AS (
+        sm.With("top_regions").As(
+            // SELECT
+            psql.Select(
+                // region
+                sm.Columns("region"),
+                // FROM regional_sales
+                sm.From("regional_sales"),
+                // WHERE total_sales > (SELECT SUM(total_sales)/10 FROM regional_sales)
+                sm.WhereC("total_sales > ?",
+                    psql.Select(
+                        sm.Columns("SUM(total_sales)/10"),
+                        sm.From("regional_sales"),
+                    ),
+                ),
+            ),
+        ),
+        // )
+        // SELECT
+        // region, product, SUM(quantity) AS product_units, SUM(amount) AS product_sales
+        sm.Columns("region", "product", "SUM(quantity) AS product_units", "SUM(amount) AS product_sales"),
+        // FROM orders
+        sm.From("orders"),
+        // WHERE region IN (SELECT region FROM top_regions)
+        sm.WhereC("region IN ?",
+            psql.Select(
+                sm.Columns("region"),
+                sm.From("top_regions"),
+            ),
+        ),
+        // GROUP BY region, product
+        sm.GroupBy("region", "product"),
+    )
+    qs, _, err := q.Build()
+    if err != nil {
+        panic(err)
+    }
+    fmt.Println(qs)
+
+    // Output:
+    // WITH regional_sales AS (
+    //   SELECT region, SUM(amount) AS total_sales
+    //   FROM orders
+    //   GROUP BY region
+    // ),
+    // top_regions AS (
+    //   SELECT region
+    //   FROM regional_sales
+    //   WHERE total_sales > (
+    //     SELECT SUM(total_sales)/10
+    //     FROM regional_sales
+    //   )
+    // )
+    // SELECT region, product, SUM(quantity) AS product_units, SUM(amount) AS product_sales
+    // FROM orders
+    // WHERE region IN (
+    //   SELECT region
+    //   FROM top_regions
+    // )
+    // GROUP BY region, product
+}
 ```
 
 ## Reference
