@@ -6,7 +6,7 @@ import (
 	"github.com/rrgmc/litsql"
 )
 
-func Build(q litsql.Query, writerOptions ...WriterOption) (string, []any, error) {
+func Build(q litsql.Query, writerOptions ...WriterOption) (string, Args, error) {
 	var b bytes.Buffer
 	w := NewWriter(&b, writerOptions...)
 	args, err := q.WriteQuery(w, 1)

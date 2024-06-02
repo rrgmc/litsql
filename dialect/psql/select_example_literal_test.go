@@ -5,7 +5,6 @@ import (
 
 	"github.com/rrgmc/litsql/dialect/psql"
 	"github.com/rrgmc/litsql/dialect/psql/sm"
-	"github.com/rrgmc/litsql/sq"
 )
 
 func ExampleSelect_literalSimple() {
@@ -24,7 +23,7 @@ func ExampleSelect_literalSimple() {
 		// ORDER BY u.name ASC, u.age DESC
 		sm.OrderBy("u.name ASC", "u.age DESC"),
 	)
-	qs, _, err := sq.Build(q)
+	qs, _, err := q.Build()
 	if err != nil {
 		panic(err)
 	}
@@ -49,7 +48,7 @@ func ExampleSelect_literalSimpleInvalid() {
 		// WHERE CREATE TABLE users
 		sm.Where("CREATE TABLE users"),
 	)
-	qs, _, err := sq.Build(q)
+	qs, _, err := q.Build()
 	if err != nil {
 		panic(err)
 	}

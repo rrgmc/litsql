@@ -57,6 +57,6 @@ func (s *DefaultQuery[T]) Apply(mods ...sq.QueryMod[T]) {
 	}
 }
 
-func (s *DefaultQuery[T]) Build(writerOptions ...sq.WriterOption) (string, []any, error) {
+func (s *DefaultQuery[T]) Build(writerOptions ...sq.WriterOption) (string, sq.Args, error) {
 	return sq.Build(s, writerOptions...)
 }

@@ -10,5 +10,5 @@ type Query[T any] interface {
 }
 
 type BuildQuery interface {
-	Build(writerOptions ...WriterOption) (string, []any, error)
+	Build(writerOptions ...WriterOption) (string, Args, error)
 }

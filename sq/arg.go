@@ -32,8 +32,35 @@ type ArgValues interface {
 	Get(string) (any, bool)
 }
 
+// Args wraps parseable argument results.
+type Args []any
+
+func (a Args) Parse(values ...any) ([]any, error) {
+	return ParseArgs(a, values...)
+}
+
+func (a Args) ParseValues(values ...ArgValues) ([]any, error) {
+	return ParseArgValues(a, values...)
+}
+
 // ParseArgs replaces all [litsql.Argument] instances in args with named values.
-func ParseArgs(args []any, values ...ArgValues) ([]any, error) {
+func ParseArgs(args []any, values ...any) ([]any, error) {
+	var av []ArgValues
+	for _, v := range values {
+		switch xv := v.(type) {
+		case ArgValues:
+			av = append(av, xv)
+		case map[string]any:
+			av = append(av, MapArgValues(xv))
+		default:
+			return nil, fmt.Errorf("unsupported arg values type: %T", v)
+		}
+	}
+	return ParseArgValues(args, av...)
+}
+
+// ParseArgValues replaces all [litsql.Argument] instances in args with named values.
+func ParseArgValues(args []any, values ...ArgValues) ([]any, error) {
 	var ret []any
 	for _, arg := range args {
 		// if both Named and Valued, check Named first, Valued as a fallback.
