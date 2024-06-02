@@ -1,6 +1,9 @@
 package litsql
 
 func Express(w Writer, d Dialect, start int, e Expression) ([]any, error) {
+	if e == nil {
+		return nil, nil
+	}
 	return e.WriteSQL(w, d, start)
 }
 

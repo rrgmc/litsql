@@ -25,7 +25,7 @@ func And(expr ...string) litsql.Expression {
 }
 
 func AndE(expr ...litsql.Expression) litsql.Expression {
-	return join{exprs: expr, sep: " OR "}
+	return join{exprs: expr, sep: " AND "}
 }
 
 type join struct {
