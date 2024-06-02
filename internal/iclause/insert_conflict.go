@@ -14,7 +14,7 @@ type InsertConflict struct {
 	Where  Where
 }
 
-func (c InsertConflict) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
+func (c *InsertConflict) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
 	if c.Do == "" {
 		return nil, internal.NewClauseError("'ON CONFLICT DO' cannot be empty")
 	}
