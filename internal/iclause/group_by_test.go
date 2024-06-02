@@ -30,6 +30,36 @@ func TestGroupByEmpty(t *testing.T) {
 	testutils.TestExpression(t, clause, o)
 }
 
+func TestGroupByDistinct(t *testing.T) {
+	clause := &GroupBy{
+		Groups: []litsql.Expression{
+			expr.Raw("id"),
+			expr.Raw("name"),
+		},
+		Distinct: true,
+	}
+
+	o := testutils.NewTestBuffer()
+	o.WriteSeparator()
+	o.Write("GROUP BY DISTINCT id, name")
+	testutils.TestExpression(t, clause, o)
+}
+
+func TestGroupByWith(t *testing.T) {
+	clause := &GroupBy{
+		Groups: []litsql.Expression{
+			expr.Raw("id"),
+			expr.Raw("name"),
+		},
+		With: "ROLLUP",
+	}
+
+	o := testutils.NewTestBuffer()
+	o.WriteSeparator()
+	o.Write("GROUP BY id, name WITH ROLLUP")
+	testutils.TestExpression(t, clause, o)
+}
+
 func TestGroupByMerge(t *testing.T) {
 	clause := testutils.Merge(
 		&GroupBy{
