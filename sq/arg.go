@@ -22,6 +22,11 @@ func DBArg(name string) litsql.Argument {
 	return dbNamedArgument{name: name}
 }
 
+// DBArgDefault adds a DB named argument with a default value.
+func DBArgDefault(name string, defaultValue any) litsql.Argument {
+	return dbNamedArgumentWithDefault{name: name, defaultValue: defaultValue}
+}
+
 // ArgFunc returns the argument value in a callback.
 func ArgFunc(fn func() (any, error)) litsql.Argument {
 	return funcArgument{fn: fn}
@@ -163,6 +168,20 @@ type dbNamedArgument struct {
 
 func (a dbNamedArgument) DBName() string {
 	return a.name
+}
+
+type dbNamedArgumentWithDefault struct {
+	litsql.ArgumentBase
+	name         string
+	defaultValue any
+}
+
+func (a dbNamedArgumentWithDefault) DBName() string {
+	return a.name
+}
+
+func (a dbNamedArgumentWithDefault) Value() (any, error) {
+	return a.defaultValue, nil
 }
 
 type funcArgument struct {
