@@ -22,7 +22,7 @@ func NewTestBuffer(options ...TestBufferOption) *TestBuffer {
 	}
 	ret := &TestBuffer{}
 	if !optns.withoutTestClausePrefix {
-		ret.WriteTestClausePrefix()
+		ret.writeTestClausePrefix()
 	}
 	return ret
 }
@@ -39,7 +39,7 @@ func WithoutTestClausePrefix() TestBufferOption {
 	}
 }
 
-func (b *TestBuffer) WriteTestClausePrefix() {
+func (b *TestBuffer) writeTestClausePrefix() {
 	b.hasTestClausePrefix = true
 	_, _ = b.b.WriteString("@")
 	_, _ = b.bnl.WriteString("@")

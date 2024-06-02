@@ -5,6 +5,6 @@ import (
 	"github.com/rrgmc/litsql/expr"
 )
 
-func TestClausePrefix(e litsql.Expression) litsql.Expression {
+func testClausePrefix(e litsql.Expression) litsql.Expression {
 	return expr.J(expr.Raw("@"), e)
 }

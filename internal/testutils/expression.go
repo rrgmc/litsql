@@ -13,7 +13,7 @@ func TestExpression(t *testing.T, e litsql.Expression, output *TestBuffer, args 
 	t.Helper()
 
 	if output.hasTestClausePrefix {
-		e = TestClausePrefix(e)
+		e = testClausePrefix(e)
 	}
 
 	for _, useNewLine := range []bool{false, true} {
