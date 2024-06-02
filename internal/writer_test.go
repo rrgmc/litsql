@@ -1,4 +1,4 @@
-package sq
+package internal
 
 import (
 	"bytes"

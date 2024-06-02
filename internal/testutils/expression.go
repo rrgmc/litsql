@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/rrgmc/litsql"
-	"github.com/rrgmc/litsql/sq"
+	"github.com/rrgmc/litsql/internal"
 	"gotest.tools/v3/assert"
 )
 
@@ -18,9 +18,9 @@ func TestExpression(t *testing.T, e litsql.Expression, output *TestBuffer, args 
 
 	for _, useNewLine := range []bool{false, true} {
 		var buf bytes.Buffer
-		w := sq.NewWriter(&buf,
-			sq.WithWriterUseNewLine(useNewLine),
-			sq.WithWriterIndentStr(" "),
+		w := internal.NewWriter(&buf,
+			internal.WithWriterUseNewLine(useNewLine),
+			internal.WithWriterIndentStr(" "),
 		)
 
 		gotArgs, err := e.WriteSQL(w, &TestDialect{}, 1)
@@ -44,9 +44,9 @@ func TestExpressionErrorIs(t *testing.T, e litsql.Expression, errIs error) {
 	t.Helper()
 	for _, useNewLine := range []bool{false, true} {
 		var buf bytes.Buffer
-		w := sq.NewWriter(&buf,
-			sq.WithWriterUseNewLine(useNewLine),
-			sq.WithWriterIndentStr(" "),
+		w := internal.NewWriter(&buf,
+			internal.WithWriterUseNewLine(useNewLine),
+			internal.WithWriterIndentStr(" "),
 		)
 
 		_, err := e.WriteSQL(w, &TestDialect{}, 1)

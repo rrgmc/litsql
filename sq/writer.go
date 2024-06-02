@@ -2,116 +2,24 @@ package sq
 
 import (
 	"io"
-	"strings"
 
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/internal"
 )
 
-// writer is the default implementation if [litsql.Writer].
-type writer struct {
-	wio              *internal.WriterIO
-	writeSep         bool
-	writeSepTopLevel bool
-	lastWrite        bool
-	indent           int
-	isNewLine        bool
-
-	useNewLine bool
-	indentStr  string
-}
-
+// NewWriter creates the default implementation if [litsql.Writer].
 func NewWriter(w io.Writer, options ...WriterOption) litsql.Writer {
-	ret := &writer{
-		wio:        internal.WewWriterIO(w),
-		useNewLine: true,
-		indentStr:  "  ",
-	}
-	for _, opt := range options {
-		opt(ret)
-	}
-	return ret
+	return internal.NewWriter(w, options...)
 }
 
-type WriterOption func(*writer)
+type WriterOption = internal.WriterOption
 
 // WithWriterUseNewLine sets whether to use newlines in the output or not. Default is true.
 func WithWriterUseNewLine(useNewLine bool) WriterOption {
-	return func(w *writer) {
-		w.useNewLine = useNewLine
-	}
+	return internal.WithWriterUseNewLine(useNewLine)
 }
 
 // WithWriterIndentStr sets the indent string (used only if WithWriterUseNewLine is true). Default is "  " (two spaces).
 func WithWriterIndentStr(indentStr string) WriterOption {
-	return func(w *writer) {
-		w.indentStr = indentStr
-	}
-}
-
-func (w *writer) Write(s string) {
-	if w.wio.Err() != nil {
-		return
-	}
-	if len(s) == 0 {
-		return
-	}
-	if w.writeSep {
-		if w.lastWrite {
-			if w.writeSepTopLevel {
-				w.WriteSeparator()
-			} else {
-				w.wio.Write(internal.Space)
-			}
-		}
-		w.writeSep = false
-		w.writeSepTopLevel = false
-		w.lastWrite = false
-	}
-	if w.isNewLine && w.indent > 0 {
-		w.wio.Write(strings.Repeat(w.indentStr, w.indent))
-	}
-	w.lastWrite = true
-	w.isNewLine = false
-	w.wio.Write(s)
-}
-
-func (w *writer) WriteNewLine() {
-	if w.useNewLine {
-		w.wio.Write(internal.NewLine)
-		w.isNewLine = true
-	}
-}
-
-func (w *writer) WriteSeparator() {
-	if w.useNewLine {
-		w.wio.Write(internal.NewLine)
-		w.isNewLine = true
-	} else {
-		w.wio.Write(internal.Space)
-	}
-}
-
-func (w *writer) AddSeparator(topLevel bool) {
-	w.writeSep = true
-	w.writeSepTopLevel = topLevel
-}
-
-func (w *writer) StartQuery() {
-	w.lastWrite = false
-}
-
-func (w *writer) Indent() {
-	w.indent += 1
-}
-
-func (w *writer) Dedent() {
-	w.indent -= 1
-	if w.indent < 0 {
-		w.indent = 0
-	}
-}
-
-func (w *writer) Err() error {
-	return w.wio.Err()
+	return internal.WithWriterIndentStr(indentStr)
 }
