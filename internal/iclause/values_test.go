@@ -22,7 +22,7 @@ func TestValues(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("VALUES (5, 50)")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestValuesEmpty(t *testing.T) {
@@ -31,7 +31,7 @@ func TestValuesEmpty(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("DEFAULT VALUES")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestValuesMultiple(t *testing.T) {
@@ -57,7 +57,7 @@ func TestValuesMultiple(t *testing.T) {
 	o.WriteSeparator()
 	o.WriteIndent(1)
 	o.Write("(100, 200)")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestValuesQuery(t *testing.T) {
@@ -71,7 +71,7 @@ func TestValuesQuery(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("test_query")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestValuesQueryAndValues(t *testing.T) {
@@ -87,7 +87,7 @@ func TestValuesQueryAndValues(t *testing.T) {
 			},
 		},
 	}
-	testutils.TestExpressionErrorIs(t, clause, litsql.ErrClause)
+	testutils.TestWriterExpressionErrorIs(t, clause, litsql.ErrClause)
 }
 
 func TestValuesMerge(t *testing.T) {
@@ -119,5 +119,5 @@ func TestValuesMerge(t *testing.T) {
 	o.WriteSeparator()
 	o.WriteIndent(1)
 	o.Write("(100, 200)")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }

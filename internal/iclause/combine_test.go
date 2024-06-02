@@ -20,7 +20,7 @@ func TestCombine(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("UNION test_query")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestCombineAll(t *testing.T) {
@@ -36,10 +36,10 @@ func TestCombineAll(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("UNION ALL test_query")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestCombineEmpty(t *testing.T) {
 	clause := &Combine{}
-	testutils.TestExpressionErrorIs(t, clause, litsql.ErrClause)
+	testutils.TestWriterExpressionErrorIs(t, clause, litsql.ErrClause)
 }

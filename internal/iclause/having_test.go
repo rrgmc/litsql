@@ -20,7 +20,7 @@ func TestHaving(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("HAVING id = 5 AND age = 10")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestHavingEmpty(t *testing.T) {
@@ -28,7 +28,7 @@ func TestHavingEmpty(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestHavingMerge(t *testing.T) {
@@ -44,5 +44,5 @@ func TestHavingMerge(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("HAVING id = 5 AND age = 10 AND id = 6 AND age = 11")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }

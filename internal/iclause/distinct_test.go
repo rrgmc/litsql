@@ -19,7 +19,7 @@ func TestDistinct(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("DISTINCT ON (id, name)")
-	testutils.TestExpression(t, c, o)
+	testutils.TestWriterExpression(t, c, o)
 }
 
 func TestDistinctEmpty(t *testing.T) {
@@ -27,7 +27,7 @@ func TestDistinctEmpty(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("DISTINCT")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestDistinctMerge(t *testing.T) {
@@ -42,5 +42,5 @@ func TestDistinctMerge(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("DISTINCT ON (id, id2, id3, id4)")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }

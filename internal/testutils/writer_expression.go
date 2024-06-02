@@ -9,7 +9,7 @@ import (
 	"gotest.tools/v3/assert"
 )
 
-func TestExpression(t *testing.T, e litsql.Expression, output *TestBuffer, args ...any) {
+func TestWriterExpression(t *testing.T, e litsql.Expression, output *TestBuffer, args ...any) {
 	t.Helper()
 
 	if output.hasTestClausePrefix {
@@ -35,12 +35,12 @@ func TestExpression(t *testing.T, e litsql.Expression, output *TestBuffer, args 
 	}
 }
 
-func TestExpressionIsError(t *testing.T, e litsql.Expression) {
+func TestWriterExpressionIsError(t *testing.T, e litsql.Expression) {
 	t.Helper()
-	TestExpressionErrorIs(t, e, nil)
+	TestWriterExpressionErrorIs(t, e, nil)
 }
 
-func TestExpressionErrorIs(t *testing.T, e litsql.Expression, errIs error) {
+func TestWriterExpressionErrorIs(t *testing.T, e litsql.Expression, errIs error) {
 	t.Helper()
 	for _, useNewLine := range []bool{false, true} {
 		var buf bytes.Buffer

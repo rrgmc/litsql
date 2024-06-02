@@ -14,7 +14,7 @@ func TestTable(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("users")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestTableEmpty(t *testing.T) {
@@ -22,7 +22,7 @@ func TestTableEmpty(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestTableColumns(t *testing.T) {
@@ -33,7 +33,7 @@ func TestTableColumns(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("users (id, name)")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestTableAlias(t *testing.T) {
@@ -45,5 +45,5 @@ func TestTableAlias(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("users AS u (id, name)")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }

@@ -23,12 +23,12 @@ func TestJoin(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("INNER JOIN users ON id = 5 AND age = 10")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestJoinEmpty(t *testing.T) {
 	clause := &Join{}
-	testutils.TestExpressionErrorIs(t, clause, litsql.ErrClause)
+	testutils.TestWriterExpressionErrorIs(t, clause, litsql.ErrClause)
 }
 
 func TestJoinEmptyFrom(t *testing.T) {
@@ -36,7 +36,7 @@ func TestJoinEmptyFrom(t *testing.T) {
 		Type: "INNER JOIN",
 		To:   &From{},
 	}
-	testutils.TestExpressionErrorIs(t, clause, litsql.ErrClause)
+	testutils.TestWriterExpressionErrorIs(t, clause, litsql.ErrClause)
 }
 
 func TestJoinEmptyOn(t *testing.T) {
@@ -50,7 +50,7 @@ func TestJoinEmptyOn(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("INNER JOIN users")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestJoinFlags(t *testing.T) {
@@ -69,7 +69,7 @@ func TestJoinFlags(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("NATURAL INNER JOIN users ON id = 5 AND age = 10")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestJoinUsing(t *testing.T) {
@@ -88,5 +88,5 @@ func TestJoinUsing(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("INNER JOIN users ON id = 5 AND age = 10 USING(id, age)")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }

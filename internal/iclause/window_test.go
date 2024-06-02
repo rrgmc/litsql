@@ -27,7 +27,7 @@ func TestWindow(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("WINDOW window_test AS (PARTITION BY id, name)")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestWindowEmpty(t *testing.T) {
@@ -35,7 +35,7 @@ func TestWindowEmpty(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestWindowClauses(t *testing.T) {
@@ -61,7 +61,7 @@ func TestWindowClauses(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("WINDOW window_test AS (other_window PARTITION BY id, name ORDER BY age, last_activity_date)")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestWindowClausesSpacing1(t *testing.T) {
@@ -83,7 +83,7 @@ func TestWindowClausesSpacing1(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("WINDOW window_test AS (other_window ORDER BY age, last_activity_date)")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestWindowClausesSpacing2(t *testing.T) {
@@ -104,7 +104,7 @@ func TestWindowClausesSpacing2(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("WINDOW window_test AS (ORDER BY age, last_activity_date)")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestWindowFrame(t *testing.T) {
@@ -128,7 +128,7 @@ func TestWindowFrame(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("WINDOW window_test AS (ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW EXCLUDE EXCLUDE GROUP)")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestWindowMerge(t *testing.T) {
@@ -170,5 +170,5 @@ func TestWindowMerge(t *testing.T) {
 	o.WriteSeparator()
 	o.WriteIndent(1)
 	o.Write("window_test2 AS (PARTITION BY id, name)")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }

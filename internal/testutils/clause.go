@@ -2,9 +2,11 @@ package testutils
 
 import (
 	"github.com/rrgmc/litsql"
-	"github.com/rrgmc/litsql/expr"
 )
 
 func testClausePrefix(e litsql.Expression) litsql.Expression {
-	return expr.J(expr.Raw("@"), e)
+	return litsql.ExpressionFunc(func(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
+		w.Write("@")
+		return e.WriteSQL(w, d, start)
+	})
 }

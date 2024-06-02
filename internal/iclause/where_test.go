@@ -20,7 +20,7 @@ func TestWhere(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("WHERE id = 5 AND age = 10")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestWhereEmpty(t *testing.T) {
@@ -28,7 +28,7 @@ func TestWhereEmpty(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestWhereMerge(t *testing.T) {
@@ -44,5 +44,5 @@ func TestWhereMerge(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("WHERE id = 5 AND age = 10 AND id = 6 AND age = 11")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }

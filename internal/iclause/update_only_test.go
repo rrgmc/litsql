@@ -13,7 +13,7 @@ func TestUpdateOnly(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("ONLY")
-	testutils.TestExpression(t, c, o)
+	testutils.TestWriterExpression(t, c, o)
 }
 
 func TestUpdateOnlyFalse(t *testing.T) {
@@ -23,5 +23,5 @@ func TestUpdateOnlyFalse(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("")
-	testutils.TestExpression(t, c, o)
+	testutils.TestWriterExpression(t, c, o)
 }

@@ -20,7 +20,7 @@ func TestOrderBy(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("ORDER BY id ASC, name DESC")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestOrderByEmpty(t *testing.T) {
@@ -28,7 +28,7 @@ func TestOrderByEmpty(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestOrderByMerge(t *testing.T) {
@@ -44,5 +44,5 @@ func TestOrderByMerge(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("ORDER BY id, id2, id3, id4")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }

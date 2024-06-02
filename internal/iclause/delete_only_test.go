@@ -13,7 +13,7 @@ func TestDeleteOnly(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("ONLY")
-	testutils.TestExpression(t, c, o)
+	testutils.TestWriterExpression(t, c, o)
 }
 
 func TestDeleteOnlyFalse(t *testing.T) {
@@ -23,5 +23,5 @@ func TestDeleteOnlyFalse(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("")
-	testutils.TestExpression(t, c, o)
+	testutils.TestWriterExpression(t, c, o)
 }

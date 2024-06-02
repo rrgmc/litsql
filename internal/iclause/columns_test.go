@@ -19,7 +19,7 @@ func TestColumns(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("id, name")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestColumnsEmpty(t *testing.T) {
@@ -27,7 +27,7 @@ func TestColumnsEmpty(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("*")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestColumnsMerge(t *testing.T) {
@@ -42,5 +42,5 @@ func TestColumnsMerge(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("id, id2, id3, id4")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }

@@ -13,5 +13,5 @@ func TestDeleteFrom(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("users")
-	testutils.TestExpression(t, c, o)
+	testutils.TestWriterExpression(t, c, o)
 }

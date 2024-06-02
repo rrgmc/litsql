@@ -20,14 +20,14 @@ func TestGroupBy(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("GROUP BY id, name")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestGroupByEmpty(t *testing.T) {
 	clause := &GroupBy{}
 
 	o := testutils.NewTestBuffer()
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestGroupByDistinct(t *testing.T) {
@@ -42,7 +42,7 @@ func TestGroupByDistinct(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("GROUP BY DISTINCT id, name")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestGroupByWith(t *testing.T) {
@@ -57,7 +57,7 @@ func TestGroupByWith(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("GROUP BY id, name WITH ROLLUP")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestGroupByMerge(t *testing.T) {
@@ -73,5 +73,5 @@ func TestGroupByMerge(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("GROUP BY id, id2, id3, id4")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }

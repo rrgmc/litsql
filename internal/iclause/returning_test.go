@@ -20,7 +20,7 @@ func TestReturning(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("RETURNING id, name")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestReturningEmpty(t *testing.T) {
@@ -29,7 +29,7 @@ func TestReturningEmpty(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("RETURNING *")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestReturningMerge(t *testing.T) {
@@ -45,5 +45,5 @@ func TestReturningMerge(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("RETURNING id, id2, id3, id4")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }

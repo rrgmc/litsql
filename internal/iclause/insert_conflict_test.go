@@ -41,12 +41,12 @@ func TestInsertConflict(t *testing.T) {
 	o.WriteSeparator()
 	o.Write("WHERE id = 5 AND age = 10")
 
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestInsertConflictEmpty(t *testing.T) {
 	clause := &InsertConflict{}
-	testutils.TestExpressionErrorIs(t, clause, litsql.ErrClause)
+	testutils.TestWriterExpressionErrorIs(t, clause, litsql.ErrClause)
 }
 
 func TestInsertConflictTarget(t *testing.T) {
@@ -90,5 +90,5 @@ func TestInsertConflictTarget(t *testing.T) {
 	o.WriteSeparator()
 	o.Write("WHERE id = 5 AND age = 10")
 
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }

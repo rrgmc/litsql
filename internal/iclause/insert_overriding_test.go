@@ -14,7 +14,7 @@ func TestInsertOverriding(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("OVERRIDING SYSTEM VALUE")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestInsertOverridingEmpty(t *testing.T) {
@@ -22,5 +22,5 @@ func TestInsertOverridingEmpty(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }

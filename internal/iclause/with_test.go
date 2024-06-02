@@ -29,14 +29,14 @@ func TestWith(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("WITH testCTE(id, name) AS test_query")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestWithEmpty(t *testing.T) {
 	clause := &With{}
 	o := testutils.NewTestBuffer()
 	o.Write("")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestWithEmptyCTE(t *testing.T) {
@@ -46,7 +46,7 @@ func TestWithEmptyCTE(t *testing.T) {
 		},
 	}
 
-	testutils.TestExpressionErrorIs(t, clause, litsql.ErrClause)
+	testutils.TestWriterExpressionErrorIs(t, clause, litsql.ErrClause)
 }
 
 func TestWithMerge(t *testing.T) {
@@ -88,5 +88,5 @@ func TestWithMerge(t *testing.T) {
 	o.Write("WITH testCTE(id, name) AS test_query,")
 	o.WriteSeparator()
 	o.Write("testCTE2(id, name) AS test_query2")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }

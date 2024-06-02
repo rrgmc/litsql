@@ -27,7 +27,7 @@ func TestSet(t *testing.T) {
 	o.WriteSeparator()
 	o.WriteIndent(1)
 	o.Write("age = 50")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestSetEmpty(t *testing.T) {
@@ -35,14 +35,14 @@ func TestSetEmpty(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestSetEmptyStarter(t *testing.T) {
 	clause := &Set{
 		Starter: true,
 	}
-	testutils.TestExpressionErrorIs(t, clause, litsql.ErrClause)
+	testutils.TestWriterExpressionErrorIs(t, clause, litsql.ErrClause)
 }
 
 func TestSetMerge(t *testing.T) {
@@ -72,5 +72,5 @@ func TestSetMerge(t *testing.T) {
 	o.WriteSeparator()
 	o.WriteIndent(1)
 	o.Write("age = 11")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }

@@ -17,12 +17,12 @@ func TestFrom(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("FROM users")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestFromEmpty(t *testing.T) {
 	clause := &From{}
-	testutils.TestExpressionErrorIs(t, clause, litsql.ErrClause)
+	testutils.TestWriterExpressionErrorIs(t, clause, litsql.ErrClause)
 }
 
 func TestFromNonStarter(t *testing.T) {
@@ -33,7 +33,7 @@ func TestFromNonStarter(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("users")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestFromClause(t *testing.T) {
@@ -46,7 +46,7 @@ func TestFromClause(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("USING users")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestFromFlags(t *testing.T) {
@@ -62,7 +62,7 @@ func TestFromFlags(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("FROM ONLY LATERAL users WITH ORDINALITY AS u")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
 
 func TestFromColumns(t *testing.T) {
@@ -76,5 +76,5 @@ func TestFromColumns(t *testing.T) {
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()
 	o.Write("FROM users AS u(id, name)")
-	testutils.TestExpression(t, clause, o)
+	testutils.TestWriterExpression(t, clause, o)
 }
