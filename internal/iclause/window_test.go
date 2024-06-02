@@ -38,6 +38,99 @@ func TestWindowEmpty(t *testing.T) {
 	testutils.TestExpression(t, clause, o)
 }
 
+func TestWindowClauses(t *testing.T) {
+	clause := &Windows{
+		Windows: []*NamedWindow{
+			{
+				Name: "window_test",
+				Definition: WindowDef{
+					From: "other_window",
+					PartitionBy: []litsql.Expression{
+						expr.Raw("id"),
+						expr.Raw("name"),
+					},
+					OrderBy: []litsql.Expression{
+						expr.Raw("age"),
+						expr.Raw("last_activity_date"),
+					},
+				},
+			},
+		},
+	}
+
+	o := testutils.NewTestBuffer()
+	o.WriteSeparator()
+	o.Write("WINDOW window_test AS (other_window PARTITION BY id, name ORDER BY age, last_activity_date)")
+	testutils.TestExpression(t, clause, o)
+}
+
+func TestWindowClausesSpacing1(t *testing.T) {
+	clause := &Windows{
+		Windows: []*NamedWindow{
+			{
+				Name: "window_test",
+				Definition: WindowDef{
+					From: "other_window",
+					OrderBy: []litsql.Expression{
+						expr.Raw("age"),
+						expr.Raw("last_activity_date"),
+					},
+				},
+			},
+		},
+	}
+
+	o := testutils.NewTestBuffer()
+	o.WriteSeparator()
+	o.Write("WINDOW window_test AS (other_window ORDER BY age, last_activity_date)")
+	testutils.TestExpression(t, clause, o)
+}
+
+func TestWindowClausesSpacing2(t *testing.T) {
+	clause := &Windows{
+		Windows: []*NamedWindow{
+			{
+				Name: "window_test",
+				Definition: WindowDef{
+					OrderBy: []litsql.Expression{
+						expr.Raw("age"),
+						expr.Raw("last_activity_date"),
+					},
+				},
+			},
+		},
+	}
+
+	o := testutils.NewTestBuffer()
+	o.WriteSeparator()
+	o.Write("WINDOW window_test AS (ORDER BY age, last_activity_date)")
+	testutils.TestExpression(t, clause, o)
+}
+
+func TestWindowFrame(t *testing.T) {
+	clause := &Windows{
+		Windows: []*NamedWindow{
+			{
+				Name: "window_test",
+				Definition: WindowDef{
+					Frame: Frame{
+						Defined:   true,
+						Mode:      "ROWS",
+						Start:     expr.Raw("UNBOUNDED PRECEDING"),
+						End:       expr.Raw("CURRENT ROW"),
+						Exclusion: "EXCLUDE GROUP",
+					},
+				},
+			},
+		},
+	}
+
+	o := testutils.NewTestBuffer()
+	o.WriteSeparator()
+	o.Write("WINDOW window_test AS (ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW EXCLUDE EXCLUDE GROUP)")
+	testutils.TestExpression(t, clause, o)
+}
+
 func TestWindowMerge(t *testing.T) {
 	clause := testutils.Merge(
 		&Windows{
