@@ -3,6 +3,7 @@ package iclause
 import (
 	"testing"
 
+	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
 	"github.com/rrgmc/litsql/internal/testutils"
 )
@@ -21,7 +22,7 @@ func TestFrom(t *testing.T) {
 
 func TestFromEmpty(t *testing.T) {
 	clause := &From{}
-	testutils.TestExpressionIsError(t, clause)
+	testutils.TestExpressionErrorIs(t, clause, litsql.ErrClause)
 }
 
 func TestFromNonStarter(t *testing.T) {

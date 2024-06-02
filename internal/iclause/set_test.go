@@ -42,7 +42,7 @@ func TestSetEmptyStarter(t *testing.T) {
 	clause := &Set{
 		Starter: true,
 	}
-	testutils.TestExpressionIsError(t, clause)
+	testutils.TestExpressionErrorIs(t, clause, litsql.ErrClause)
 }
 
 func TestSetMerge(t *testing.T) {

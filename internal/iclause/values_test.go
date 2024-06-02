@@ -87,7 +87,7 @@ func TestValuesQueryAndValues(t *testing.T) {
 			},
 		},
 	}
-	testutils.TestExpressionIsError(t, clause)
+	testutils.TestExpressionErrorIs(t, clause, litsql.ErrClause)
 }
 
 func TestValuesMerge(t *testing.T) {

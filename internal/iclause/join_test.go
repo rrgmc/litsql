@@ -28,7 +28,7 @@ func TestJoin(t *testing.T) {
 
 func TestJoinEmpty(t *testing.T) {
 	clause := &Join{}
-	testutils.TestExpressionIsError(t, clause)
+	testutils.TestExpressionErrorIs(t, clause, litsql.ErrClause)
 }
 
 func TestJoinEmptyFrom(t *testing.T) {
@@ -36,7 +36,7 @@ func TestJoinEmptyFrom(t *testing.T) {
 		Type: "INNER JOIN",
 		To:   &From{},
 	}
-	testutils.TestExpressionIsError(t, clause)
+	testutils.TestExpressionErrorIs(t, clause, litsql.ErrClause)
 }
 
 func TestJoinEmptyOn(t *testing.T) {

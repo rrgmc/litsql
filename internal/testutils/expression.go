@@ -37,6 +37,11 @@ func TestExpression(t *testing.T, e litsql.Expression, output *TestBuffer, args 
 
 func TestExpressionIsError(t *testing.T, e litsql.Expression) {
 	t.Helper()
+	TestExpressionErrorIs(t, e, nil)
+}
+
+func TestExpressionErrorIs(t *testing.T, e litsql.Expression, errIs error) {
+	t.Helper()
 	for _, useNewLine := range []bool{false, true} {
 		var buf bytes.Buffer
 		w := sq.NewWriter(&buf,
@@ -45,6 +50,10 @@ func TestExpressionIsError(t *testing.T, e litsql.Expression) {
 		)
 
 		_, err := e.WriteSQL(w, &TestDialect{}, 1)
-		assert.Assert(t, err != nil)
+		if errIs != nil {
+			assert.ErrorIs(t, err, errIs)
+		} else {
+			assert.Assert(t, err != nil)
+		}
 	}
 }
