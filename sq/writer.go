@@ -8,6 +8,7 @@ import (
 	"github.com/rrgmc/litsql/internal"
 )
 
+// writer is the default implementation if [litsql.Writer].
 type writer struct {
 	wio              *internal.WriterIO
 	writeSep         bool
@@ -34,12 +35,14 @@ func NewWriter(w io.Writer, options ...WriterOption) litsql.Writer {
 
 type WriterOption func(*writer)
 
+// WithWriterUseNewLine sets whether to use newlines in the output or not. Default is true.
 func WithWriterUseNewLine(useNewLine bool) WriterOption {
 	return func(w *writer) {
 		w.useNewLine = useNewLine
 	}
 }
 
+// WithWriterIndentStr sets the indent string (used only if WithWriterUseNewLine is true). Default is "  " (two spaces).
 func WithWriterIndentStr(indentStr string) WriterOption {
 	return func(w *writer) {
 		w.indentStr = indentStr
