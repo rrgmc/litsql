@@ -1,10 +1,9 @@
 package iclause
 
 import (
-	"fmt"
-
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/sq/clause"
 )
 
@@ -16,7 +15,7 @@ type Set struct {
 func (c *Set) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
 	if c.Starter {
 		if len(c.Set) == 0 {
-			return nil, fmt.Errorf("'SET' fields are required")
+			return nil, internal.NewClauseError("'SET' fields are required")
 		}
 		w.AddSeparator(true)
 		w.Write("SET")

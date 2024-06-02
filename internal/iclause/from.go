@@ -1,8 +1,6 @@
 package iclause
 
 import (
-	"fmt"
-
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/sq/clause"
@@ -25,7 +23,7 @@ type From struct {
 
 func (c *From) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
 	if c.Table == nil {
-		return nil, fmt.Errorf("'FROM' table is required")
+		return nil, internal.NewClauseError("'FROM' table is required")
 	}
 
 	b := litsql.NewExpressBuilder(w, d, start)

@@ -3,6 +3,7 @@ package iclause
 import (
 	"testing"
 
+	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
 	"github.com/rrgmc/litsql/internal/testutils"
 	"gotest.tools/v3/assert"
@@ -57,6 +58,36 @@ func TestValuesMultiple(t *testing.T) {
 	o.WriteIndent(1)
 	o.Write("(100, 200)")
 	testutils.TestExpression(t, clause, o)
+}
+
+func TestValuesQuery(t *testing.T) {
+	clause := &Values{
+		Query: litsql.QueryFunc{
+			D: testutils.NewTestDialect(),
+			E: expr.Raw("test_query"),
+		},
+	}
+
+	o := testutils.NewTestBuffer()
+	o.WriteSeparator()
+	o.Write("test_query")
+	testutils.TestExpression(t, clause, o)
+}
+
+func TestValuesQueryAndValues(t *testing.T) {
+	clause := &Values{
+		Query: litsql.QueryFunc{
+			D: testutils.NewTestDialect(),
+			E: expr.Raw("test_query"),
+		},
+		Vals: []Value{
+			{
+				expr.Raw("5"),
+				expr.Raw("50"),
+			},
+		},
+	}
+	testutils.TestExpressionIsError(t, clause)
 }
 
 func TestValuesMerge(t *testing.T) {

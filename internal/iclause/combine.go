@@ -1,13 +1,12 @@
 package iclause
 
 import (
-	"errors"
-
 	"github.com/rrgmc/litsql"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/sq/clause"
 )
 
-var ErrNoCombinationStrategy = errors.New("Combination strategy must be set")
+var ErrNoCombinationStrategy = internal.NewClauseError("Combination strategy must be set")
 
 const (
 	Union     = "UNION"

@@ -1,10 +1,9 @@
 package iclause
 
 import (
-	"errors"
-
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/sq/clause"
 )
 
@@ -22,7 +21,7 @@ func (c *Values) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, 
 	// If a query is present, use it
 	if c.Query != nil {
 		if len(c.Vals) > 0 {
-			return nil, errors.New("cannot set Query and Values at the same time in Values clause")
+			return nil, internal.NewClauseError("cannot set Query and Values at the same time in Values clause")
 		}
 		w.WriteSeparator()
 		return c.Query.WriteQuery(w, start)
