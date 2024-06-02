@@ -9,38 +9,42 @@ import (
 
 type WindowDef struct {
 	From        string // an existing window name
-	orderBy     []litsql.Expression
-	partitionBy []litsql.Expression
+	OrderBy     []litsql.Expression
+	PartitionBy []litsql.Expression
 	Frame
 }
 
-func (wi *WindowDef) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
+func (wd *WindowDef) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
 	b := litsql.NewExpressBuilder(w, d, start)
 
-	if wi.From != "" {
-		w.Write(wi.From)
-		w.Write(" ")
+	prefixCond := false
+
+	if wd.From != "" {
+		w.Write(wd.From)
+		prefixCond = true
 	}
 
-	b.ExpressSlice(wi.partitionBy, expr.Raw("PARTITION BY "), expr.CommaSpace, expr.Space)
+	b.ExpressSlice(wd.PartitionBy, expr.PrefixIf(prefixCond, expr.Space, expr.Raw("PARTITION BY ")), expr.CommaSpace, nil)
+	prefixCond = prefixCond || len(wd.PartitionBy) > 0
 
-	b.ExpressSlice(wi.orderBy, expr.Raw("ORDER BY "), expr.CommaSpace, nil)
+	b.ExpressSlice(wd.OrderBy, expr.PrefixIf(prefixCond, expr.Space, expr.Raw("ORDER BY ")), expr.CommaSpace, nil)
+	prefixCond = prefixCond || len(wd.OrderBy) > 0
 
-	b.ExpressIf(&wi.Frame, wi.Frame.Defined, expr.Space, nil)
+	b.ExpressIf(&wd.Frame, wd.Frame.Defined, expr.Space, nil)
 
 	return b.Result()
 }
 
-func (wi *WindowDef) SetFrom(from string) {
-	wi.From = from
+func (wd *WindowDef) SetFrom(from string) {
+	wd.From = from
 }
 
-func (wi *WindowDef) AddPartitionBy(condition ...litsql.Expression) {
-	wi.partitionBy = append(wi.partitionBy, condition...)
+func (wd *WindowDef) AddPartitionBy(condition ...litsql.Expression) {
+	wd.PartitionBy = append(wd.PartitionBy, condition...)
 }
 
-func (wi *WindowDef) AddOrderBy(order ...litsql.Expression) {
-	wi.orderBy = append(wi.orderBy, order...)
+func (wd *WindowDef) AddOrderBy(order ...litsql.Expression) {
+	wd.OrderBy = append(wd.OrderBy, order...)
 }
 
 type NamedWindow struct {
@@ -48,7 +52,11 @@ type NamedWindow struct {
 	Definition WindowDef
 }
 
-func (n NamedWindow) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
+func (n *NamedWindow) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
+	if n.Name == "" {
+		return nil, internal.NewClauseError("'WINDOW' name is required")
+	}
+
 	w.Write(n.Name)
 	w.Write(" AS (")
 	args, err := litsql.Express(w, d, start, &n.Definition)
@@ -57,21 +65,25 @@ func (n NamedWindow) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]a
 }
 
 type Windows struct {
-	Windows []NamedWindow
+	Windows []*NamedWindow
 }
 
-func (wi *Windows) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
+func (c *Windows) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
+	if len(c.Windows) == 0 {
+		return nil, nil
+	}
+
 	b := litsql.NewExpressBuilder(w, d, start)
 
 	w.AddSeparator(true)
 	w.Write("WINDOW ")
 
-	if len(wi.Windows) > 1 {
+	if len(c.Windows) > 1 {
 		w.WriteNewLine()
 		w.Indent()
 	}
-	b.ExpressSlice(expr.CastSlice(wi.Windows), nil, expr.CommaWriterSeparator, nil)
-	if len(wi.Windows) > 1 {
+	b.ExpressSlice(expr.CastSlice(c.Windows), nil, expr.CommaWriterSeparator, nil)
+	if len(c.Windows) > 1 {
 		w.Dedent()
 	}
 
@@ -84,14 +96,14 @@ func (c *Windows) ClauseID() string {
 	return "d8c54a38-29e2-4205-a991-e24c8238ae00"
 }
 
-func (wi *Windows) ClauseOrder() int {
+func (c *Windows) ClauseOrder() int {
 	return clause.OrderWindow
 }
 
-func (wi *Windows) ClauseMerge(other litsql.QueryClause) {
+func (c *Windows) ClauseMerge(other litsql.QueryClause) {
 	o, ok := other.(*Windows)
 	if !ok {
 		panic("invalid merge")
 	}
-	wi.Windows = append(wi.Windows, o.Windows...)
+	c.Windows = append(c.Windows, o.Windows...)
 }

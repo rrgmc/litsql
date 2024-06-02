@@ -8,10 +8,10 @@ import (
 
 func Window[T any](name string) chain.Window[T] {
 	w := &iclause.Windows{
-		Windows: []iclause.NamedWindow{{Name: name}},
+		Windows: []*iclause.NamedWindow{{Name: name}},
 	}
 	return &ichain.WindowChain[T]{
 		Windows:     w,
-		NamedWindow: &w.Windows[0],
+		NamedWindow: w.Windows[0],
 	}
 }
