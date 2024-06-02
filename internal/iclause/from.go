@@ -12,8 +12,8 @@ type From struct {
 	Clause  string
 
 	// Aliases
-	Alias   string
-	Columns []string
+	Alias        string
+	AliasColumns []string
 
 	// Dialect specific modifiers
 	Only           bool // Postgres
@@ -54,9 +54,9 @@ func (c *From) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, er
 		w.Write(c.Alias)
 	}
 
-	if len(c.Columns) > 0 {
+	if len(c.AliasColumns) > 0 {
 		w.Write(internal.OpenPar)
-		for k, cAlias := range c.Columns {
+		for k, cAlias := range c.AliasColumns {
 			if k != 0 {
 				w.Write(", ")
 			}
@@ -80,7 +80,7 @@ func (c *From) ClauseOrder() int {
 
 func (f *From) SetAs(alias string, columns ...string) {
 	f.Alias = alias
-	f.Columns = columns
+	f.AliasColumns = columns
 }
 
 func (f *From) SetOnly() {

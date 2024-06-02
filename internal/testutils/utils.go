@@ -18,13 +18,23 @@ func NewTestBuffer() *TestBuffer {
 	return &TestBuffer{}
 }
 
+func (b *TestBuffer) WriteTestClausePrefix() {
+	_, _ = b.b.WriteString("@")
+	_, _ = b.bnl.WriteString("@")
+}
+
 func (b *TestBuffer) Write(f string, args ...any) {
 	_, _ = b.b.WriteString(fmt.Sprintf(f, args...))
 	_, _ = b.bnl.WriteString(fmt.Sprintf(f, args...))
 }
 
-func (b *TestBuffer) WriteNewLine() {
+func (b *TestBuffer) WriteSeparator() {
 	_, _ = b.b.WriteString(" ")
+	_, _ = b.bnl.WriteString("\n")
+}
+
+func (b *TestBuffer) WriteNewLine() {
+	_, _ = b.b.WriteString("")
 	_, _ = b.bnl.WriteString("\n")
 }
 

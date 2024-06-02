@@ -10,7 +10,7 @@ import (
 )
 
 func TestColumns(t *testing.T) {
-	c := &Columns{
+	clause := &Columns{
 		Columns: []litsql.Expression{
 			expr.Raw("id"),
 			expr.Raw("name"),
@@ -19,7 +19,7 @@ func TestColumns(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("id, name")
-	testutils.TestExpression(t, c, o)
+	testutils.TestExpression(t, clause, o)
 }
 
 func TestColumnsEmpty(t *testing.T) {
