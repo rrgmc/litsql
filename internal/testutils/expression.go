@@ -23,9 +23,9 @@ func TestExpression(t *testing.T, e litsql.Expression, output *TestBuffer, args 
 		assert.NilError(t, err)
 
 		if useNewLine {
-			assert.Equal(t, output.OutputNL(), buf.String())
+			assert.DeepEqual(t, output.OutputNL(), buf.String())
 		} else {
-			assert.Equal(t, output.Output(), buf.String())
+			assert.DeepEqual(t, output.Output(), buf.String())
 		}
 		assert.DeepEqual(t, args, gotArgs)
 	}
