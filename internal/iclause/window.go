@@ -76,11 +76,13 @@ func (c *Windows) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any,
 	b := litsql.NewExpressBuilder(w, d, start)
 
 	w.AddSeparator(true)
-	w.Write("WINDOW ")
+	w.Write("WINDOW")
 
 	if len(c.Windows) > 1 {
-		w.WriteNewLine()
+		w.WriteSeparator()
 		w.Indent()
+	} else {
+		w.Write(" ")
 	}
 	b.ExpressSlice(expr.CastSlice(c.Windows), nil, expr.CommaWriterSeparator, nil)
 	if len(c.Windows) > 1 {
