@@ -32,10 +32,12 @@ func (c *Values) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, 
 
 	// If values are present, use them
 	if len(c.Vals) > 0 {
-		w.Write("VALUES ")
+		w.Write("VALUES")
 		if len(c.Vals) > 1 {
-			w.WriteNewLine()
+			w.WriteSeparator()
 			w.Indent()
+		} else {
+			w.Write(" ")
 		}
 		args, err := litsql.ExpressSlice(w, d, start, expr.CastSlice(c.Vals), nil, expr.CommaWriterSeparator, nil)
 		if len(c.Vals) > 1 {
