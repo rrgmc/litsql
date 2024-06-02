@@ -6,6 +6,7 @@ import (
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
 	"github.com/rrgmc/litsql/internal/testutils"
+	"gotest.tools/v3/assert"
 )
 
 func TestColumns(t *testing.T) {
@@ -18,5 +19,28 @@ func TestColumns(t *testing.T) {
 
 	o := testutils.NewTestBuffer()
 	o.Write("id, name")
-	testutils.CheckExpression(t, c, o)
+	testutils.TestExpression(t, c, o)
+}
+
+func TestColumnsEmpty(t *testing.T) {
+	clause := &Columns{}
+
+	o := testutils.NewTestBuffer()
+	o.Write("*")
+	testutils.TestExpression(t, clause, o)
+}
+
+func TestColumnsMerge(t *testing.T) {
+	clause := testutils.Merge(
+		&Columns{
+			Columns: []litsql.Expression{expr.Raw("id"), expr.Raw("id2")},
+		},
+		&Columns{
+			Columns: []litsql.Expression{expr.Raw("id3"), expr.Raw("id4")},
+		})
+	assert.Assert(t, len(clause.Columns) == 4)
+
+	o := testutils.NewTestBuffer()
+	o.Write("id, id2, id3, id4")
+	testutils.TestExpression(t, clause, o)
 }
