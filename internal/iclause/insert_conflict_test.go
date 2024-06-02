@@ -77,6 +77,7 @@ func TestInsertConflictTarget(t *testing.T) {
 	o.Write("ON CONFLICT ")
 	o.Write("WHERE id = 5 AND age = 10 ")
 	o.Write("DO UPDATE")
+
 	o.WriteSeparator()
 	o.Write("SET")
 	o.WriteSeparator()
