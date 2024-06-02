@@ -16,7 +16,7 @@ type InsertConflictChain[T any] struct {
 }
 
 func (f *InsertConflictChain[T]) Apply(a litsql.QueryBuilder) {
-	a.Add(f.InsertConflict)
+	a.AddQueryClause(f.InsertConflict)
 }
 
 func (f *InsertConflictChain[T]) Where(condition string) chain.InsertConflict[T, imod.InsertConflictUpdateModUM] {

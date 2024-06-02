@@ -22,7 +22,7 @@ type JoinChain[T any] struct {
 }
 
 func (c *JoinChain[T]) Apply(a litsql.QueryBuilder) {
-	a.Add(c.Join)
+	a.AddQueryClause(c.Join)
 }
 
 func (c *JoinChain[T]) As(alias string, columns ...string) chain.Join[T] {

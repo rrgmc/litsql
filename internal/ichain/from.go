@@ -13,7 +13,7 @@ type FromChain[T any] struct {
 }
 
 func (f *FromChain[T]) Apply(a litsql.QueryBuilder) {
-	a.Add(f.From)
+	a.AddQueryClause(f.From)
 }
 
 func (f *FromChain[T]) As(alias string, columns ...string) chain.From[T] {

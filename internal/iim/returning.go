@@ -9,6 +9,6 @@ import (
 
 func Returning[T any](clauses ...string) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Returning{Expressions: expr.SL(clauses)})
+		a.AddQueryClause(&iclause.Returning{Expressions: expr.SL(clauses)})
 	})
 }

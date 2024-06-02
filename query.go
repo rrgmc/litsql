@@ -7,7 +7,7 @@ type Query interface {
 
 type QueryBuilder interface {
 	Dialect() Dialect
-	Add(q QueryClause)
+	AddQueryClause(q QueryClause)
 }
 
 type QueryClause interface {

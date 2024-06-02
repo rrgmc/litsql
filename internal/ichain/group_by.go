@@ -13,7 +13,7 @@ type GroupByChain[T any] struct {
 }
 
 func (c *GroupByChain[T]) Apply(a litsql.QueryBuilder) {
-	a.Add(c.GroupBy)
+	a.AddQueryClause(c.GroupBy)
 }
 
 func (c *GroupByChain[T]) Distinct() chain.GroupBy[T] {

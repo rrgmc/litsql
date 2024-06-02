@@ -13,6 +13,6 @@ func Distinct[T any](on ...string) sq.QueryMod[T] {
 
 func DistinctE[T any](on ...litsql.Expression) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Distinct{On: on})
+		a.AddQueryClause(&iclause.Distinct{On: on})
 	})
 }

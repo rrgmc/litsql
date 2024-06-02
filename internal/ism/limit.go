@@ -15,7 +15,7 @@ func Limit[T any](count int) sq.QueryMod[T] {
 
 func LimitE[T any](count litsql.Expression) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Limit{Count: count})
+		a.AddQueryClause(&iclause.Limit{Count: count})
 	})
 }
 

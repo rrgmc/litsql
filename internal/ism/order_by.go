@@ -13,6 +13,6 @@ func OrderBy[T any](names ...string) sq.QueryMod[T] {
 
 func OrderByE[T any](names ...litsql.Expression) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.OrderBy{Expressions: names})
+		a.AddQueryClause(&iclause.OrderBy{Expressions: names})
 	})
 }

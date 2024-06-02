@@ -37,7 +37,7 @@ func (s *DefaultQuery[T]) WriteQuery(w litsql.Writer, start int) ([]any, error) 
 	w.StartQuery()
 	wroteStart := false
 
-	for i, e := range s.ClauseList() {
+	for i, e := range s.QueryClauseList() {
 		if !wroteStart && e.ClauseOrder() >= s.startOrder {
 			w.AddSeparator(true)
 			w.Write(s.startStr)

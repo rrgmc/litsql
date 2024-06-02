@@ -18,7 +18,7 @@ func ValuesE[T any](clauses ...litsql.Expression) sq.QueryMod[T] {
 		if len(clauses) > 0 {
 			vals = append(vals, clauses)
 		}
-		a.Add(&iclause.Values{
+		a.AddQueryClause(&iclause.Values{
 			Vals: vals,
 		})
 	})
@@ -31,7 +31,7 @@ func ValuesS[T any](clauses ...string) sq.QueryMod[T] {
 // Insert from a query
 func Query[T, A any](q isq.Query[A]) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Values{
+		a.AddQueryClause(&iclause.Values{
 			Query: q,
 		})
 	})

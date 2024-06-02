@@ -15,7 +15,7 @@ type WithChain[T any] struct {
 }
 
 func (c *WithChain[T]) Apply(a litsql.QueryBuilder) {
-	a.Add(c.With)
+	a.AddQueryClause(c.With)
 }
 
 func (c *WithChain[T]) Recursive() chain.With[T] {

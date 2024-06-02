@@ -24,7 +24,7 @@ func (s *Builder) Dialect() litsql.Dialect {
 	return s.d
 }
 
-func (s *Builder) Add(q litsql.QueryClause) {
+func (s *Builder) AddQueryClause(q litsql.QueryClause) {
 	cid := q.ClauseID()
 	if e, ok := s.mlist[cid]; ok {
 		if len(e) == 0 {
@@ -45,7 +45,7 @@ func (s *Builder) Add(q litsql.QueryClause) {
 	s.mlist[cid] = []litsql.QueryClause{q}
 }
 
-func (s *Builder) ClauseList() []litsql.QueryClause {
+func (s *Builder) QueryClauseList() []litsql.QueryClause {
 	var exprs []litsql.QueryClause
 	for _, q := range s.mlist {
 		exprs = append(exprs, q...)

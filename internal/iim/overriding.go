@@ -8,12 +8,12 @@ import (
 
 func OverridingSystem[T any]() sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.InsertOverriding{Overriding: "SYSTEM"})
+		a.AddQueryClause(&iclause.InsertOverriding{Overriding: "SYSTEM"})
 	})
 }
 
 func OverridingUser[T any]() sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.InsertOverriding{Overriding: "USER"})
+		a.AddQueryClause(&iclause.InsertOverriding{Overriding: "USER"})
 	})
 }

@@ -17,7 +17,7 @@ type WindowChain[T any] struct {
 var _ chain.Window[int] = (*WindowChain[int])(nil)
 
 func (f *WindowChain[T]) Apply(a litsql.QueryBuilder) {
-	a.Add(f.Windows)
+	a.AddQueryClause(f.Windows)
 }
 
 func (f *WindowChain[T]) From(name string) chain.Window[T] {

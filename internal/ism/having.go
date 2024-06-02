@@ -13,7 +13,7 @@ func Having[T any](condition string) sq.QueryMod[T] {
 
 func HavingE[T any](condition litsql.Expression) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Having{Conditions: []litsql.Expression{condition}})
+		a.AddQueryClause(&iclause.Having{Conditions: []litsql.Expression{condition}})
 	})
 }
 

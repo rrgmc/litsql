@@ -13,6 +13,6 @@ func Columns[T any](names ...string) sq.QueryMod[T] {
 
 func ColumnsE[T any](names ...litsql.Expression) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Columns{Columns: names})
+		a.AddQueryClause(&iclause.Columns{Columns: names})
 	})
 }

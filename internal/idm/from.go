@@ -8,6 +8,6 @@ import (
 
 func From[T any](table string) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.DeleteFrom{Table: table})
+		a.AddQueryClause(&iclause.DeleteFrom{Table: table})
 	})
 }

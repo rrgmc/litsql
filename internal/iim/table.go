@@ -9,7 +9,7 @@ import (
 
 func Into[T any](name string, columns ...string) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Table{
+		a.AddQueryClause(&iclause.Table{
 			Expression: expr.S(name),
 			Columns:    columns,
 		})
@@ -18,7 +18,7 @@ func Into[T any](name string, columns ...string) sq.QueryMod[T] {
 
 func IntoAs[T any](name string, alias string, columns ...string) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Table{
+		a.AddQueryClause(&iclause.Table{
 			Expression: expr.S(name),
 			Columns:    columns,
 			Alias:      alias,

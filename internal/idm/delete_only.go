@@ -8,6 +8,6 @@ import (
 
 func Only[T any](only bool) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.DeleteOnly{Only: only})
+		a.AddQueryClause(&iclause.DeleteOnly{Only: only})
 	})
 }

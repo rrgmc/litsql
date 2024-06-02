@@ -9,7 +9,7 @@ import (
 
 func Union[T any](q isq.Query[T]) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Combine{
+		a.AddQueryClause(&iclause.Combine{
 			Strategy: iclause.Union,
 			Query:    q,
 			All:      false,
@@ -19,7 +19,7 @@ func Union[T any](q isq.Query[T]) sq.QueryMod[T] {
 
 func UnionAll[T any](q isq.Query[T]) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Combine{
+		a.AddQueryClause(&iclause.Combine{
 			Strategy: iclause.Union,
 			Query:    q,
 			All:      true,
@@ -29,7 +29,7 @@ func UnionAll[T any](q isq.Query[T]) sq.QueryMod[T] {
 
 func Intersect[T any](q isq.Query[T]) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Combine{
+		a.AddQueryClause(&iclause.Combine{
 			Strategy: iclause.Intersect,
 			Query:    q,
 			All:      false,
@@ -39,7 +39,7 @@ func Intersect[T any](q isq.Query[T]) sq.QueryMod[T] {
 
 func IntersectAll[T any](q isq.Query[T]) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Combine{
+		a.AddQueryClause(&iclause.Combine{
 			Strategy: iclause.Intersect,
 			Query:    q,
 			All:      true,
@@ -49,7 +49,7 @@ func IntersectAll[T any](q isq.Query[T]) sq.QueryMod[T] {
 
 func Except[T any](q isq.Query[T]) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Combine{
+		a.AddQueryClause(&iclause.Combine{
 			Strategy: iclause.Except,
 			Query:    q,
 			All:      false,
@@ -59,7 +59,7 @@ func Except[T any](q isq.Query[T]) sq.QueryMod[T] {
 
 func ExceptAll[T any](q isq.Query[T]) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Combine{
+		a.AddQueryClause(&iclause.Combine{
 			Strategy: iclause.Except,
 			Query:    q,
 			All:      true,

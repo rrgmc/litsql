@@ -15,7 +15,7 @@ func Offset[T any](count int) sq.QueryMod[T] {
 
 func OffsetE[T any](count litsql.Expression) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Offset{Count: count})
+		a.AddQueryClause(&iclause.Offset{Count: count})
 	})
 }
 

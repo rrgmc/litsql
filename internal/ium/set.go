@@ -30,7 +30,7 @@ func SetR[T any](raw string) sq.QueryMod[T] {
 
 func SetRE[T any](assignment litsql.Expression) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.Add(&iclause.Set{
+		a.AddQueryClause(&iclause.Set{
 			Set:     []litsql.Expression{assignment},
 			Starter: true,
 		})
