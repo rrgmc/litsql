@@ -1,4 +1,4 @@
-package iclause
+package testutils
 
 import (
 	"bytes"
@@ -12,7 +12,7 @@ import (
 	"gotest.tools/v3/assert"
 )
 
-func checkExpression(t *testing.T, e litsql.Expression, output testBuffer, args ...any) {
+func CheckExpression(t *testing.T, e litsql.Expression, output *TestBuffer, args ...any) {
 	t.Helper()
 
 	for _, useNewLine := range []bool{false, true} {
@@ -22,7 +22,7 @@ func checkExpression(t *testing.T, e litsql.Expression, output testBuffer, args 
 			sq.WithWriterIndentStr(" "),
 		)
 
-		gotArgs, err := e.WriteSQL(w, &testDialect{}, 1)
+		gotArgs, err := e.WriteSQL(w, &TestDialect{}, 1)
 		assert.NilError(t, err)
 
 		if useNewLine {
@@ -34,48 +34,56 @@ func checkExpression(t *testing.T, e litsql.Expression, output testBuffer, args 
 	}
 }
 
-type testBuffer struct {
+type TestBuffer struct {
 	b   bytes.Buffer
 	bnl bytes.Buffer
 }
 
-func (b *testBuffer) Write(f string, args ...any) {
+func NewTestBuffer() *TestBuffer {
+	return &TestBuffer{}
+}
+
+func (b *TestBuffer) Write(f string, args ...any) {
 	_, _ = b.b.WriteString(fmt.Sprintf(f, args...))
 	_, _ = b.bnl.WriteString(fmt.Sprintf(f, args...))
 }
 
-func (b *testBuffer) WriteNewLine() {
+func (b *TestBuffer) WriteNewLine() {
 	_, _ = b.b.WriteString(" ")
 	_, _ = b.bnl.WriteString("\n")
 }
 
-func (b *testBuffer) WriteIndent(amount int) {
+func (b *TestBuffer) WriteIndent(amount int) {
 	_, _ = b.b.WriteString("")
 	_, _ = b.bnl.WriteString(strings.Repeat(" ", amount))
 }
 
-func (b *testBuffer) Output() string {
+func (b *TestBuffer) Output() string {
 	return b.b.String()
 }
 
-func (b *testBuffer) OutputNL() string {
+func (b *TestBuffer) OutputNL() string {
 	return b.bnl.String()
 }
 
-type testDialect struct{}
+type TestDialect struct{}
 
-func (d testDialect) WriteArg(w litsql.Writer, position int) {
+func NewTestDialect() *TestDialect {
+	return &TestDialect{}
+}
+
+func (d TestDialect) WriteArg(w litsql.Writer, position int) {
 	w.Write("$")
 	w.Write(strconv.Itoa(position))
 }
 
-func (d testDialect) WriteQuoted(w litsql.Writer, s string) {
+func (d TestDialect) WriteQuoted(w litsql.Writer, s string) {
 	w.Write(`"`)
 	w.Write(s)
 	w.Write(`"`)
 }
 
-func (d testDialect) WriteCheckQuoted(w litsql.Writer, s string) {
+func (d TestDialect) WriteCheckQuoted(w litsql.Writer, s string) {
 	if !strings.ContainsAny(s, " ") {
 		w.Write(s)
 		return

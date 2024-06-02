@@ -5,6 +5,7 @@ import (
 
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal/testutils"
 )
 
 func TestColumns(t *testing.T) {
@@ -15,7 +16,7 @@ func TestColumns(t *testing.T) {
 		},
 	}
 
-	var o testBuffer
+	o := testutils.NewTestBuffer()
 	o.Write("id, name")
-	checkExpression(t, c, o)
+	testutils.CheckExpression(t, c, o)
 }
