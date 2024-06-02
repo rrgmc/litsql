@@ -7,6 +7,7 @@ import (
 	"github.com/rrgmc/litsql"
 )
 
+// Builder implements [litsql.QueryBuilder].
 type Builder struct {
 	d     litsql.Dialect
 	mlist map[string][]litsql.QueryClause
@@ -30,10 +31,13 @@ func (s *Builder) Add(q litsql.QueryClause) {
 			panic("should never be 0")
 		}
 		if em, ok := e[0].(litsql.QueryClauseMerge); ok {
+			// clause can be merged, merge on the first one.
 			em.ClauseMerge(q)
 		} else if em, ok := e[0].(litsql.QueryClauseMultiple); ok {
+			// clause can have multiple instances.
 			s.mlist[cid] = append(s.mlist[cid], em)
 		} else {
+			// clause can have only a single instance, store only the last one.
 			s.mlist[cid][0] = q
 		}
 		return
