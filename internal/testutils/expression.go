@@ -34,3 +34,17 @@ func TestExpression(t *testing.T, e litsql.Expression, output *TestBuffer, args 
 		assert.DeepEqual(t, args, gotArgs)
 	}
 }
+
+func TestExpressionIsError(t *testing.T, e litsql.Expression) {
+	t.Helper()
+	for _, useNewLine := range []bool{false, true} {
+		var buf bytes.Buffer
+		w := sq.NewWriter(&buf,
+			sq.WithWriterUseNewLine(useNewLine),
+			sq.WithWriterIndentStr(" "),
+		)
+
+		_, err := e.WriteSQL(w, &TestDialect{}, 1)
+		assert.Assert(t, err != nil)
+	}
+}

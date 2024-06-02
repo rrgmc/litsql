@@ -20,15 +20,8 @@ func TestFrom(t *testing.T) {
 }
 
 func TestFromEmpty(t *testing.T) {
-	clause := &From{
-		Table:   nil,
-		Starter: true,
-	}
-
-	o := testutils.NewTestBuffer()
-	o.WriteSeparator()
-	o.Write("FROM ")
-	testutils.TestExpression(t, clause, o)
+	clause := &From{}
+	testutils.TestExpressionIsError(t, clause)
 }
 
 func TestFromNonStarter(t *testing.T) {

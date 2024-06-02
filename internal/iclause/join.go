@@ -1,6 +1,8 @@
 package iclause
 
 import (
+	"fmt"
+
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
 	"github.com/rrgmc/litsql/sq/clause"
@@ -17,6 +19,13 @@ type Join struct {
 }
 
 func (c *Join) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
+	if c.Type == "" {
+		return nil, fmt.Errorf("'JOIN' type is required")
+	}
+	if c.To == nil {
+		return nil, fmt.Errorf("'JOIN' table is required")
+	}
+
 	b := litsql.NewExpressBuilder(w, d, start)
 
 	w.AddSeparator(true)
