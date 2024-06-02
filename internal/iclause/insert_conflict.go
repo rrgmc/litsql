@@ -3,6 +3,7 @@ package iclause
 import (
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/sq/clause"
 )
 
@@ -14,6 +15,10 @@ type InsertConflict struct {
 }
 
 func (c InsertConflict) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
+	if c.Do == "" {
+		return nil, internal.NewClauseError("'ON CONFLICT DO' cannot be empty")
+	}
+
 	b := litsql.NewExpressBuilder(w, d, start)
 
 	w.AddSeparator(true)
