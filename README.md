@@ -75,6 +75,13 @@ The library won't do:
 go get -u github.com/rrgmc/litsql
 ```
 
+## Dialects
+
+* [PostgreSQL](https://pkg.go.dev/github.com/rrgmc/litsql/dialect/psql)
+* [MySQL](https://pkg.go.dev/github.com/rrgmc/litsql/dialect/mysql)
+* [SQLite](https://pkg.go.dev/github.com/rrgmc/litsql/dialect/sqlite)
+
+
 ## Sub-packages
 
  * [structargs](https://pkg.go.dev/github.com/rrgmc/litsql/sq/structargs): get named arguments from struct fields
