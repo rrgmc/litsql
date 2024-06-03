@@ -5,6 +5,7 @@ import (
 
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/internal/testutils"
 	"gotest.tools/v3/assert"
 )
@@ -91,7 +92,7 @@ func TestValuesQueryAndValues(t *testing.T) {
 }
 
 func TestValuesMerge(t *testing.T) {
-	clause, err := testutils.Merge(
+	clause, err := internal.MergeClauses(
 		&Values{
 			Vals: []Value{
 				{

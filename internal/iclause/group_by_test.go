@@ -5,6 +5,7 @@ import (
 
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/internal/testutils"
 	"gotest.tools/v3/assert"
 )
@@ -61,7 +62,7 @@ func TestGroupByWith(t *testing.T) {
 }
 
 func TestGroupByMerge(t *testing.T) {
-	clause, err := testutils.Merge(
+	clause, err := internal.MergeClauses(
 		&GroupBy{
 			Groups: []litsql.Expression{expr.Raw("id"), expr.Raw("id2")},
 		},

@@ -5,6 +5,7 @@ import (
 
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/internal/testutils"
 	"gotest.tools/v3/assert"
 )
@@ -50,7 +51,7 @@ func TestWithEmptyCTE(t *testing.T) {
 }
 
 func TestWithMerge(t *testing.T) {
-	clause, err := testutils.Merge(
+	clause, err := internal.MergeClauses(
 		&With{
 			CTEs: []*CTE{
 				{
@@ -96,7 +97,7 @@ func TestWithMergeRecursive(t *testing.T) {
 	rtrue := true
 	rfalse := false
 
-	_, err := testutils.Merge(
+	_, err := internal.MergeClauses(
 		&With{
 			Recursive: &rtrue,
 			CTEs: []*CTE{

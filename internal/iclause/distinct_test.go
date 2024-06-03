@@ -5,6 +5,7 @@ import (
 
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/internal/testutils"
 	"gotest.tools/v3/assert"
 )
@@ -31,7 +32,7 @@ func TestDistinctEmpty(t *testing.T) {
 }
 
 func TestDistinctMerge(t *testing.T) {
-	clause, err := testutils.Merge(
+	clause, err := internal.MergeClauses(
 		&Distinct{
 			On: []litsql.Expression{expr.Raw("id"), expr.Raw("id2")},
 		},

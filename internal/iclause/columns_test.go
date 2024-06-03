@@ -5,6 +5,7 @@ import (
 
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/internal/testutils"
 	"gotest.tools/v3/assert"
 )
@@ -31,7 +32,7 @@ func TestColumnsEmpty(t *testing.T) {
 }
 
 func TestColumnsMerge(t *testing.T) {
-	clause, err := testutils.Merge(
+	clause, err := internal.MergeClauses(
 		&Columns{
 			Columns: []litsql.Expression{expr.Raw("id"), expr.Raw("id2")},
 		},

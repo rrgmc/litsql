@@ -5,6 +5,7 @@ import (
 
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/internal/testutils"
 	"gotest.tools/v3/assert"
 )
@@ -32,7 +33,7 @@ func TestWhereEmpty(t *testing.T) {
 }
 
 func TestWhereMerge(t *testing.T) {
-	clause, err := testutils.Merge(
+	clause, err := internal.MergeClauses(
 		&Where{
 			Conditions: []litsql.Expression{expr.Raw("id = 5"), expr.Raw("age = 10")},
 		},

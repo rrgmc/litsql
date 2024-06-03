@@ -7,17 +7,25 @@ import (
 )
 
 type DefaultQuery[T any] struct {
-	*sq.Builder
+	builder    *sq.Builder
 	startOrder int
 	startStr   string
 }
 
 func NewDefaultQuery[T any](d litsql.Dialect, startOrder int, startStr string) *DefaultQuery[T] {
 	return &DefaultQuery[T]{
-		Builder:    sq.NewQueryBuilder(d),
+		builder:    sq.NewQueryBuilder(d),
 		startOrder: startOrder,
 		startStr:   startStr,
 	}
+}
+
+func (s *DefaultQuery[T]) Dialect() litsql.Dialect {
+	return s.builder.Dialect()
+}
+
+func (s *DefaultQuery[T]) AddQueryClause(q litsql.QueryClause) {
+	s.builder.AddQueryClause(q)
 }
 
 func (s *DefaultQuery[T]) WriteSQL(w litsql.Writer, _ litsql.Dialect, start int) ([]any, error) {
@@ -37,7 +45,7 @@ func (s *DefaultQuery[T]) WriteQuery(w litsql.Writer, start int) ([]any, error) 
 	w.StartQuery()
 	wroteStart := false
 
-	clauses, err := s.QueryClauseList()
+	clauses, err := s.builder.QueryClauseList()
 	if err != nil {
 		return nil, err
 	}

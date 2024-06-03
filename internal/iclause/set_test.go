@@ -5,6 +5,7 @@ import (
 
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/internal/testutils"
 	"gotest.tools/v3/assert"
 )
@@ -46,7 +47,7 @@ func TestSetEmptyStarter(t *testing.T) {
 }
 
 func TestSetMerge(t *testing.T) {
-	clause, err := testutils.Merge(
+	clause, err := internal.MergeClauses(
 		&Set{
 			Starter: true,
 			Set:     []litsql.Expression{expr.Raw("id = 5"), expr.Raw("age = 10")},

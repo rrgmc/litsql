@@ -31,10 +31,6 @@ func (s *Builder) Dialect() litsql.Dialect {
 func (s *Builder) AddQueryClause(q litsql.QueryClause) {
 	cid := q.ClauseID()
 	s.mlist[cid] = append(s.mlist[cid], q)
-	// if e, ok := s.mlist[cid]; ok {
-	// 	s.mlist[cid] = append(s.mlist[cid], q)
-	// }
-	// s.mlist[cid] = []litsql.QueryClause{q}
 }
 
 func (s *Builder) QueryClauseList() ([]litsql.QueryClause, error) {
@@ -47,13 +43,11 @@ func (s *Builder) QueryClauseList() ([]litsql.QueryClause, error) {
 		if len(e) == 0 {
 			return nil, errors.New("invalid condition: clause list should never be 0")
 		}
-		if em, ok := e[0].(litsql.QueryClauseMerge); ok {
+		if _, ok := e[0].(litsql.QueryClauseMerge); ok {
 			// clause can be merged, merge on the first one.
-			for ei := 1; ei < len(e); ei++ {
-				err := em.ClauseMerge(e[ei])
-				if err != nil {
-					return nil, fmt.Errorf("error merging clause: %w", err)
-				}
+			em, err := internal.MergeClauses(e...)
+			if err != nil {
+				return nil, fmt.Errorf("error merging clauses: %w", err)
 			}
 			exprs = append(exprs, em)
 		} else if _, ok := e[0].(litsql.QueryClauseMultiple); ok {
