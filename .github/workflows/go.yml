@@ -25,6 +25,14 @@ jobs:
       run: go build -v ./...
     - name: Test
       run: go test -v -race -covermode atomic -coverprofile=profile.cov ./...
+
+    - name: Build structargs
+      working-directory: ./sq/structargs
+      run: go build -v ./...
+    - name: Test structargs
+      working-directory: ./sq/structargs
+      run: go test -v ./...
+
     - name: Upload coverage
       uses: shogo82148/actions-goveralls@v1
       with:
