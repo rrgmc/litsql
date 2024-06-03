@@ -32,7 +32,7 @@ func TestOrderByEmpty(t *testing.T) {
 }
 
 func TestOrderByMerge(t *testing.T) {
-	clause := testutils.Merge(
+	clause, err := testutils.Merge(
 		&OrderBy{
 			Expressions: []litsql.Expression{expr.Raw("id"), expr.Raw("id2")},
 		},
@@ -40,6 +40,7 @@ func TestOrderByMerge(t *testing.T) {
 			Expressions: []litsql.Expression{expr.Raw("id3"), expr.Raw("id4")},
 		})
 	assert.Assert(t, len(clause.Expressions) == 4)
+	assert.NilError(t, err)
 
 	o := testutils.NewTestBuffer()
 	o.WriteSeparator()

@@ -132,7 +132,7 @@ func TestWindowFrame(t *testing.T) {
 }
 
 func TestWindowMerge(t *testing.T) {
-	clause := testutils.Merge(
+	clause, err := testutils.Merge(
 		&Windows{
 			Windows: []*NamedWindow{
 				{
@@ -159,6 +159,7 @@ func TestWindowMerge(t *testing.T) {
 				},
 			},
 		})
+	assert.NilError(t, err)
 	assert.Assert(t, len(clause.Windows) == 2)
 
 	o := testutils.NewTestBuffer()

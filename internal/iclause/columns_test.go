@@ -31,13 +31,14 @@ func TestColumnsEmpty(t *testing.T) {
 }
 
 func TestColumnsMerge(t *testing.T) {
-	clause := testutils.Merge(
+	clause, err := testutils.Merge(
 		&Columns{
 			Columns: []litsql.Expression{expr.Raw("id"), expr.Raw("id2")},
 		},
 		&Columns{
 			Columns: []litsql.Expression{expr.Raw("id3"), expr.Raw("id4")},
 		})
+	assert.NilError(t, err)
 	assert.Assert(t, len(clause.Columns) == 4)
 
 	o := testutils.NewTestBuffer()

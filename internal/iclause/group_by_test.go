@@ -61,13 +61,14 @@ func TestGroupByWith(t *testing.T) {
 }
 
 func TestGroupByMerge(t *testing.T) {
-	clause := testutils.Merge(
+	clause, err := testutils.Merge(
 		&GroupBy{
 			Groups: []litsql.Expression{expr.Raw("id"), expr.Raw("id2")},
 		},
 		&GroupBy{
 			Groups: []litsql.Expression{expr.Raw("id3"), expr.Raw("id4")},
 		})
+	assert.NilError(t, err)
 	assert.Assert(t, len(clause.Groups) == 4)
 
 	o := testutils.NewTestBuffer()

@@ -91,7 +91,7 @@ func TestValuesQueryAndValues(t *testing.T) {
 }
 
 func TestValuesMerge(t *testing.T) {
-	clause := testutils.Merge(
+	clause, err := testutils.Merge(
 		&Values{
 			Vals: []Value{
 				{
@@ -108,6 +108,7 @@ func TestValuesMerge(t *testing.T) {
 				},
 			},
 		})
+	assert.NilError(t, err)
 	assert.Assert(t, len(clause.Vals) == 2)
 
 	o := testutils.NewTestBuffer()

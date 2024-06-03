@@ -32,13 +32,14 @@ func TestHavingEmpty(t *testing.T) {
 }
 
 func TestHavingMerge(t *testing.T) {
-	clause := testutils.Merge(
+	clause, err := testutils.Merge(
 		&Having{
 			Conditions: []litsql.Expression{expr.Raw("id = 5"), expr.Raw("age = 10")},
 		},
 		&Having{
 			Conditions: []litsql.Expression{expr.Raw("id = 6"), expr.Raw("age = 11")},
 		})
+	assert.NilError(t, err)
 	assert.Assert(t, len(clause.Conditions) == 4)
 
 	o := testutils.NewTestBuffer()

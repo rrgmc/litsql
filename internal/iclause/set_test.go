@@ -46,7 +46,7 @@ func TestSetEmptyStarter(t *testing.T) {
 }
 
 func TestSetMerge(t *testing.T) {
-	clause := testutils.Merge(
+	clause, err := testutils.Merge(
 		&Set{
 			Starter: true,
 			Set:     []litsql.Expression{expr.Raw("id = 5"), expr.Raw("age = 10")},
@@ -55,6 +55,7 @@ func TestSetMerge(t *testing.T) {
 			Starter: true,
 			Set:     []litsql.Expression{expr.Raw("id = 6"), expr.Raw("age = 11")},
 		})
+	assert.NilError(t, err)
 	assert.Assert(t, len(clause.Set) == 4)
 
 	o := testutils.NewTestBuffer()

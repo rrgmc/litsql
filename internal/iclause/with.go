@@ -8,14 +8,14 @@ import (
 )
 
 type With struct {
-	Recursive bool
+	Recursive *bool
 	CTEs      []*CTE
 }
 
 func (c *With) WriteSQL(wr litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
 	wr.AddSeparator(true)
 	prefix := "WITH "
-	if c.Recursive {
+	if c.Recursive != nil && *c.Recursive {
 		prefix = "WITH RECURSIVE "
 	}
 	return litsql.ExpressSlice(wr, d, start, expr.CastSlice(c.CTEs), expr.Raw(prefix), expr.CommaWriterSeparator, nil)
@@ -36,7 +36,7 @@ func (c *With) ClauseMerge(other litsql.QueryClause) error {
 	if !ok {
 		return internal.NewClauseErrorInvalidMerge("With")
 	}
-	if c.Recursive != o.Recursive {
+	if c.Recursive != nil && o.Recursive != nil && *c.Recursive != *o.Recursive {
 		return internal.NewClauseErrorInvalidMergeHasChanges("With")
 	}
 	c.CTEs = append(c.CTEs, o.CTEs...)
@@ -44,5 +44,6 @@ func (c *With) ClauseMerge(other litsql.QueryClause) error {
 }
 
 func (c *With) SetRecursive(r bool) {
-	c.Recursive = r
+	c.Recursive = new(bool)
+	*c.Recursive = r
 }

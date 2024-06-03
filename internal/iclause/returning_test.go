@@ -33,13 +33,14 @@ func TestReturningEmpty(t *testing.T) {
 }
 
 func TestReturningMerge(t *testing.T) {
-	clause := testutils.Merge(
+	clause, err := testutils.Merge(
 		&Returning{
 			Expressions: []litsql.Expression{expr.Raw("id"), expr.Raw("id2")},
 		},
 		&Returning{
 			Expressions: []litsql.Expression{expr.Raw("id3"), expr.Raw("id4")},
 		})
+	assert.NilError(t, err)
 	assert.Assert(t, len(clause.Expressions) == 4)
 
 	o := testutils.NewTestBuffer()

@@ -50,7 +50,7 @@ func TestWithEmptyCTE(t *testing.T) {
 }
 
 func TestWithMerge(t *testing.T) {
-	clause := testutils.Merge(
+	clause, err := testutils.Merge(
 		&With{
 			CTEs: []*CTE{
 				{
@@ -81,6 +81,7 @@ func TestWithMerge(t *testing.T) {
 				},
 			},
 		})
+	assert.NilError(t, err)
 	assert.Assert(t, len(clause.CTEs) == 2)
 
 	o := testutils.NewTestBuffer()
@@ -89,4 +90,44 @@ func TestWithMerge(t *testing.T) {
 	o.WriteSeparator()
 	o.Write("testCTE2(id, name) AS test_query2")
 	testutils.TestWriterExpression(t, clause, o)
+}
+
+func TestWithMergeRecursive(t *testing.T) {
+	rtrue := true
+	rfalse := false
+
+	_, err := testutils.Merge(
+		&With{
+			Recursive: &rtrue,
+			CTEs: []*CTE{
+				{
+					Name: "testCTE",
+					Columns: []litsql.Expression{
+						expr.Raw("id"),
+						expr.Raw("name"),
+					},
+					Query: litsql.QueryFunc{
+						D: testutils.NewTestDialect(),
+						E: expr.Raw("test_query"),
+					},
+				},
+			},
+		},
+		&With{
+			Recursive: &rfalse,
+			CTEs: []*CTE{
+				{
+					Name: "testCTE2",
+					Columns: []litsql.Expression{
+						expr.Raw("id"),
+						expr.Raw("name"),
+					},
+					Query: litsql.QueryFunc{
+						D: testutils.NewTestDialect(),
+						E: expr.Raw("test_query2"),
+					},
+				},
+			},
+		})
+	assert.ErrorIs(t, err, litsql.ErrClause)
 }
