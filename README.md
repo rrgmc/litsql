@@ -55,7 +55,9 @@ The library will do:
 
  * ensure clause ordering
  * enforce some kind of code structure
- * 
+ * be type-safe without using `any` too much
+ * guarantee whitespace. **extra whitespace is considered a bug**
+ * output correct argument characters for each database dialect
 
 The library won't do:
 
@@ -63,7 +65,7 @@ The library won't do:
  * quoting
  * execute queries in databases
  * provide helper expressions to build things like "IsEQ()", "Not(expression)", "LT(value)". These are expected to be written as strings
- * 
+ * be an ORM (**never**)
 
 ## Installation
 
