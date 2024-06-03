@@ -11,10 +11,7 @@ import (
 func TestCombine(t *testing.T) {
 	clause := &Combine{
 		Strategy: "UNION",
-		Query: litsql.QueryFunc{
-			D: testutils.NewTestDialect(),
-			E: expr.Raw("test_query"),
-		},
+		Query:    litsql.QueryFunc(testutils.NewTestDialect(), expr.Raw("test_query"), nil),
 	}
 
 	o := testutils.NewTestBuffer()
@@ -27,10 +24,7 @@ func TestCombineAll(t *testing.T) {
 	clause := &Combine{
 		Strategy: "UNION",
 		All:      true,
-		Query: litsql.QueryFunc{
-			D: testutils.NewTestDialect(),
-			E: expr.Raw("test_query"),
-		},
+		Query:    litsql.QueryFunc(testutils.NewTestDialect(), expr.Raw("test_query"), nil),
 	}
 
 	o := testutils.NewTestBuffer()

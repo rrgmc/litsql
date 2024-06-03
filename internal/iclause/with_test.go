@@ -19,10 +19,7 @@ func TestWith(t *testing.T) {
 					expr.Raw("id"),
 					expr.Raw("name"),
 				},
-				Query: litsql.QueryFunc{
-					D: testutils.NewTestDialect(),
-					E: expr.Raw("test_query"),
-				},
+				Query: litsql.QueryFunc(testutils.NewTestDialect(), expr.Raw("test_query"), nil),
 			},
 		},
 	}
@@ -60,10 +57,7 @@ func TestWithMerge(t *testing.T) {
 						expr.Raw("id"),
 						expr.Raw("name"),
 					},
-					Query: litsql.QueryFunc{
-						D: testutils.NewTestDialect(),
-						E: expr.Raw("test_query"),
-					},
+					Query: litsql.QueryFunc(testutils.NewTestDialect(), expr.Raw("test_query"), nil),
 				},
 			},
 		},
@@ -75,10 +69,7 @@ func TestWithMerge(t *testing.T) {
 						expr.Raw("id"),
 						expr.Raw("name"),
 					},
-					Query: litsql.QueryFunc{
-						D: testutils.NewTestDialect(),
-						E: expr.Raw("test_query2"),
-					},
+					Query: litsql.QueryFunc(testutils.NewTestDialect(), expr.Raw("test_query2"), nil),
 				},
 			},
 		})
@@ -107,10 +98,7 @@ func TestWithMergeRecursive(t *testing.T) {
 						expr.Raw("id"),
 						expr.Raw("name"),
 					},
-					Query: litsql.QueryFunc{
-						D: testutils.NewTestDialect(),
-						E: expr.Raw("test_query"),
-					},
+					Query: litsql.QueryFunc(testutils.NewTestDialect(), expr.Raw("test_query"), nil),
 				},
 			},
 		},
@@ -123,10 +111,7 @@ func TestWithMergeRecursive(t *testing.T) {
 						expr.Raw("id"),
 						expr.Raw("name"),
 					},
-					Query: litsql.QueryFunc{
-						D: testutils.NewTestDialect(),
-						E: expr.Raw("test_query2"),
-					},
+					Query: litsql.QueryFunc(testutils.NewTestDialect(), expr.Raw("test_query2"), nil),
 				},
 			},
 		})

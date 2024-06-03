@@ -63,10 +63,7 @@ func TestValuesMultiple(t *testing.T) {
 
 func TestValuesQuery(t *testing.T) {
 	clause := &Values{
-		Query: litsql.QueryFunc{
-			D: testutils.NewTestDialect(),
-			E: expr.Raw("test_query"),
-		},
+		Query: litsql.QueryFunc(testutils.NewTestDialect(), expr.Raw("test_query"), nil),
 	}
 
 	o := testutils.NewTestBuffer()
@@ -77,10 +74,7 @@ func TestValuesQuery(t *testing.T) {
 
 func TestValuesQueryAndValues(t *testing.T) {
 	clause := &Values{
-		Query: litsql.QueryFunc{
-			D: testutils.NewTestDialect(),
-			E: expr.Raw("test_query"),
-		},
+		Query: litsql.QueryFunc(testutils.NewTestDialect(), expr.Raw("test_query"), nil),
 		Vals: []Value{
 			{
 				expr.Raw("5"),

@@ -34,19 +34,25 @@ type QueryClauseMultiple interface {
 // helpers
 
 // QueryFunc is a functional implementation of Query.
-type QueryFunc struct {
-	D Dialect
-	E Expression
-	F func(w Writer, start int) (args []any, err error) // if nil, WriteSQL will be called directly.
+// If f is nil, WriteSQL will be called directly by WriteQuery.
+func QueryFunc(dialect Dialect, expression Expression, f func(w Writer, start int) (args []any, err error)) Query {
+	return &queryFunc{dialect, expression, f}
 }
 
-func (q QueryFunc) WriteQuery(w Writer, start int) (args []any, err error) {
-	if q.F == nil {
-		return q.WriteSQL(w, q.D, start)
+// queryFunc is a functional implementation of Query.
+type queryFunc struct {
+	dialect    Dialect
+	expression Expression
+	fn         func(w Writer, start int) (args []any, err error) // if nil, WriteSQL will be called directly by WriteQuery.
+}
+
+func (q queryFunc) WriteQuery(w Writer, start int) (args []any, err error) {
+	if q.fn == nil {
+		return q.WriteSQL(w, q.dialect, start)
 	}
-	return q.F(w, start)
+	return q.fn(w, start)
 }
 
-func (q QueryFunc) WriteSQL(w Writer, d Dialect, start int) (args []any, err error) {
-	return q.E.WriteSQL(w, d, start)
+func (q queryFunc) WriteSQL(w Writer, d Dialect, start int) (args []any, err error) {
+	return q.expression.WriteSQL(w, d, start)
 }
