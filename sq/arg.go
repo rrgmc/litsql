@@ -7,38 +7,38 @@ import (
 
 // Arg adds a named argument.
 func Arg(name string) litsql.Argument {
-	return namedArgument{name: name}
+	return &internal.NamedArgument{ArgName: name}
 }
 
 // ArgDefault adds a named argument with a default value.
 func ArgDefault(name string, defaultValue any) litsql.Argument {
-	return namedArgumentWithDefault{name: name, defaultValue: defaultValue}
+	return &internal.NamedArgumentWithDefault{ArgName: name, DefaultValue: defaultValue}
 }
 
 // DBArg adds a DB named argument.
 func DBArg(name string) litsql.Argument {
-	return dbNamedArgument{name: name}
+	return &internal.DBNamedArgument{ArgName: name}
 }
 
 // DBArgDefault adds a DB named argument with a default value.
 func DBArgDefault(name string, defaultValue any) litsql.Argument {
-	return dbNamedArgumentWithDefault{name: name, defaultValue: defaultValue}
+	return &internal.DBNamedArgumentWithDefault{ArgName: name, DefaultValue: defaultValue}
 }
 
 // ArgFunc returns the argument value in a callback.
 func ArgFunc(fn func() (any, error)) litsql.Argument {
-	return funcArgument{fn: fn}
+	return &internal.FuncArgument{FN: fn}
 }
 
 // Args wraps parseable argument results.
 type Args []any
 
 func (a Args) Parse(values ...any) ([]any, error) {
-	return ParseArgs(a, values...)
+	return internal.ParseArgs(a, values...)
 }
 
 func (a Args) ParseValues(values ...litsql.ArgValues) ([]any, error) {
-	return ParseArgValues(a, values...)
+	return internal.ParseArgValues(a, values...)
 }
 
 // ParseArgs replaces all [litsql.Argument] instances in args with named values.
@@ -49,61 +49,4 @@ func ParseArgs(args []any, values ...any) ([]any, error) {
 // ParseArgValues replaces all [litsql.Argument] instances in args with named values.
 func ParseArgValues(args []any, values ...litsql.ArgValues) ([]any, error) {
 	return internal.ParseArgValues(args, values...)
-}
-
-// implementation
-
-type namedArgument struct {
-	litsql.ArgumentBase
-	name string
-}
-
-func (a namedArgument) Name() string {
-	return a.name
-}
-
-type namedArgumentWithDefault struct {
-	litsql.ArgumentBase
-	name         string
-	defaultValue any
-}
-
-func (a namedArgumentWithDefault) Name() string {
-	return a.name
-}
-
-func (a namedArgumentWithDefault) Value() (any, error) {
-	return a.defaultValue, nil
-}
-
-type dbNamedArgument struct {
-	litsql.ArgumentBase
-	name string
-}
-
-func (a dbNamedArgument) DBName() string {
-	return a.name
-}
-
-type dbNamedArgumentWithDefault struct {
-	litsql.ArgumentBase
-	name         string
-	defaultValue any
-}
-
-func (a dbNamedArgumentWithDefault) DBName() string {
-	return a.name
-}
-
-func (a dbNamedArgumentWithDefault) Value() (any, error) {
-	return a.defaultValue, nil
-}
-
-type funcArgument struct {
-	litsql.ArgumentBase
-	fn func() (any, error)
-}
-
-func (f funcArgument) Value() (any, error) {
-	return f.fn()
 }
