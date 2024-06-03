@@ -21,7 +21,7 @@ func ExampleSelect_literalSimple() {
 		// WHERE u.age > $1
 		sm.WhereC("u.age > ?", 40),
 		// WHERE u.city_id = $2
-		sm.WhereC("u.city_id = ?", sq.Arg("city_id")),
+		sm.WhereC("u.city_id = ?", sq.NamedArg("city_id")),
 		// AND u.deleted_at IS NOT NULL
 		sm.Where("u.deleted_at IS NOT NULL"),
 		// ORDER BY u.name ASC, u.age DESC

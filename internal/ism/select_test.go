@@ -65,10 +65,10 @@ func TestSelectBasicNamedArgs(t *testing.T) {
 		Columns[testutils.TestTag]("u.id", "u.name", "ua.address"),
 		From[testutils.TestTag]("users AS u"),
 		InnerJoin[testutils.TestTag]("users_address AS a").On("users.id = a.user_id"),
-		WhereC[testutils.TestTag]("age < ?", sq.Arg("age")),
+		WhereC[testutils.TestTag]("age < ?", sq.NamedArg("age")),
 		OrderBy[testutils.TestTag]("name ASC"),
-		OffsetA[testutils.TestTag](sq.Arg("offset")),
-		LimitA[testutils.TestTag](sq.Arg("limit")),
+		OffsetA[testutils.TestTag](sq.NamedArg("offset")),
+		LimitA[testutils.TestTag](sq.NamedArg("limit")),
 	)
 
 	testutils.TestQueryParseArgs(t, query, expectedQuery, map[string]any{

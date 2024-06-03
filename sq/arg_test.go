@@ -11,10 +11,10 @@ import (
 func TestParseArgValues(t *testing.T) {
 	args := []any{
 		1,
-		Arg("first"),
-		ArgDefault("second", 55),
-		DBArg("third"),
-		DBArgDefault("fourth", 77),
+		NamedArg("first"),
+		NamedArg("second", WithDefaultValue(55)),
+		DBNamedArg("third"),
+		DBNamedArg("fourth", WithDefaultValue(77)),
 		ArgFunc(func() (any, error) {
 			return "in-func", nil
 		}),

@@ -5,24 +5,29 @@ import (
 	"github.com/rrgmc/litsql/internal"
 )
 
-// Arg adds a named argument.
-func Arg(name string) litsql.Argument {
+// NamedArg adds a named argument for replacement with ParseArgs.
+func NamedArg(name string, options ...ArgOption) litsql.Argument {
+	var optns argOptions
+	for _, opt := range options {
+		opt(&optns)
+	}
+	if optns.defaultValue != nil {
+		return &internal.NamedArgumentWithDefault{ArgName: name, DefaultValue: *optns.defaultValue}
+	}
 	return &internal.NamedArgument{ArgName: name}
 }
 
-// ArgDefault adds a named argument with a default value.
-func ArgDefault(name string, defaultValue any) litsql.Argument {
-	return &internal.NamedArgumentWithDefault{ArgName: name, DefaultValue: defaultValue}
-}
-
-// DBArg adds a DB named argument.
-func DBArg(name string) litsql.Argument {
+// DBNamedArg adds a DB-native named argument (for databases that support it).
+// The end value will be wrapped in [sql.Named].
+func DBNamedArg(name string, options ...ArgOption) litsql.Argument {
+	var optns argOptions
+	for _, opt := range options {
+		opt(&optns)
+	}
+	if optns.defaultValue != nil {
+		return &internal.DBNamedArgumentWithDefault{ArgName: name, DefaultValue: *optns.defaultValue}
+	}
 	return &internal.DBNamedArgument{ArgName: name}
-}
-
-// DBArgDefault adds a DB named argument with a default value.
-func DBArgDefault(name string, defaultValue any) litsql.Argument {
-	return &internal.DBNamedArgumentWithDefault{ArgName: name, DefaultValue: defaultValue}
 }
 
 // ArgFunc returns the argument value in a callback.
@@ -38,4 +43,17 @@ func ParseArgs(args []any, values any) ([]any, error) {
 // ParseArgValues replaces all [litsql.Argument] instances in args with named values.
 func ParseArgValues(args []any, values litsql.ArgValues) ([]any, error) {
 	return internal.ParseArgValues(args, values)
+}
+
+type ArgOption func(options *argOptions)
+
+// WithDefaultValue sets a default value if the argument name was not passed.
+func WithDefaultValue(defaultValue any) ArgOption {
+	return func(options *argOptions) {
+		options.defaultValue = &defaultValue
+	}
+}
+
+type argOptions struct {
+	defaultValue *any
 }
