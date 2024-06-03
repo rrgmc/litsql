@@ -77,7 +77,7 @@ go get -u github.com/rrgmc/litsql
 
 ## Sub-packages
 
- * [structargs](https://github.com/rrgmc/litsql/tree/master/sq/structargs): get named arguments from struct fields
+ * [structargs](https://pkg.go.dev/github.com/rrgmc/litsql/sq/structargs): get named arguments from struct fields
 
 ## Examples
 
