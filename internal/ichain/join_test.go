@@ -31,4 +31,5 @@ func TestJoinChain(t *testing.T) {
 	assert.Equal(t, true, chain.Join.To.WithOrdinality)
 	assert.DeepEqual(t, []string{"using_str"}, chain.Join.Using)
 	assert.Assert(t, len(chain.Join.On) == 1)
+	testutils.TestExpression(t, chain.Join.On[0], "on_str")
 }
