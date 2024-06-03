@@ -1,5 +1,6 @@
 package litsql
 
+// Express writes the expression to the output. If e is nil, nothing is done.
 func Express(w Writer, d Dialect, start int, e Expression) ([]any, error) {
 	if e == nil {
 		return nil, nil
