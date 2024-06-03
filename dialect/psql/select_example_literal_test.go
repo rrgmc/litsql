@@ -16,7 +16,7 @@ func ExampleSelect_literalSimple() {
 		sm.Columns("u.id", "u.name"),
 		// , u.created_at, u.updated_at
 		sm.Columns("u.created_at", "u.updated_at"),
-		// FROM users As u
+		// FROM users AS u
 		sm.From("users AS u"),
 		// WHERE u.age > $1
 		sm.WhereC("u.age > ?", 40),
