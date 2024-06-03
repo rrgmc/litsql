@@ -30,17 +30,6 @@ func ArgFunc(fn func() (any, error)) litsql.Argument {
 	return &internal.FuncArgument{FN: fn}
 }
 
-// Args wraps parseable argument results.
-type Args []any
-
-func (a Args) Parse(values ...any) ([]any, error) {
-	return internal.ParseArgs(a, values...)
-}
-
-func (a Args) ParseValues(values ...litsql.ArgValues) ([]any, error) {
-	return internal.ParseArgValues(a, values...)
-}
-
 // ParseArgs replaces all [litsql.Argument] instances in args with named values.
 func ParseArgs(args []any, values ...any) ([]any, error) {
 	return internal.ParseArgs(args, values...)

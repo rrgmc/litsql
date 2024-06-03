@@ -9,7 +9,7 @@ import (
 )
 
 func TestParseArgValues(t *testing.T) {
-	args := Args{
+	args := []any{
 		1,
 		Arg("first"),
 		ArgDefault("second", 55),
@@ -19,7 +19,7 @@ func TestParseArgValues(t *testing.T) {
 			return "in-func", nil
 		}),
 	}
-	pargs, err := args.Parse(map[string]any{
+	pargs, err := ParseArgs(args, map[string]any{
 		"first": 99,
 		"third": 45,
 	})

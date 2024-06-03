@@ -34,5 +34,5 @@ func TestArgValues(t *testing.T) {
 
 	assert.NilError(t, err)
 	assert.Equal(t, "INSERT INTO users (id, name) VALUES ($1, $2)", queryStr)
-	assert.DeepEqual(t, sq.Args([]any{123, "John Doe"}), args)
+	assert.DeepEqual(t, []any{123, "John Doe"}, args)
 }

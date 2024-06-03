@@ -8,7 +8,7 @@ import (
 type BuildQueryOption = internal.BuildQueryOption
 
 // Build builds a query string and its arguments.
-func Build(q litsql.Query, options ...BuildQueryOption) (string, Args, error) {
+func Build(q litsql.Query, options ...BuildQueryOption) (string, []any, error) {
 	return internal.BuildQuery(q, options...)
 }
 

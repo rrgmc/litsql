@@ -69,6 +69,6 @@ func (s *DefaultQuery[T]) Apply(mods ...sq.QueryMod[T]) {
 	}
 }
 
-func (s *DefaultQuery[T]) Build(options ...sq.BuildQueryOption) (string, sq.Args, error) {
+func (s *DefaultQuery[T]) Build(options ...sq.BuildQueryOption) (string, []any, error) {
 	return sq.Build(s, options...)
 }
