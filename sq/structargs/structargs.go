@@ -5,6 +5,7 @@ import (
 	"github.com/rrgmc/litsql"
 )
 
+// ArgValues returns a [litsql.ArgValues] from struct fields.
 func ArgValues(v any, options ...ArgValuesOption) (litsql.ArgValues, error) {
 	optns := argValuesOptions{
 		tagName: "json",
@@ -17,6 +18,7 @@ func ArgValues(v any, options ...ArgValuesOption) (litsql.ArgValues, error) {
 	}, v)
 }
 
+// ArgValuesFromConfig returns a [litsql.ArgValues] from struct fields using a [mapstructure.DecoderConfig].
 func ArgValuesFromConfig(config *mapstructure.DecoderConfig, v any) (litsql.ArgValues, error) {
 	result := map[string]any{}
 	config.Result = &result
