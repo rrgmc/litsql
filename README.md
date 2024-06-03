@@ -75,6 +75,10 @@ The library won't do:
 go get -u github.com/rrgmc/litsql
 ```
 
+## Sub-packages
+
+ * [structargs](https://github.com/rrgmc/litsql/tree/master/sq/structargs): get named arguments from struct fields
+
 ## Examples
 
 ```go
