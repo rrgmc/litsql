@@ -23,8 +23,12 @@ func BuildQuery(q litsql.Query, options ...BuildQueryOption) (string, []any, err
 		return "", nil, err
 	}
 
-	if len(optns.parseArgs) > 0 {
-		args, err = ParseArgValues(args, optns.parseArgs...)
+	if len(optns.parseArgs) > 0 || len(optns.parseArgValues) > 0 {
+		if len(optns.parseArgs) > 0 {
+			args, err = ParseArgs(args, append(optns.parseArgs, ToAnySlice(optns.parseArgValues)...)...)
+		} else {
+			args, err = ParseArgValues(args, optns.parseArgValues...)
+		}
 		if err != nil {
 			return "", nil, err
 		}
@@ -36,8 +40,9 @@ func BuildQuery(q litsql.Query, options ...BuildQueryOption) (string, []any, err
 type BuildQueryOption func(options *buildQueryOptions)
 
 type buildQueryOptions struct {
-	writerOptions []WriterOption
-	parseArgs     []litsql.ArgValues
+	writerOptions  []WriterOption
+	parseArgs      []any
+	parseArgValues []litsql.ArgValues
 }
 
 // WithBuildQueryWriterOptions adds writer options.
@@ -48,8 +53,15 @@ func WithBuildQueryWriterOptions(writerOptions ...WriterOption) BuildQueryOption
 }
 
 // WithBuildQueryParseArgs adds named argument values.
-func WithBuildQueryParseArgs(argValues ...litsql.ArgValues) BuildQueryOption {
+func WithBuildQueryParseArgs(argValues ...any) BuildQueryOption {
 	return func(options *buildQueryOptions) {
 		options.parseArgs = append(options.parseArgs, argValues...)
+	}
+}
+
+// WithBuildQueryParseArgValues adds named argument values.
+func WithBuildQueryParseArgValues(argValues ...litsql.ArgValues) BuildQueryOption {
+	return func(options *buildQueryOptions) {
+		options.parseArgValues = append(options.parseArgValues, argValues...)
 	}
 }

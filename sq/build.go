@@ -18,6 +18,11 @@ func WithBuildQueryWriterOptions(writerOptions ...WriterOption) BuildQueryOption
 }
 
 // WithBuildQueryParseArgs adds named argument values.
-func WithBuildQueryParseArgs(argValues ...litsql.ArgValues) BuildQueryOption {
+func WithBuildQueryParseArgs(argValues ...any) BuildQueryOption {
 	return internal.WithBuildQueryParseArgs(argValues...)
+}
+
+// WithBuildQueryParseArgValues adds named argument values.
+func WithBuildQueryParseArgValues(argValues ...litsql.ArgValues) BuildQueryOption {
+	return internal.WithBuildQueryParseArgValues(argValues...)
 }

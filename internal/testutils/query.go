@@ -5,7 +5,6 @@ import (
 
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/internal"
-	"github.com/rrgmc/litsql/sq"
 	"gotest.tools/v3/assert"
 )
 
@@ -19,12 +18,13 @@ func TestQuery(t *testing.T, query litsql.Query, expected string, expectedArgs .
 
 func TestQueryParseArgs(t *testing.T, query litsql.Query, expected string, argValues map[string]any, expectedArgs ...any) {
 	t.Helper()
-	queryStr, args, err := internal.BuildQuery(query, internal.WithBuildQueryWriterOptions(internal.WithWriterUseNewLine(false)))
-	assert.NilError(t, err)
-	pargs, err := sq.ParseArgs(args, argValues)
+	queryStr, args, err := internal.BuildQuery(query,
+		internal.WithBuildQueryWriterOptions(internal.WithWriterUseNewLine(false)),
+		internal.WithBuildQueryParseArgs(argValues),
+	)
 	assert.NilError(t, err)
 	assert.Equal(t, expected, queryStr)
-	assert.DeepEqual(t, expectedArgs, pargs)
+	assert.DeepEqual(t, expectedArgs, args)
 }
 
 func TestQueryIsError(t *testing.T, query litsql.Query) {
