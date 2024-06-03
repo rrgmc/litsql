@@ -23,6 +23,19 @@ type DBNamedArgument interface {
 	DBName() string
 }
 
+// ArgValues is the supplier of values for named arguments.
+type ArgValues interface {
+	Get(string) (any, bool)
+}
+
+// MapArgValues is an ArgValues backed from a map[string]any.
+type MapArgValues map[string]any
+
+func (m MapArgValues) Get(s string) (any, bool) {
+	v, ok := m[s]
+	return v, ok
+}
+
 // helpers
 
 type ArgumentBase struct{}

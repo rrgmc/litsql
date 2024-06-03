@@ -1,10 +1,8 @@
 package sq
 
 import (
-	"database/sql"
-	"fmt"
-
 	"github.com/rrgmc/litsql"
+	"github.com/rrgmc/litsql/internal"
 )
 
 // Arg adds a named argument.
@@ -32,11 +30,6 @@ func ArgFunc(fn func() (any, error)) litsql.Argument {
 	return funcArgument{fn: fn}
 }
 
-// ArgValues is the supplier of values for named arguments.
-type ArgValues interface {
-	Get(string) (any, bool)
-}
-
 // Args wraps parseable argument results.
 type Args []any
 
@@ -44,99 +37,21 @@ func (a Args) Parse(values ...any) ([]any, error) {
 	return ParseArgs(a, values...)
 }
 
-func (a Args) ParseValues(values ...ArgValues) ([]any, error) {
+func (a Args) ParseValues(values ...litsql.ArgValues) ([]any, error) {
 	return ParseArgValues(a, values...)
 }
 
 // ParseArgs replaces all [litsql.Argument] instances in args with named values.
 func ParseArgs(args []any, values ...any) ([]any, error) {
-	var av []ArgValues
-	for _, v := range values {
-		switch xv := v.(type) {
-		case ArgValues:
-			av = append(av, xv)
-		case map[string]any:
-			av = append(av, MapArgValues(xv))
-		default:
-			return nil, fmt.Errorf("unsupported arg values type: %T", v)
-		}
-	}
-	return ParseArgValues(args, av...)
+	return internal.ParseArgs(args, values...)
 }
 
 // ParseArgValues replaces all [litsql.Argument] instances in args with named values.
-func ParseArgValues(args []any, values ...ArgValues) ([]any, error) {
-	var ret []any
-	for _, arg := range args {
-		// if both Named and Valued, check Named first, Valued as a fallback.
-		atvalued, isvalued := arg.(litsql.ValuedArgument)
-
-		atname := ""
-		isatname := false
-		isatdbnamed := false
-
-		if at, ok := arg.(litsql.NamedArgument); ok {
-			atname = at.Name()
-			isatname = true
-		} else if at, ok := arg.(litsql.DBNamedArgument); ok {
-			atname = at.DBName()
-			isatname = true
-			isatdbnamed = true
-		}
-
-		if isatname {
-			var nok bool
-			var v any
-
-			if len(values) == 0 {
-				nok = false
-			} else {
-				for _, value := range values {
-					v, nok = value.Get(atname)
-					if nok {
-						break
-					}
-				}
-			}
-			if !nok {
-				if !isvalued {
-					return nil, fmt.Errorf("value for argument '%s' not found", atname)
-				}
-			} else {
-				if isatdbnamed {
-					v = sql.Named(atname, v)
-				}
-				ret = append(ret, v)
-				continue
-			}
-		}
-
-		if isvalued {
-			v, err := atvalued.Value()
-			if err != nil {
-				return nil, err
-			}
-			if isatdbnamed {
-				v = sql.Named(atname, v)
-			}
-			ret = append(ret, v)
-			continue
-		}
-
-		ret = append(ret, arg)
-	}
-	return ret, nil
+func ParseArgValues(args []any, values ...litsql.ArgValues) ([]any, error) {
+	return internal.ParseArgValues(args, values...)
 }
 
 // implementation
-
-// MapArgValues is an ArgValues backed from a map[string]any.
-type MapArgValues map[string]any
-
-func (m MapArgValues) Get(s string) (any, bool) {
-	v, ok := m[s]
-	return v, ok
-}
 
 type namedArgument struct {
 	litsql.ArgumentBase
@@ -157,8 +72,8 @@ func (a namedArgumentWithDefault) Name() string {
 	return a.name
 }
 
-func (f namedArgumentWithDefault) Value() (any, error) {
-	return f.defaultValue, nil
+func (a namedArgumentWithDefault) Value() (any, error) {
+	return a.defaultValue, nil
 }
 
 type dbNamedArgument struct {

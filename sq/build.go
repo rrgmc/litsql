@@ -5,7 +5,19 @@ import (
 	"github.com/rrgmc/litsql/internal"
 )
 
+type BuildQueryOption = internal.BuildQueryOption
+
 // Build builds a query string and its arguments.
-func Build(q litsql.Query, writerOptions ...WriterOption) (string, Args, error) {
-	return internal.BuildQuery(q, writerOptions...)
+func Build(q litsql.Query, options ...BuildQueryOption) (string, Args, error) {
+	return internal.BuildQuery(q, options...)
+}
+
+// WithBuildQueryWriterOptions adds writer options.
+func WithBuildQueryWriterOptions(writerOptions ...WriterOption) BuildQueryOption {
+	return internal.WithBuildQueryWriterOptions(writerOptions...)
+}
+
+// WithBuildQueryParseArgs adds named argument values.
+func WithBuildQueryParseArgs(argValues ...litsql.ArgValues) BuildQueryOption {
+	return internal.WithBuildQueryParseArgs(argValues...)
 }

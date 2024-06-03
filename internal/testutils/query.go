@@ -5,25 +5,36 @@ import (
 
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/internal"
+	"github.com/rrgmc/litsql/sq"
 	"gotest.tools/v3/assert"
 )
 
 func TestQuery(t *testing.T, query litsql.Query, expected string, expectedArgs ...any) {
 	t.Helper()
-	queryStr, args, err := internal.BuildQuery(query, internal.WithWriterUseNewLine(false))
+	queryStr, args, err := internal.BuildQuery(query, internal.WithBuildQueryWriterOptions(internal.WithWriterUseNewLine(false)))
 	assert.NilError(t, err)
 	assert.Equal(t, expected, queryStr)
 	assert.DeepEqual(t, expectedArgs, args)
 }
 
+func TestQueryParseArgs(t *testing.T, query litsql.Query, expected string, argValues map[string]any, expectedArgs ...any) {
+	t.Helper()
+	queryStr, args, err := internal.BuildQuery(query, internal.WithBuildQueryWriterOptions(internal.WithWriterUseNewLine(false)))
+	assert.NilError(t, err)
+	pargs, err := sq.ParseArgs(args, argValues)
+	assert.NilError(t, err)
+	assert.Equal(t, expected, queryStr)
+	assert.DeepEqual(t, expectedArgs, pargs)
+}
+
 func TestQueryIsError(t *testing.T, query litsql.Query) {
 	t.Helper()
-	_, _, err := internal.BuildQuery(query, internal.WithWriterUseNewLine(false))
+	_, _, err := internal.BuildQuery(query, internal.WithBuildQueryWriterOptions(internal.WithWriterUseNewLine(false)))
 	assert.Assert(t, err != nil)
 }
 
 func TestQueryErrorIs(t *testing.T, query litsql.Query, errIs error) {
 	t.Helper()
-	_, _, err := internal.BuildQuery(query, internal.WithWriterUseNewLine(false))
+	_, _, err := internal.BuildQuery(query, internal.WithBuildQueryWriterOptions(internal.WithWriterUseNewLine(false)))
 	assert.ErrorIs(t, err, errIs)
 }
