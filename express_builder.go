@@ -1,7 +1,16 @@
 package litsql
 
 // ExpressBuilder builds arguments in a sequence of Express calls.
-type ExpressBuilder struct {
+type ExpressBuilder interface {
+	Express(e Expression)
+	ExpressIf(e Expression, cond bool, prefix, suffix Expression)
+	ExpressSlice(expressions []Expression, prefix, sep, suffix Expression)
+	WriteQuery(e Query)
+	Result() ([]any, error)
+	Err() error
+}
+
+type expressBuilder struct {
 	w     Writer
 	d     Dialect
 	start int
@@ -9,15 +18,15 @@ type ExpressBuilder struct {
 	err   error
 }
 
-func NewExpressBuilder(w Writer, d Dialect, start int) *ExpressBuilder {
-	return &ExpressBuilder{
+func NewExpressBuilder(w Writer, d Dialect, start int) ExpressBuilder {
+	return &expressBuilder{
 		w:     w,
 		d:     d,
 		start: start,
 	}
 }
 
-func (h *ExpressBuilder) Express(e Expression) {
+func (h *expressBuilder) Express(e Expression) {
 	if h.err != nil || e == nil {
 		return
 	}
@@ -29,7 +38,7 @@ func (h *ExpressBuilder) Express(e Expression) {
 	h.args = append(h.args, newArgs...)
 }
 
-func (h *ExpressBuilder) ExpressIf(e Expression, cond bool, prefix, suffix Expression) {
+func (h *expressBuilder) ExpressIf(e Expression, cond bool, prefix, suffix Expression) {
 	if h.err != nil || e == nil {
 		return
 	}
@@ -41,7 +50,7 @@ func (h *ExpressBuilder) ExpressIf(e Expression, cond bool, prefix, suffix Expre
 	h.args = append(h.args, newArgs...)
 }
 
-func (h *ExpressBuilder) ExpressSlice(expressions []Expression, prefix, sep, suffix Expression) {
+func (h *expressBuilder) ExpressSlice(expressions []Expression, prefix, sep, suffix Expression) {
 	if h.err != nil || len(expressions) == 0 {
 		return
 	}
@@ -53,7 +62,7 @@ func (h *ExpressBuilder) ExpressSlice(expressions []Expression, prefix, sep, suf
 	h.args = append(h.args, newArgs...)
 }
 
-func (h *ExpressBuilder) WriteQuery(e Query) {
+func (h *expressBuilder) WriteQuery(e Query) {
 	if h.err != nil || e == nil {
 		return
 	}
@@ -65,10 +74,10 @@ func (h *ExpressBuilder) WriteQuery(e Query) {
 	h.args = append(h.args, newArgs...)
 }
 
-func (h *ExpressBuilder) Err() error {
+func (h *expressBuilder) Err() error {
 	return h.err
 }
 
-func (h *ExpressBuilder) Result() ([]any, error) {
+func (h *expressBuilder) Result() ([]any, error) {
 	return h.args, h.err
 }
