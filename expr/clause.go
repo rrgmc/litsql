@@ -9,7 +9,8 @@ import (
 	"github.com/rrgmc/litsql"
 )
 
-// C parses the query, replacing any "?" with the dialect-specific argument matching, and wraps the passed arguments.
+// C parses the query, replacing any "?" with the dialect-specific argument matcher, and wraps the passed arguments.
+// If the argument is a [litsql.Expression], it will be output in place.
 func C(query string, args ...any) litsql.Expression {
 	return &clause{
 		query: query,
