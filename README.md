@@ -230,6 +230,16 @@ query := psql.Select(
 query := psql.Select(
     sm.Columns("id", "name", "age"),
     sm.From("users"),
+    sm.WhereC("age IN (?)", expr.In(15, 30, 45)),
+)
+```
+
+#### WHERE value IN using named arguments
+
+```go
+query := psql.Select(
+    sm.Columns("id", "name", "age"),
+    sm.From("users"),
     sm.WhereC("age IN (?)", expr.In(
         sq.NamedArg("first"),
         sq.NamedArg("second"),
@@ -242,6 +252,21 @@ qs, args, err := query.Build(
         "second": 30,
         "third":  45,
     }),
+)
+```
+
+#### WHERE value IN subselect
+
+```go
+query := psql.Select(
+    sm.Columns("id", "name", "age"),
+    sm.From("users"),
+    sm.WhereC("region IN ?",
+        psql.Select(
+            sm.Columns("region"),
+            sm.From("top_regions"),
+        ),
+    ),
 )
 ```
 
