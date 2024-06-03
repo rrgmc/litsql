@@ -12,6 +12,10 @@ func Values[T any](values ...any) sq.QueryMod[T] {
 	return ValuesE[T](expr.Args(values)...)
 }
 
+func ValuesAN[T any](argumentNames ...string) sq.QueryMod[T] {
+	return ValuesE[T](expr.ArgsNamed(argumentNames...)...)
+}
+
 func ValuesE[T any](clauses ...litsql.Expression) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
 		var vals []iclause.Value

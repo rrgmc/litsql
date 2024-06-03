@@ -10,11 +10,25 @@ func Arg(value any) litsql.Expression {
 	return arg{value: value}
 }
 
+// ArgNamed outputs the dialect-specific argument matcher, and wraps the passed value as a named argument.
+func ArgNamed(name string) litsql.Expression {
+	return Arg(internal.NamedArgument{ArgName: name})
+}
+
 // Args wraps multiple values in Arg.
 func Args(values []any) []litsql.Expression {
 	var ret []litsql.Expression
 	for _, v := range values {
 		ret = append(ret, Arg(v))
+	}
+	return ret
+}
+
+// ArgsNamed wraps multiple values in ArgNamed.
+func ArgsNamed(names ...string) []litsql.Expression {
+	var ret []litsql.Expression
+	for _, n := range names {
+		ret = append(ret, ArgNamed(n))
 	}
 	return ret
 }

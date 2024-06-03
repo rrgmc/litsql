@@ -36,6 +36,10 @@ func Values(values ...any) psql.InsertMod {
 	return iim.Values[tag.InsertTag](values...)
 }
 
+func ValuesAN(argumentNames ...string) psql.InsertMod {
+	return iim.ValuesAN[tag.InsertTag](argumentNames...)
+}
+
 func ValuesE(clauses ...litsql.Expression) psql.InsertMod {
 	return iim.ValuesE[tag.InsertTag](clauses...)
 }
