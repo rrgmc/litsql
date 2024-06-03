@@ -31,11 +31,11 @@ func ArgFunc(fn func() (any, error)) litsql.Argument {
 }
 
 // ParseArgs replaces all [litsql.Argument] instances in args with named values.
-func ParseArgs(args []any, values ...any) ([]any, error) {
-	return internal.ParseArgs(args, values...)
+func ParseArgs(args []any, values any) ([]any, error) {
+	return internal.ParseArgs(args, values)
 }
 
 // ParseArgValues replaces all [litsql.Argument] instances in args with named values.
-func ParseArgValues(args []any, values ...litsql.ArgValues) ([]any, error) {
-	return internal.ParseArgValues(args, values...)
+func ParseArgValues(args []any, values litsql.ArgValues) ([]any, error) {
+	return internal.ParseArgValues(args, values)
 }

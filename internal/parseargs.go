@@ -7,24 +7,29 @@ import (
 	"github.com/rrgmc/litsql"
 )
 
-// ParseArgs replaces all [litsql.Argument] instances in args with named values.
-func ParseArgs(args []any, values ...any) ([]any, error) {
-	var av []litsql.ArgValues
-	for _, v := range values {
-		switch xv := v.(type) {
-		case litsql.ArgValues:
-			av = append(av, xv)
-		case map[string]any:
-			av = append(av, litsql.MapArgValues(xv))
-		default:
-			return nil, fmt.Errorf("unsupported arg values type: %T", v)
-		}
+// GetArgValuesInstance gets the [litsql.ArgValues] instance from the passed parameter.
+func GetArgValuesInstance(values any) (litsql.ArgValues, error) {
+	switch xv := values.(type) {
+	case litsql.ArgValues:
+		return xv, nil
+	case map[string]any:
+		return litsql.MapArgValues(xv), nil
+	default:
+		return nil, fmt.Errorf("unsupported arg values type: %T", values)
 	}
-	return ParseArgValues(args, av...)
+}
+
+// ParseArgs replaces all [litsql.Argument] instances in args with named values.
+func ParseArgs(args []any, values any) ([]any, error) {
+	av, err := GetArgValuesInstance(values)
+	if err != nil {
+		return nil, err
+	}
+	return ParseArgValues(args, av)
 }
 
 // ParseArgValues replaces all [litsql.Argument] instances in args with named values.
-func ParseArgValues(args []any, values ...litsql.ArgValues) ([]any, error) {
+func ParseArgValues(args []any, values litsql.ArgValues) ([]any, error) {
 	var ret []any
 	for _, arg := range args {
 		// if both Named and Valued, check Named first, Valued as a fallback.
@@ -47,15 +52,10 @@ func ParseArgValues(args []any, values ...litsql.ArgValues) ([]any, error) {
 			var nok bool
 			var v any
 
-			if len(values) == 0 {
+			if values == nil {
 				nok = false
 			} else {
-				for _, value := range values {
-					v, nok = value.Get(atname)
-					if nok {
-						break
-					}
-				}
+				v, nok = values.Get(atname)
 			}
 			if !nok {
 				if !isvalued {
