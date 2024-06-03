@@ -209,6 +209,100 @@ func ExampleSelect_literalWith() {
 }
 ```
 
+## Tasks
+
+#### Select from subselect
+
+```go
+query := psql.Select(
+    sm.Columns("id", "name", "age"),
+    sm.FromQ(psql.Select(
+        sm.Columns("id", "name", "age"),
+        sm.From("users"),
+        sm.Where("age > 10"),
+    )),
+)
+```
+
+#### WHERE value IN
+
+```go
+query := psql.Select(
+    sm.Columns("id", "name", "age"),
+    sm.From("users"),
+    sm.WhereC("age IN (?)", expr.In(
+        sq.NamedArg("first"),
+        sq.NamedArg("second"),
+        sq.NamedArg("third"),
+    )),
+)
+qs, args, err := query.Build(
+    sq.WithBuildParseArgs(map[string]any{
+        "first":  15,
+        "second": 30,
+        "third":  45,
+    }),
+)
+```
+
+#### Add clauses in inline callback
+
+```go
+query := psql.Select(
+    sm.Columns("id", "name", "age"),
+    sm.From("users"),
+    sm.Apply(func(a psql.SelectModApply) {
+        a.Apply(
+            sm.Where("age > 10"),
+        )
+    }),
+)
+```
+
+#### Use IS NULL or a condition depending on a flag
+
+```go
+v := any(32)
+query := psql.Select(
+    sm.Columns("id", "name", "age"),
+    sm.From("users"),
+    sm.WhereC("u.age ?",
+        expr.ExprIfElse(v != nil,
+            expr.C("> ?", 32),
+            expr.S("IS NULL"))),
+)
+```
+
+#### OR expression
+
+```go
+query := psql.Select(
+    sm.Columns("id", "name", "age"),
+    sm.From("users"),
+    sm.WhereE(
+        expr.Or(
+            "(age > 10 AND city_id = 12)",
+            "(age < 10 AND city_id = 15)",
+        ),
+    ),
+)
+```
+
+#### UNION
+
+```go
+query := psql.Select(
+    sm.Columns("id", "name", "age"),
+    sm.From("users"),
+    sm.Where("age < 10"),
+    sm.Union(psql.Select(
+        sm.Columns("id", "name", "age"),
+        sm.From("users"),
+        sm.Where("age > 50"),
+    )),
+)
+```
+
 ## Reference
 
 This library is heavily inspired by the excellent [Bob Go SQL Access Toolkit](https://bob.stephenafamo.com/). Its base 
