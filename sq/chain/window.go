@@ -8,8 +8,10 @@ import (
 type Window[T any] interface {
 	sq.QueryMod[T]
 	From(name string) Window[T]
-	PartitionBy(condition ...litsql.Expression) Window[T]
-	OrderBy(order ...litsql.Expression) Window[T]
+	PartitionBy(condition ...string) Window[T]
+	PartitionByE(condition ...litsql.Expression) Window[T]
+	OrderBy(order ...string) Window[T]
+	OrderByE(order ...litsql.Expression) Window[T]
 	Range() Window[T]
 	Rows() Window[T]
 	Groups() Window[T]
