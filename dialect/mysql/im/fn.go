@@ -7,8 +7,8 @@ import (
 	"github.com/rrgmc/litsql/internal/iim"
 )
 
-func Func(f func(a mysql.InsertModApply)) mysql.InsertMod {
-	return iim.Func(f)
+func Apply(f func(a mysql.InsertModApply)) mysql.InsertMod {
+	return iim.Apply(f)
 }
 
 func Into(name string, columns ...string) mysql.InsertMod {

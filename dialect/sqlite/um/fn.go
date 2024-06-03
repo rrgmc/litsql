@@ -7,6 +7,10 @@ import (
 	"github.com/rrgmc/litsql/internal/ium"
 )
 
+func Apply(f func(a sqlite.UpdateModApply)) sqlite.UpdateMod {
+	return ium.Apply(f)
+}
+
 func From(table string) FromChain {
 	return ium.From[tag.UpdateTag](table)
 }
@@ -17,10 +21,6 @@ func FromE(table litsql.Expression) FromChain {
 
 func FromQ(q sqlite.SelectQuery) FromChain {
 	return ium.FromQ[tag.UpdateTag, tag.SelectTag](q)
-}
-
-func Func(f func(a sqlite.UpdateModApply)) sqlite.UpdateMod {
-	return ium.Func(f)
 }
 
 func InnerJoin(table string) JoinChain {

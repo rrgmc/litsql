@@ -7,12 +7,12 @@ import (
 	"github.com/rrgmc/litsql/internal/idm"
 )
 
-func From(table string) sqlite.DeleteMod {
-	return idm.From[tag.DeleteTag](table)
+func Apply(f func(a sqlite.DeleteModApply)) sqlite.DeleteMod {
+	return idm.Apply(f)
 }
 
-func Func(f func(a sqlite.DeleteModApply)) sqlite.DeleteMod {
-	return idm.Func(f)
+func From(table string) sqlite.DeleteMod {
+	return idm.From[tag.DeleteTag](table)
 }
 
 func InnerJoin(table string) JoinChain {

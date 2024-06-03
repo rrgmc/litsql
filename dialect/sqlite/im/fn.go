@@ -7,8 +7,8 @@ import (
 	"github.com/rrgmc/litsql/internal/iim"
 )
 
-func Func(f func(a sqlite.InsertModApply)) sqlite.InsertMod {
-	return iim.Func(f)
+func Apply(f func(a sqlite.InsertModApply)) sqlite.InsertMod {
+	return iim.Apply(f)
 }
 
 func Into(name string, columns ...string) sqlite.InsertMod {

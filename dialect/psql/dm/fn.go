@@ -7,12 +7,12 @@ import (
 	"github.com/rrgmc/litsql/internal/idm"
 )
 
-func From(table string) psql.DeleteMod {
-	return idm.From[tag.DeleteTag](table)
+func Apply(f func(a psql.DeleteModApply)) psql.DeleteMod {
+	return idm.Apply(f)
 }
 
-func Func(f func(a psql.DeleteModApply)) psql.DeleteMod {
-	return idm.Func(f)
+func From(table string) psql.DeleteMod {
+	return idm.From[tag.DeleteTag](table)
 }
 
 func InnerJoin(table string) JoinChain {

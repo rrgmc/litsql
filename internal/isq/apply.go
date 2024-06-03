@@ -13,7 +13,7 @@ func (f *funcApply[T]) Apply(mod ...sq.QueryMod[T]) {
 	f.mods = append(f.mods, mod...)
 }
 
-func Func[T any](f func(a sq.QueryModApply[T])) sq.QueryMod[T] {
+func Apply[T any](f func(a sq.QueryModApply[T])) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
 		fi := &funcApply[T]{}
 		f(fi)

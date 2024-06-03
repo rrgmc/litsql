@@ -7,6 +7,10 @@ import (
 	"github.com/rrgmc/litsql/internal/ism"
 )
 
+func Apply(f func(a psql.SelectModApply)) psql.SelectMod {
+	return ism.Apply(f)
+}
+
 func Columns(names ...string) psql.SelectMod {
 	return ism.Columns[tag.SelectTag](names...)
 }
@@ -33,10 +37,6 @@ func FromE(table litsql.Expression) FromChain {
 
 func FromQ(q psql.SelectQuery) FromChain {
 	return ism.FromQ[tag.SelectTag, tag.SelectTag](q)
-}
-
-func Func(f func(a psql.SelectModApply)) psql.SelectMod {
-	return ism.Func(f)
 }
 
 func GroupBy(columns ...string) GroupByChain {
