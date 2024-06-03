@@ -3,6 +3,7 @@ package iclause
 import (
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/sq/clause"
 )
 
@@ -46,12 +47,16 @@ func (c *GroupBy) ClauseOrder() int {
 	return clause.OrderGroupBy
 }
 
-func (c *GroupBy) ClauseMerge(other litsql.QueryClause) {
+func (c *GroupBy) ClauseMerge(other litsql.QueryClause) error {
 	o, ok := other.(*GroupBy)
 	if !ok {
-		panic("invalid merge")
+		return internal.NewClauseErrorInvalidMerge("GroupBy")
+	}
+	if c.Distinct != o.Distinct || o.With != "" {
+		return internal.NewClauseErrorInvalidMergeHasChanges("GroupBy")
 	}
 	c.Groups = append(c.Groups, o.Groups...)
+	return nil
 }
 
 func (g *GroupBy) SetGroupWith(with string) {

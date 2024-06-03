@@ -3,6 +3,7 @@ package iclause
 import (
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/sq/clause"
 )
 
@@ -28,10 +29,11 @@ func (c *Having) ClauseOrder() int {
 	return clause.OrderHaving
 }
 
-func (c *Having) ClauseMerge(other litsql.QueryClause) {
+func (c *Having) ClauseMerge(other litsql.QueryClause) error {
 	o, ok := other.(*Having)
 	if !ok {
-		panic("invalid merge")
+		return internal.NewClauseErrorInvalidMerge("Having")
 	}
 	c.Conditions = append(c.Conditions, o.Conditions...)
+	return nil
 }

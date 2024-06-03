@@ -3,6 +3,7 @@ package iclause
 import (
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/sq/clause"
 )
 
@@ -28,10 +29,11 @@ func (c *OrderBy) ClauseOrder() int {
 	return clause.OrderOrderBy
 }
 
-func (c *OrderBy) ClauseMerge(other litsql.QueryClause) {
+func (c *OrderBy) ClauseMerge(other litsql.QueryClause) error {
 	o, ok := other.(*OrderBy)
 	if !ok {
-		panic("invalid merge")
+		return internal.NewClauseErrorInvalidMerge("OrderBy")
 	}
 	c.Expressions = append(c.Expressions, o.Expressions...)
+	return nil
 }

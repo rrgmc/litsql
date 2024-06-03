@@ -44,12 +44,13 @@ func TestBuilderArgs(t *testing.T) {
 }
 
 func TestBuilderMergeMultiple(t *testing.T) {
-	qmergefunc := func(this, other litsql.QueryClause) {
+	qmergefunc := func(this, other litsql.QueryClause) error {
 		xthis, thisok := this.(*testQueryClauseMerge)
 		xother, otherok := other.(*testQueryClauseMerge)
 		assert.Assert(t, thisok, "'this' query clause is not of the expected type")
 		assert.Assert(t, otherok, "'other' query clause is not of the expected type")
 		xthis.e = expr.J(xthis.e, xother.e)
+		return nil
 	}
 
 	d := testutils.NewTestDialect()
@@ -93,11 +94,6 @@ func TestBuilderMergeMultiple(t *testing.T) {
 		cid:    "c5",
 		e:      expr.Raw("C5_"),
 	})
-	qb.AddQueryClause(&testQueryClause{
-		corder: 10,
-		cid:    "c10",
-		e:      expr.Raw("C102_"),
-	})
 	qb.AddQueryClause(&testQueryClauseMerge{
 		testQueryClause: testQueryClause{
 			corder: 8,
@@ -107,15 +103,37 @@ func TestBuilderMergeMultiple(t *testing.T) {
 		m: qmergefunc,
 	})
 
-	builderTest(t, d, qb, "M2_C5_R8_R8_M9_M9_C102_")
+	builderTest(t, d, qb, "M2_C5_R8_R8_M9_M9_C10_")
+}
+
+func TestBuilderMergeNoMultiple(t *testing.T) {
+	d := testutils.NewTestDialect()
+	qb := NewQueryBuilder(d)
+	qb.AddQueryClause(&testQueryClause{
+		corder: 10,
+		cid:    "c10",
+		e:      expr.Raw("C10_"),
+	})
+	qb.AddQueryClause(&testQueryClause{
+		corder: 10,
+		cid:    "c10",
+		e:      expr.Raw("C102_"),
+	})
+
+	_, err := qb.QueryClauseList()
+	assert.ErrorIs(t, err, litsql.ErrClause)
 }
 
 func builderTest(t *testing.T, d litsql.Dialect, qb *Builder, querystr string, args ...any) {
+	t.Helper()
+
 	var buf bytes.Buffer
 	w := NewWriter(&buf,
 		WithWriterUseNewLine(false))
 	eb := litsql.NewExpressBuilder(w, d, 1)
-	for _, e := range qb.QueryClauseList() {
+	clauses, err := qb.QueryClauseList()
+	assert.NilError(t, err)
+	for _, e := range clauses {
 		eb.Express(e)
 	}
 
@@ -149,13 +167,13 @@ func (c *testQueryClause) ClauseOrder() int {
 
 type testQueryClauseMerge struct {
 	testQueryClause
-	m func(this, other litsql.QueryClause)
+	m func(this, other litsql.QueryClause) error
 }
 
 var _ litsql.QueryClauseMerge = (*testQueryClauseMerge)(nil)
 
-func (c *testQueryClauseMerge) ClauseMerge(other litsql.QueryClause) {
-	c.m(c, other)
+func (c *testQueryClauseMerge) ClauseMerge(other litsql.QueryClause) error {
+	return c.m(c, other)
 }
 
 type testQueryClauseMultiple struct {

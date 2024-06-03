@@ -60,15 +60,16 @@ func (c *Values) ClauseOrder() int {
 	return clause.OrderValues
 }
 
-func (c *Values) ClauseMerge(other litsql.QueryClause) {
+func (c *Values) ClauseMerge(other litsql.QueryClause) error {
 	o, ok := other.(*Values)
 	if !ok {
-		panic("invalid merge")
+		return internal.NewClauseErrorInvalidMerge("Values")
 	}
 	if o.Query != nil {
 		c.Query = o.Query
 	}
 	c.Vals = append(c.Vals, o.Vals...)
+	return nil
 }
 
 type Value []litsql.Expression

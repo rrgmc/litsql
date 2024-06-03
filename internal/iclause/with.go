@@ -3,6 +3,7 @@ package iclause
 import (
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/sq/clause"
 )
 
@@ -30,15 +31,16 @@ func (c *With) ClauseOrder() int {
 	return clause.OrderWith
 }
 
-func (c *With) ClauseMerge(other litsql.QueryClause) {
+func (c *With) ClauseMerge(other litsql.QueryClause) error {
 	o, ok := other.(*With)
 	if !ok {
-		panic("invalid merge")
+		return internal.NewClauseErrorInvalidMerge("With")
 	}
-	if o.Recursive {
-		c.Recursive = o.Recursive
+	if c.Recursive != o.Recursive {
+		return internal.NewClauseErrorInvalidMergeHasChanges("With")
 	}
 	c.CTEs = append(c.CTEs, o.CTEs...)
+	return nil
 }
 
 func (c *With) SetRecursive(r bool) {

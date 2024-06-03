@@ -22,7 +22,7 @@ type QueryClause interface {
 // QueryClauseMerge can be implemented by QueryClause when its data can be merged.
 type QueryClauseMerge interface {
 	QueryClause
-	ClauseMerge(other QueryClause)
+	ClauseMerge(other QueryClause) error
 }
 
 // QueryClauseMultiple can be implemented by QueryClause to signal multiple instances can be added.

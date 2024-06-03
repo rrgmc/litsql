@@ -102,10 +102,11 @@ func (c *Windows) ClauseOrder() int {
 	return clause.OrderWindow
 }
 
-func (c *Windows) ClauseMerge(other litsql.QueryClause) {
+func (c *Windows) ClauseMerge(other litsql.QueryClause) error {
 	o, ok := other.(*Windows)
 	if !ok {
-		panic("invalid merge")
+		return internal.NewClauseErrorInvalidMerge("Window")
 	}
 	c.Windows = append(c.Windows, o.Windows...)
+	return nil
 }

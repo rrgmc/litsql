@@ -3,6 +3,7 @@ package iclause
 import (
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/sq/clause"
 )
 
@@ -30,10 +31,11 @@ func (c *Distinct) ClauseOrder() int {
 	return clause.OrderDistinct
 }
 
-func (c *Distinct) ClauseMerge(other litsql.QueryClause) {
+func (c *Distinct) ClauseMerge(other litsql.QueryClause) error {
 	o, ok := other.(*Distinct)
 	if !ok {
-		panic("invalid merge")
+		return internal.NewClauseErrorInvalidMerge("Distinct")
 	}
 	c.On = append(c.On, o.On...)
+	return nil
 }

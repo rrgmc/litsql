@@ -39,13 +39,14 @@ func (c *Set) ClauseOrder() int {
 	return clause.OrderSet
 }
 
-func (c *Set) ClauseMerge(other litsql.QueryClause) {
+func (c *Set) ClauseMerge(other litsql.QueryClause) error {
 	o, ok := other.(*Set)
 	if !ok {
-		panic("invalid merge")
+		return internal.NewClauseErrorInvalidMerge("Set")
 	}
-	if o.Starter {
-		c.Starter = true
+	if c.Starter != o.Starter {
+		return internal.NewClauseErrorInvalidMergeHasChanges("Set")
 	}
 	c.Set = append(c.Set, o.Set...)
+	return nil
 }
