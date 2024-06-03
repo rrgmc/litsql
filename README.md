@@ -1,5 +1,7 @@
 # litsql - Literal SQL query builder
 
+[![Test Status](https://github.com/rrgmc/litsql/actions/workflows/go.yml/badge.svg)](https://github.com/rrgmc/litsql/actions/workflows/go.yml) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/rrgmc/litsql) [![Go Reference](https://pkg.go.dev/badge/github.com/rrgmc/litsql.svg)](https://pkg.go.dev/github.com/rrgmc/litsql) [![Go Report Card](https://goreportcard.com/badge/github.com/rrgmc/litsql)](https://goreportcard.com/report/github.com/rrgmc/litsql) ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/rrgmc/litsql) [![Coverage Status](https://coveralls.io/repos/github/rrgmc/litsql/badge.svg)](https://coveralls.io/github/rrgmc/litsql)
+
 `litsql` is a Golang string concatenation library **disguised** as an SQL query builder.
 
 Ok, it really is an SQL query builder, but it aims to be an **easier-to-use replacement for raw SQL strings**.
