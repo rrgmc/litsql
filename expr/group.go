@@ -4,10 +4,12 @@ import (
 	"github.com/rrgmc/litsql"
 )
 
+// Paren returns an expression what outputs the list of expressions comma-separated with parenthesis around.
 func Paren(expr ...string) litsql.Expression {
 	return ParenE(SL(expr)...)
 }
 
+// ParenE returns an expression what outputs the list of expressions comma-separated with parenthesis around.
 func ParenE(expr ...litsql.Expression) litsql.Expression {
 	return group(expr)
 }

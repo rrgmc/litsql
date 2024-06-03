@@ -9,6 +9,7 @@ import (
 	"github.com/rrgmc/litsql"
 )
 
+// C parses the query, replacing any "?" with the dialect-specific argument matching, and wraps the passed arguments.
 func C(query string, args ...any) litsql.Expression {
 	return &clause{
 		query: query,
@@ -92,7 +93,7 @@ func (r clause) convertQuestionMarks(w litsql.Writer, d litsql.Dialect, startAt 
 
 func clauseWriteArg(w litsql.Writer, d litsql.Dialect, startAt int, arg any) (args []any, err error) {
 	if ex, ok := arg.(litsql.Expression); ok {
-		// inner Expression
+		// inner [litsql.Expression]
 		eargs, err := ex.WriteSQL(w, d, startAt)
 		if err != nil {
 			return nil, err

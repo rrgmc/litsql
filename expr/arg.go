@@ -5,10 +5,12 @@ import (
 	"github.com/rrgmc/litsql/internal"
 )
 
+// Arg outputs the dialect-specific argument matcher, and wraps the passed value.
 func Arg(value any) litsql.Expression {
 	return arg{value: value}
 }
 
+// Args wraps multiple values in Arg.
 func Args(values []any) []litsql.Expression {
 	var ret []litsql.Expression
 	for _, v := range values {
@@ -17,6 +19,7 @@ func Args(values []any) []litsql.Expression {
 	return ret
 }
 
+// In outputs the list of values as Arg separated by commas.
 func In(values ...any) litsql.Expression {
 	return argList{
 		values:    values,
@@ -24,6 +27,7 @@ func In(values ...any) litsql.Expression {
 	}
 }
 
+// InP outputs the list of values as Arg separated by commas, wrapped in parentheses.
 func InP(values ...any) litsql.Expression {
 	return argList{
 		values:    values,

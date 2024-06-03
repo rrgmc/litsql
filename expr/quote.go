@@ -4,6 +4,7 @@ import (
 	"github.com/rrgmc/litsql"
 )
 
+// Quote outputs quoted and joined, something like "users"."id".
 func Quote(aa ...string) litsql.Expression {
 	ss := make([]string, 0, len(aa))
 	for _, v := range aa {
@@ -15,6 +16,7 @@ func Quote(aa ...string) litsql.Expression {
 	return quoted{data: ss}
 }
 
+// QuoteCheck outputs quoted and joined, something like "users"."id", only if each string needs to be quoted.
 func QuoteCheck(aa ...string) litsql.Expression {
 	ss := make([]string, 0, len(aa))
 	for _, v := range aa {
