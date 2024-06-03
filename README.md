@@ -22,12 +22,18 @@ func ExampleSelect_literalSimple() {
         sm.From("users AS u"),
         // WHERE u.age > $1
         sm.WhereC("u.age > ?", 40),
+        // WHERE u.city_id = $2
+        sm.WhereC("u.city_id = ?", sq.Arg("city_id")),
         // AND u.deleted_at IS NOT NULL
         sm.Where("u.deleted_at IS NOT NULL"),
         // ORDER BY u.name ASC, u.age DESC
         sm.OrderBy("u.name ASC", "u.age DESC"),
     )
-    qs, args, err := q.Build()
+    qs, args, err := q.Build(
+        sq.WithBuildParseArgs(map[string]any{
+            "city_id": 66,
+        }),
+    )
     if err != nil {
         panic(err)
     }
@@ -38,21 +44,26 @@ func ExampleSelect_literalSimple() {
     // Output:
     // SELECT u.id, u.name, u.created_at, u.updated_at
     // FROM users AS u
-    // WHERE u.age > $1 AND u.deleted_at IS NOT NULL
+    // WHERE u.age > $1 AND u.city_id = $2 AND u.deleted_at IS NOT NULL
     // ORDER BY u.name ASC, u.age DESC
     // ===
-    // [40]
+    // [40 66]
 }
 ```
 
 The library will do:
 
  * ensure clause ordering
+ * enforce some kind of code structure
+ * 
 
 The library won't do:
 
  * prevent invalid SQL from being output
- * automatic quoting
+ * quoting
+ * execute queries in databases
+ * provide helper expressions to build things like "IsEQ()", "Not(expression)", "LT(value)". These are expected to be written as strings
+ * 
 
 ## Installation
 
