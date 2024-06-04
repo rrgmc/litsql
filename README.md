@@ -218,6 +218,26 @@ func ExampleSelect_literalWith() {
 
 ## Tasks
 
+#### Dynamic query building
+
+```go
+type userFilter struct {
+    Name string
+}
+filter := userFilter{
+    Name: "john",
+}
+query := psql.Select(
+    sm.Columns("id", "name"),
+    sm.From("users"),
+)
+if filter.Name != "" {
+    query.Apply(
+        sm.WhereC("name = ?", filter.Name),
+    )
+}
+```
+
 #### Select from subselect
 
 ```go
