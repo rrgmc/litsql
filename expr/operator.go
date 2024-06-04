@@ -4,7 +4,7 @@ import (
 	"github.com/rrgmc/litsql"
 )
 
-// J combines a list of [litsql.Expression] in a single expression, without any separator.
+// J combines a list of [litsql.Expression] in a single expression, without a separator.
 func J(exprs ...litsql.Expression) litsql.Expression {
 	return join{expressions: exprs, sep: ""}
 }

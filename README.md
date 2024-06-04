@@ -270,6 +270,28 @@ query := psql.Select(
 )
 ```
 
+#### Expression function to generate using custom code
+
+```go
+query := psql.Select(
+    sm.Columns("id", "name", "age"),
+    sm.From("users"),
+    sm.WhereC("age > ?",
+        expr.F(func() (litsql.Expression, error) {
+            r := rand.Intn(3)
+            switch r {
+            case 0:
+                return expr.Arg(20), nil
+            case 1:
+                return expr.Arg(30), nil
+            default:
+                return expr.Arg(50), nil
+            }
+        }),
+    ),
+)
+```
+
 #### Add clauses in inline callback
 
 ```go
