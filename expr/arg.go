@@ -15,22 +15,42 @@ func ArgNamed(name string) litsql.Expression {
 	return Arg(internal.NamedArgument{ArgName: name})
 }
 
-// Args wraps multiple values in Arg.
-func Args(values []any) []litsql.Expression {
-	var ret []litsql.Expression
-	for _, v := range values {
-		ret = append(ret, Arg(v))
-	}
-	return ret
+// ArgDBNamed outputs the dialect-specific argument matcher, and wraps the passed value as a named argument.
+func ArgDBNamed(name string) litsql.Expression {
+	return Arg(internal.DBNamedArgument{ArgName: name})
 }
 
-// ArgsNamed wraps multiple values in ArgNamed.
+// ArgFunc returns the argument value in a callback.
+func ArgFunc(f func() (any, error)) litsql.Expression {
+	return Arg(internal.FuncArgument{FN: f})
+}
+
+// Args wraps multiple values in a slice of Arg.
+func Args(values []any) []litsql.Expression {
+	return MapSlice(values, func(a any) litsql.Expression {
+		return Arg(a)
+	})
+}
+
+// ArgsNamed wraps multiple values in a slice of ArgNamed.
 func ArgsNamed(names ...string) []litsql.Expression {
-	var ret []litsql.Expression
-	for _, n := range names {
-		ret = append(ret, ArgNamed(n))
-	}
-	return ret
+	return MapSlice(names, func(a string) litsql.Expression {
+		return ArgNamed(a)
+	})
+}
+
+// ArgsDBNamed wraps multiple values in a slice of ArgDBNamed.
+func ArgsDBNamed(names ...string) []litsql.Expression {
+	return MapSlice(names, func(a string) litsql.Expression {
+		return ArgDBNamed(a)
+	})
+}
+
+// ArgsFunc wraps multiple values in a slice of ArgFunc.
+func ArgsFunc(fs []func() (any, error)) []litsql.Expression {
+	return MapSlice(fs, func(f func() (any, error)) litsql.Expression {
+		return ArgFunc(f)
+	})
 }
 
 // In outputs the list of values as Arg separated by commas.
