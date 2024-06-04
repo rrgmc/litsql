@@ -45,6 +45,17 @@ func ParseArgValues(args []any, values litsql.ArgValues) ([]any, error) {
 	return internal.ParseArgValues(args, values)
 }
 
+// ArgsParser wraps parseable argument results.
+type ArgsParser []any
+
+func (a ArgsParser) Parse(values any) ([]any, error) {
+	return internal.ParseArgs(a, values)
+}
+
+func (a ArgsParser) ParseValues(values litsql.ArgValues) ([]any, error) {
+	return internal.ParseArgValues(a, values)
+}
+
 type ArgOption func(options *argOptions)
 
 // WithDefaultValue sets a default value if the argument name was not passed.
