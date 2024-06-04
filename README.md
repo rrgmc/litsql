@@ -6,11 +6,9 @@
 
 Ok, it really is an SQL query builder, but it aims to be an **easier-to-use replacement for raw SQL strings**.
 
-Each `litsql` statement must be directly related to an SQL output, **including whitespace**, which must be obvious to
-the user of the library. The output will be exactly the passed values, so the library won't prevent invalid SQL from
-being generated.
-
-The library tests **includes testing for exact string and whitespace output** to ensure this.
+Each `litsql` statement must be directly related to an SQL output, **including whitespace** (backed by whitespace tests), 
+which must be obvious to the user of the library. The output will be exactly the passed values, so the library won't 
+prevent invalid SQL from being generated.
 
 ```go
 func ExampleSelect_literalSimple() {
@@ -74,6 +72,15 @@ The library won't do:
 ```shell
 go get -u github.com/rrgmc/litsql
 ```
+
+## Reference
+
+This library is heavily inspired by the excellent [Bob Go SQL Access Toolkit](https://bob.stephenafamo.com/). Its base
+ideas and some of its implementations where used to build this library.
+
+The biggest difference is that `Bob` is not only a query builder, but an ORM, so the query builder part must be
+much more complex to be able to tackle multiple jobs. It encourages using Go to code SQL expressions, which this 
+library heavily discourages.
 
 ## Dialects
 
@@ -350,14 +357,56 @@ query := psql.Select(
 )
 ```
 
-## Reference
+#### Prepared statements
 
-This library is heavily inspired by the excellent [Bob Go SQL Access Toolkit](https://bob.stephenafamo.com/). Its base 
-ideas and some of its implementations where used to build this library's interface.
+When using prepared statements, the use of named arguments is required, as it would be impossible to know which
+argument maps to each value.
 
-The biggest difference is that `Bob` is not only a query builder, but an ORM, so the query builder part must be
-much more complex to be able to tackle multiple jobs. In some parts it is hard to directly relate what SQL will be
-generated, and it encourages using Go to code SQL expressions, which this library heavily discourages.
+```go
+query := psql.Select(
+    sm.Columns("film_id", "title", "length"),
+    sm.From("film"),
+    sm.WhereC("length > ?", sq.NamedArg("length")),
+    sm.LimitE(expr.ArgNamed("limit")),
+)
+
+queryStr, args, err := query.Build()
+if err != nil {
+    return err
+}
+
+prepq, err := db.PrepareContext(ctx, queryStr)
+if err != nil {
+    return err
+}
+
+pargs, err := sq.ParseArgs(args, map[string]any{
+    "length": 100,
+    "limit":  10,
+})
+if err != nil {
+    return err
+}
+
+rows, err := prepq.QueryContext(ctx, pargs...)
+if err != nil {
+    return err
+}
+defer rows.Close()
+
+for rows.Next() {
+    var id, length int
+    var title string
+    if err := rows.Scan(&id, &title, &length); err != nil {
+        return err
+    }
+    fmt.Println(id, title, length)
+}
+
+if rows.Err() != nil {
+    return rows.Err()
+}
+```
 
 ## Author
 
