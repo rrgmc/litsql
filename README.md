@@ -32,7 +32,7 @@ func ExampleSelect_literalSimple() {
         sm.OrderBy("u.name ASC", "u.age DESC"),
     )
     qs, args, err := q.Build(
-        sq.WithBuildParseArgs(map[string]any{
+        sq.WithParseArgs(map[string]any{
             "city_id": 66,
         }),
     )
@@ -247,7 +247,7 @@ query := psql.Select(
     )),
 )
 qs, args, err := query.Build(
-    sq.WithBuildParseArgs(map[string]any{
+    sq.WithParseArgs(map[string]any{
         "first":  15,
         "second": 30,
         "third":  45,

@@ -20,7 +20,7 @@ func TestWriterExpression(t *testing.T, e litsql.Expression, output *TestBuffer,
 		var buf bytes.Buffer
 		w := internal.NewWriter(&buf,
 			internal.WithWriterUseNewLine(useNewLine),
-			internal.WithWriterIndentStr(" "),
+			internal.WithWriterIndentString(" "),
 		)
 
 		gotArgs, err := e.WriteSQL(w, &TestDialect{}, 1)
@@ -46,7 +46,7 @@ func TestWriterExpressionErrorIs(t *testing.T, e litsql.Expression, errIs error)
 		var buf bytes.Buffer
 		w := internal.NewWriter(&buf,
 			internal.WithWriterUseNewLine(useNewLine),
-			internal.WithWriterIndentStr(" "),
+			internal.WithWriterIndentString(" "),
 		)
 
 		_, err := e.WriteSQL(w, &TestDialect{}, 1)

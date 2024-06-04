@@ -39,7 +39,7 @@ func TestNewWriterNewLine(t *testing.T) {
 
 	w := NewWriter(&buf,
 		WithWriterUseNewLine(true),
-		WithWriterIndentStr(" "))
+		WithWriterIndentString(" "))
 
 	w.AddSeparator(true)
 	w.Write("a")

@@ -28,7 +28,7 @@ func ExampleSelect_literalSimple() {
 		sm.OrderBy("u.name ASC", "u.age DESC"),
 	)
 	qs, args, err := q.Build(
-		sq.WithBuildParseArgs(map[string]any{
+		sq.WithParseArgs(map[string]any{
 			"city_id": 66,
 		}),
 	)

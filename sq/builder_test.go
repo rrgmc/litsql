@@ -129,7 +129,7 @@ func builderTest(t *testing.T, d litsql.Dialect, qb *Builder, querystr string, a
 
 	var buf bytes.Buffer
 	w := NewWriter(&buf,
-		WithWriterUseNewLine(false))
+		WithUseNewLine(false))
 	eb := litsql.NewExpressBuilder(w, d, 1)
 	clauses, err := qb.QueryClauseList()
 	assert.NilError(t, err)

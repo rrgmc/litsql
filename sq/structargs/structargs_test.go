@@ -28,8 +28,8 @@ func TestArgValues(t *testing.T) {
 		im.ValuesAN("id", "name"),
 	)
 	queryStr, args, err := query.Build(
-		sq.WithBuildWriterOptions(sq.WithWriterUseNewLine(false)),
-		sq.WithBuildParseArgs(pargs),
+		sq.WithWriterOptions(sq.WithUseNewLine(false)),
+		sq.WithParseArgs(pargs),
 	)
 
 	assert.NilError(t, err)

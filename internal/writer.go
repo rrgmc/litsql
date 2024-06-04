@@ -41,10 +41,10 @@ func WithWriterUseNewLine(useNewLine bool) WriterOption {
 	}
 }
 
-// WithWriterIndentStr sets the indent string (used only if WithWriterUseNewLine is true). Default is "  " (two spaces).
-func WithWriterIndentStr(indentStr string) WriterOption {
+// WithWriterIndentString sets the indent string (used only if WithWriterUseNewLine is true). Default is "  " (two spaces).
+func WithWriterIndentString(indentString string) WriterOption {
 	return func(w *writer) {
-		w.indentStr = indentStr
+		w.indentStr = indentString
 	}
 }
 

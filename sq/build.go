@@ -12,17 +12,17 @@ func Build(q litsql.Query, options ...BuildQueryOption) (string, []any, error) {
 	return internal.BuildQuery(q, options...)
 }
 
-// WithBuildWriterOptions adds writer options.
-func WithBuildWriterOptions(writerOptions ...WriterOption) BuildQueryOption {
+// WithWriterOptions adds writer options.
+func WithWriterOptions(writerOptions ...WriterOption) BuildQueryOption {
 	return internal.WithBuildQueryWriterOptions(writerOptions...)
 }
 
-// WithBuildParseArgs adds named argument values.
-func WithBuildParseArgs(argValues any) BuildQueryOption {
+// WithParseArgs adds named argument values.
+func WithParseArgs(argValues any) BuildQueryOption {
 	return internal.WithBuildQueryParseArgs(argValues)
 }
 
-// WithBuildParseArgValues adds named argument values.
-func WithBuildParseArgValues(argValues litsql.ArgValues) BuildQueryOption {
+// WithParseArgValues adds named argument values.
+func WithParseArgValues(argValues litsql.ArgValues) BuildQueryOption {
 	return internal.WithBuildQueryParseArgValues(argValues)
 }

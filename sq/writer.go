@@ -14,12 +14,12 @@ func NewWriter(w io.Writer, options ...WriterOption) litsql.Writer {
 
 type WriterOption = internal.WriterOption
 
-// WithWriterUseNewLine sets whether to use newlines in the output or not. Default is true.
-func WithWriterUseNewLine(useNewLine bool) WriterOption {
+// WithUseNewLine sets whether to use newlines in the output or not. Default is true.
+func WithUseNewLine(useNewLine bool) WriterOption {
 	return internal.WithWriterUseNewLine(useNewLine)
 }
 
-// WithWriterIndentStr sets the indent string (used only if WithWriterUseNewLine is true). Default is "  " (two spaces).
-func WithWriterIndentStr(indentStr string) WriterOption {
-	return internal.WithWriterIndentStr(indentStr)
+// WithIndentString sets the indent string (used only if WithUseNewLine is true). Default is "  " (two spaces).
+func WithIndentString(indentString string) WriterOption {
+	return internal.WithWriterIndentString(indentString)
 }
