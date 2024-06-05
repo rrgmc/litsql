@@ -36,13 +36,25 @@ func ArgFunc(fn func() (any, error)) litsql.Argument {
 }
 
 // ParseArgs replaces all [litsql.Argument] instances in args with named values.
-func ParseArgs(args []any, values any) ([]any, error) {
-	return internal.ParseArgs(args, values)
+func ParseArgs(args []any, values any, options ...GetArgValuesInstanceOption) ([]any, error) {
+	return internal.ParseArgs(args, values, options...)
 }
 
 // ParseArgValues replaces all [litsql.Argument] instances in args with named values.
 func ParseArgValues(args []any, values litsql.ArgValues) ([]any, error) {
 	return internal.ParseArgValues(args, values)
+}
+
+type GetArgValuesInstanceOption = internal.GetArgValuesInstanceOption
+
+// GetArgValuesInstance gets the [litsql.ArgValues] instance from the passed parameter.
+func GetArgValuesInstance(values any, options ...GetArgValuesInstanceOption) (litsql.ArgValues, error) {
+	return internal.GetArgValuesInstance(values, options...)
+}
+
+// WithGetArgValuesInstanceOptionCustom sets a custom [litsql.ArgValues] detector.
+func WithGetArgValuesInstanceOptionCustom(custom func(values any) (litsql.ArgValues, error)) GetArgValuesInstanceOption {
+	return internal.WithGetArgValuesInstanceOptionCustom(custom)
 }
 
 // ArgsParser wraps parseable argument results.

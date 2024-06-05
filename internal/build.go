@@ -52,13 +52,13 @@ func WithBuildQueryWriterOptions(writerOptions ...WriterOption) BuildQueryOption
 }
 
 // WithBuildQueryParseArgs adds named argument values.
-func WithBuildQueryParseArgs(argValues any) BuildQueryOption {
-	return func(options *buildQueryOptions) error {
-		av, err := GetArgValuesInstance(argValues)
+func WithBuildQueryParseArgs(argValues any, options ...GetArgValuesInstanceOption) BuildQueryOption {
+	return func(o *buildQueryOptions) error {
+		av, err := GetArgValuesInstance(argValues, options...)
 		if err != nil {
 			return err
 		}
-		options.argValues = av
+		o.argValues = av
 		return nil
 	}
 }

@@ -18,8 +18,8 @@ func WithWriterOptions(writerOptions ...WriterOption) BuildQueryOption {
 }
 
 // WithParseArgs adds named argument values.
-func WithParseArgs(argValues any) BuildQueryOption {
-	return internal.WithBuildQueryParseArgs(argValues)
+func WithParseArgs(argValues any, options ...GetArgValuesInstanceOption) BuildQueryOption {
+	return internal.WithBuildQueryParseArgs(argValues, options...)
 }
 
 // WithParseArgValues adds named argument values.

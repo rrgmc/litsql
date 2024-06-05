@@ -36,3 +36,26 @@ func TestArgValues(t *testing.T) {
 	assert.Equal(t, "INSERT INTO users (id, name) VALUES ($1, $2)", queryStr)
 	assert.DeepEqual(t, []any{123, "John Doe"}, args)
 }
+
+func TestArgValuesGetter(t *testing.T) {
+	user := sampleUser{
+		Id:   123,
+		Name: "John Doe",
+	}
+
+	pargs, err := ArgValues(user)
+	assert.NilError(t, err)
+
+	query := psql.Insert(
+		im.Into("users", "id", "name"),
+		im.ValuesAN("id", "name"),
+	)
+	queryStr, args, err := query.Build(
+		sq.WithWriterOptions(sq.WithUseNewLine(false)),
+		sq.WithParseArgs(pargs, WithGetArgsValuesOption()),
+	)
+
+	assert.NilError(t, err)
+	assert.Equal(t, "INSERT INTO users (id, name) VALUES ($1, $2)", queryStr)
+	assert.DeepEqual(t, []any{123, "John Doe"}, args)
+}

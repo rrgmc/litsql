@@ -8,20 +8,45 @@ import (
 )
 
 // GetArgValuesInstance gets the [litsql.ArgValues] instance from the passed parameter.
-func GetArgValuesInstance(values any) (litsql.ArgValues, error) {
+func GetArgValuesInstance(values any, options ...GetArgValuesInstanceOption) (litsql.ArgValues, error) {
+	var optns getArgValuesInstanceOptions
+	for _, opt := range options {
+		opt(&optns)
+	}
+
 	switch xv := values.(type) {
 	case litsql.ArgValues:
 		return xv, nil
 	case map[string]any:
 		return litsql.MapArgValues(xv), nil
 	default:
+		if optns.custom != nil {
+			if c, err := optns.custom(values); err != nil {
+				return nil, err
+			} else if c != nil {
+				return c, nil
+			}
+		}
 		return nil, fmt.Errorf("unsupported arg values type: %T", values)
 	}
 }
 
+type GetArgValuesInstanceOption func(*getArgValuesInstanceOptions)
+
+// WithGetArgValuesInstanceOptionCustom sets a custom [litsql.ArgValues] detector.
+func WithGetArgValuesInstanceOptionCustom(custom func(values any) (litsql.ArgValues, error)) GetArgValuesInstanceOption {
+	return func(options *getArgValuesInstanceOptions) {
+		options.custom = custom
+	}
+}
+
+type getArgValuesInstanceOptions struct {
+	custom func(values any) (litsql.ArgValues, error)
+}
+
 // ParseArgs replaces all [litsql.Argument] instances in args with named values.
-func ParseArgs(args []any, values any) ([]any, error) {
-	av, err := GetArgValuesInstance(values)
+func ParseArgs(args []any, values any, options ...GetArgValuesInstanceOption) ([]any, error) {
+	av, err := GetArgValuesInstance(values, options...)
 	if err != nil {
 		return nil, err
 	}
