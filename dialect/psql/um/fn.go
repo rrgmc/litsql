@@ -83,6 +83,10 @@ func Set(column string, arg any) psql.UpdateMod {
 	return ium.Set[tag.UpdateTag](column, arg)
 }
 
+func SetAN(column string, argumentName string) psql.UpdateMod {
+	return ium.SetAN[tag.UpdateTag](column, argumentName)
+}
+
 func SetE(column string, value litsql.Expression) psql.UpdateMod {
 	return ium.SetE[tag.UpdateTag](column, value)
 }

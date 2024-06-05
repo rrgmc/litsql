@@ -12,6 +12,10 @@ func Set[T any](column string, arg any) sq.QueryMod[T] {
 	return SetRE[T](expr.JS(" = ", expr.S(column), expr.Arg(arg)))
 }
 
+func SetAN[T any](column string, argumentName string) sq.QueryMod[T] {
+	return SetRE[T](expr.JS(" = ", expr.S(column), expr.ArgNamed(argumentName)))
+}
+
 func SetE[T any](column string, value litsql.Expression) sq.QueryMod[T] {
 	return SetRE[T](expr.JS(" = ", expr.S(column), value))
 }

@@ -83,6 +83,10 @@ func Set(column string, arg any) sqlite.UpdateMod {
 	return ium.Set[tag.UpdateTag](column, arg)
 }
 
+func SetAN(column string, argumentName string) sqlite.UpdateMod {
+	return ium.SetAN[tag.UpdateTag](column, argumentName)
+}
+
 func SetE(column string, value litsql.Expression) sqlite.UpdateMod {
 	return ium.SetE[tag.UpdateTag](column, value)
 }

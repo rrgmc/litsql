@@ -83,6 +83,10 @@ func Set(column string, arg any) mysql.UpdateMod {
 	return ium.Set[tag.UpdateTag](column, arg)
 }
 
+func SetAN(column string, argumentName string) mysql.UpdateMod {
+	return ium.SetAN[tag.UpdateTag](column, argumentName)
+}
+
 func SetE(column string, value litsql.Expression) mysql.UpdateMod {
 	return ium.SetE[tag.UpdateTag](column, value)
 }
