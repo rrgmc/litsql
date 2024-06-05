@@ -123,6 +123,10 @@ func LimitA(arg any) psql.SelectMod {
 	return ism.LimitA[tag.SelectTag](arg)
 }
 
+func LimitAN(argumentName string) psql.SelectMod {
+	return ism.LimitAN[tag.SelectTag](argumentName)
+}
+
 func Offset(count int) psql.SelectMod {
 	return ism.Offset[tag.SelectTag](count)
 }
@@ -133,6 +137,10 @@ func OffsetE(count litsql.Expression) psql.SelectMod {
 
 func OffsetA(arg any) psql.SelectMod {
 	return ism.OffsetA[tag.SelectTag](arg)
+}
+
+func OffsetAN(argumentName string) psql.SelectMod {
+	return ism.OffsetAN[tag.SelectTag](argumentName)
 }
 
 func OrderBy(names ...string) psql.SelectMod {

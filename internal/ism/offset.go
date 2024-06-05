@@ -22,3 +22,7 @@ func OffsetE[T any](count litsql.Expression) sq.QueryMod[T] {
 func OffsetA[T any](arg any) sq.QueryMod[T] {
 	return OffsetE[T](expr.Arg(arg))
 }
+
+func OffsetAN[T any](argumentName string) sq.QueryMod[T] {
+	return OffsetE[T](expr.ArgNamed(argumentName))
+}

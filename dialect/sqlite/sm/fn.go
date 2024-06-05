@@ -123,6 +123,10 @@ func LimitA(arg any) sqlite.SelectMod {
 	return ism.LimitA[tag.SelectTag](arg)
 }
 
+func LimitAN(argumentName string) sqlite.SelectMod {
+	return ism.LimitAN[tag.SelectTag](argumentName)
+}
+
 func Offset(count int) sqlite.SelectMod {
 	return ism.Offset[tag.SelectTag](count)
 }
@@ -133,6 +137,10 @@ func OffsetE(count litsql.Expression) sqlite.SelectMod {
 
 func OffsetA(arg any) sqlite.SelectMod {
 	return ism.OffsetA[tag.SelectTag](arg)
+}
+
+func OffsetAN(argumentName string) sqlite.SelectMod {
+	return ism.OffsetAN[tag.SelectTag](argumentName)
 }
 
 func OrderBy(names ...string) sqlite.SelectMod {

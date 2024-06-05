@@ -20,5 +20,9 @@ func LimitE[T any](count litsql.Expression) sq.QueryMod[T] {
 }
 
 func LimitA[T any](arg any) sq.QueryMod[T] {
-	return LimitE[T](expr.C("?", arg))
+	return LimitE[T](expr.Arg(arg))
+}
+
+func LimitAN[T any](argumentName string) sq.QueryMod[T] {
+	return LimitE[T](expr.ArgNamed(argumentName))
 }

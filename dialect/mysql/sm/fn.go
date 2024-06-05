@@ -123,6 +123,10 @@ func LimitA(arg any) mysql.SelectMod {
 	return ism.LimitA[tag.SelectTag](arg)
 }
 
+func LimitAN(argumentName string) mysql.SelectMod {
+	return ism.LimitAN[tag.SelectTag](argumentName)
+}
+
 func Offset(count int) mysql.SelectMod {
 	return ism.Offset[tag.SelectTag](count)
 }
@@ -133,6 +137,10 @@ func OffsetE(count litsql.Expression) mysql.SelectMod {
 
 func OffsetA(arg any) mysql.SelectMod {
 	return ism.OffsetA[tag.SelectTag](arg)
+}
+
+func OffsetAN(argumentName string) mysql.SelectMod {
+	return ism.OffsetAN[tag.SelectTag](argumentName)
 }
 
 func OrderBy(names ...string) mysql.SelectMod {
