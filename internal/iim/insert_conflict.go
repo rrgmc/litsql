@@ -38,15 +38,15 @@ func OnConflictOnConstraint[T any](constraint string) chain.InsertConflict[T, im
 }
 
 func ConflictSet[T any](column string, arg any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return ConflictSetRE[T](expr.JS(" = ", expr.S(column), expr.Arg(arg)))
+	return ConflictSetEC[T](expr.JS(" = ", expr.S(column), expr.Arg(arg)))
 }
 
 func ConflictSetAN[T any](column string, argumentName string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return ConflictSetRE[T](expr.JS(" = ", expr.S(column), expr.ArgNamed(argumentName)))
+	return ConflictSetEC[T](expr.JS(" = ", expr.S(column), expr.ArgNamed(argumentName)))
 }
 
 func ConflictSetE[T any](column string, value litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return ConflictSetRE[T](expr.JS(" = ", expr.S(column), value))
+	return ConflictSetEC[T](expr.JS(" = ", expr.S(column), value))
 }
 
 func ConflictSetQ[T, A any](column string, q isq.Query[A]) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
@@ -57,11 +57,11 @@ func ConflictSetS[T any](column string, right string) mod.InsertConflictUpdateMo
 	return ConflictSetE[T](column, expr.S(right))
 }
 
-func ConflictSetR[T any](raw string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return ConflictSetRE[T](expr.S(raw))
+func ConflictSetC[T any](query string, args ...any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
+	return ConflictSetEC[T](expr.C(query, args...))
 }
 
-func ConflictSetRE[T any](assignment litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
+func ConflictSetEC[T any](assignment litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
 	return mod.InsertConflictUpdateModFunc[T, imod.InsertConflictUpdateModUM](func(a *iclause.InsertConflict) {
 		a.Set.Set = append(a.Set.Set, assignment)
 	})

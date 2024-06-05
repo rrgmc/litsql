@@ -76,12 +76,12 @@ func ConflictSetS(column string, right string) InsertConflictUpdateMod {
 	return iim.ConflictSetS[tag.InsertTag](column, right)
 }
 
-func ConflictSetR(raw string) InsertConflictUpdateMod {
-	return iim.ConflictSetR[tag.InsertTag](raw)
+func ConflictSetC(query string, args ...any) InsertConflictUpdateMod {
+	return iim.ConflictSetC[tag.InsertTag](query, args...)
 }
 
-func ConflictSetRE(assignment litsql.Expression) InsertConflictUpdateMod {
-	return iim.ConflictSetRE[tag.InsertTag](assignment)
+func ConflictSetEC(assignment litsql.Expression) InsertConflictUpdateMod {
+	return iim.ConflictSetEC[tag.InsertTag](assignment)
 }
 
 func ConflictWhere(condition string) InsertConflictUpdateMod {

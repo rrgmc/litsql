@@ -99,12 +99,12 @@ func SetS(column string, right string) sqlite.UpdateMod {
 	return ium.SetS[tag.UpdateTag](column, right)
 }
 
-func SetR(raw string) sqlite.UpdateMod {
-	return ium.SetR[tag.UpdateTag](raw)
+func SetC(query string, args ...any) sqlite.UpdateMod {
+	return ium.SetC[tag.UpdateTag](query, args...)
 }
 
-func SetRE(assignment litsql.Expression) sqlite.UpdateMod {
-	return ium.SetRE[tag.UpdateTag](assignment)
+func SetEC(assignment litsql.Expression) sqlite.UpdateMod {
+	return ium.SetEC[tag.UpdateTag](assignment)
 }
 
 func Table(name string) sqlite.UpdateMod {

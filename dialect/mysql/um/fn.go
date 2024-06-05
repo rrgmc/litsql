@@ -99,12 +99,12 @@ func SetS(column string, right string) mysql.UpdateMod {
 	return ium.SetS[tag.UpdateTag](column, right)
 }
 
-func SetR(raw string) mysql.UpdateMod {
-	return ium.SetR[tag.UpdateTag](raw)
+func SetC(query string, args ...any) mysql.UpdateMod {
+	return ium.SetC[tag.UpdateTag](query, args...)
 }
 
 func SetRE(assignment litsql.Expression) mysql.UpdateMod {
-	return ium.SetRE[tag.UpdateTag](assignment)
+	return ium.SetEC[tag.UpdateTag](assignment)
 }
 
 func Table(name string) mysql.UpdateMod {

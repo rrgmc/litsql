@@ -99,12 +99,12 @@ func SetS(column string, right string) psql.UpdateMod {
 	return ium.SetS[tag.UpdateTag](column, right)
 }
 
-func SetR(raw string) psql.UpdateMod {
-	return ium.SetR[tag.UpdateTag](raw)
+func SetC(query string, args ...any) psql.UpdateMod {
+	return ium.SetC[tag.UpdateTag](query, args...)
 }
 
-func SetRE(assignment litsql.Expression) psql.UpdateMod {
-	return ium.SetRE[tag.UpdateTag](assignment)
+func SetEC(assignment litsql.Expression) psql.UpdateMod {
+	return ium.SetEC[tag.UpdateTag](assignment)
 }
 
 func Table(name string) psql.UpdateMod {
