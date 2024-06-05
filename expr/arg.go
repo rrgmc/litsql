@@ -54,17 +54,35 @@ func ArgsFunc(fs []func() (any, error)) []litsql.Expression {
 }
 
 // In outputs the list of values as Arg separated by commas.
-func In(values ...any) litsql.Expression {
+func In(values []any) litsql.Expression {
 	return argList{
 		values:    values,
 		separator: internal.CommaSpace,
 	}
 }
 
+// InT outputs the list of values as Arg separated by commas.
+func InT[T any](values ...T) litsql.Expression {
+	return argList{
+		values:    internal.ToAnySlice(values),
+		separator: internal.CommaSpace,
+	}
+}
+
 // InP outputs the list of values as Arg separated by commas, wrapped in parentheses.
-func InP(values ...any) litsql.Expression {
+func InP(values []any) litsql.Expression {
 	return argList{
 		values:    values,
+		separator: internal.CommaSpace,
+		prefix:    internal.OpenPar,
+		suffix:    internal.ClosePar,
+	}
+}
+
+// InPT outputs the list of values as Arg separated by commas, wrapped in parentheses.
+func InPT[T any](values ...T) litsql.Expression {
+	return argList{
+		values:    internal.ToAnySlice(values),
 		separator: internal.CommaSpace,
 		prefix:    internal.OpenPar,
 		suffix:    internal.ClosePar,

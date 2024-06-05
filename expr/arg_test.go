@@ -17,11 +17,21 @@ func TestArgs(t *testing.T) {
 }
 
 func TestIn(t *testing.T) {
-	ex := In(15, 20, 25)
+	ex := In([]any{15, 20, 25})
+	testutils.TestExpression(t, ex, "$1, $2, $3", 15, 20, 25)
+}
+
+func TestInT(t *testing.T) {
+	ex := InT(15, 20, 25)
 	testutils.TestExpression(t, ex, "$1, $2, $3", 15, 20, 25)
 }
 
 func TestInP(t *testing.T) {
-	ex := InP(15, 20, 25)
+	ex := InP([]any{15, 20, 25})
+	testutils.TestExpression(t, ex, "($1, $2, $3)", 15, 20, 25)
+}
+
+func TestInPT(t *testing.T) {
+	ex := InPT(15, 20, 25)
 	testutils.TestExpression(t, ex, "($1, $2, $3)", 15, 20, 25)
 }

@@ -69,7 +69,7 @@ func TestUpdateFromQuery(t *testing.T) {
 			ism.Select[testutils.TestTag](d,
 				ism.Columns[testutils.TestTag]("address", "city", "state"),
 				ism.From[testutils.TestTag]("address"),
-				ism.WhereC[testutils.TestTag]("id IN (?)", expr.In(15, 16, 17)),
+				ism.WhereC[testutils.TestTag]("id IN (?)", expr.InT(15, 16, 17)),
 			),
 		).As("adr"),
 		SetS[testutils.TestTag]("address", "adr.address"),
