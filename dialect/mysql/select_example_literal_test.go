@@ -84,7 +84,7 @@ func ExampleSelect_literalJoin() {
 		// INNER JOIN users AS u ON orders.user_id = u.id
 		sm.InnerJoin("users AS u").On("orders.user_id = u.id"),
 		// WHERE u.age > ?
-		sm.WhereC("u.age ?",
+		sm.WhereC("u.age !",
 			// example to use either IS NULL or a comparison
 			expr.ExprIfElse(true, // some condition
 				expr.C("> ?", 32),

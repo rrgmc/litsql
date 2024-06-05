@@ -66,7 +66,7 @@ func (r clause) convertClauseArgs(w litsql.Writer, d litsql.Dialect, startAt int
 			if err != nil {
 				return 0, nil, err
 			}
-			if nch == '?' {
+			if nch == '?' || nch == '!' {
 				ch = nch
 				ignoreArg = true
 			} else {
@@ -76,7 +76,7 @@ func (r clause) convertClauseArgs(w litsql.Writer, d litsql.Dialect, startAt int
 				}
 			}
 		}
-		if !ignoreArg && ch == '?' {
+		if !ignoreArg && (ch == '?' || ch == '!') {
 			if sb.Len() > 0 {
 				w.Write(sb.String())
 				sb.Reset()
@@ -87,7 +87,13 @@ func (r clause) convertClauseArgs(w litsql.Writer, d litsql.Dialect, startAt int
 				arg = r.args[total]
 			}
 
-			newArgs, err := clauseWriteArg(w, d, startAt, arg)
+			var newArgs []any
+
+			if ch == '!' {
+				newArgs, err = clauseExprWriteArg(w, d, startAt, arg)
+			} else {
+				newArgs, err = clauseWriteArg(w, d, startAt, arg)
+			}
 			if err != nil {
 				return total, nil, err
 			}
@@ -167,14 +173,14 @@ func (r clause) convertQuestionMarks(w litsql.Writer, d litsql.Dialect, startAt 
 }
 
 func clauseWriteArg(w litsql.Writer, d litsql.Dialect, startAt int, arg any) (args []any, err error) {
-	if ex, ok := arg.(litsql.Expression); ok {
-		// return nil, fmt.Errorf("expression clause must use '&'")
-		// inner [litsql.Expression]
-		eargs, err := ex.WriteSQL(w, d, startAt)
-		if err != nil {
-			return nil, err
-		}
-		args = append(args, eargs...)
+	if _, ok := arg.(litsql.Expression); ok {
+		return nil, fmt.Errorf("expression clause must use '!'")
+		// // inner [litsql.Expression]
+		// eargs, err := ex.WriteSQL(w, d, startAt)
+		// if err != nil {
+		// 	return nil, err
+		// }
+		// args = append(args, eargs...)
 	} else if nv, ok := arg.(litsql.DBNamedArgument); ok {
 		// DB-specific named argument
 		dn, ok := d.(litsql.DialectWithNamed)
