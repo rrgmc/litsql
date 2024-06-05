@@ -16,3 +16,7 @@ func ColumnsE[T any](names ...litsql.Expression) sq.QueryMod[T] {
 		a.AddQueryClause(&iclause.Columns{Columns: names})
 	})
 }
+
+func ColumnsC[T any](query string, args ...any) sq.QueryMod[T] {
+	return ColumnsE[T](expr.C(query, args...))
+}

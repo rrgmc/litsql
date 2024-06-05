@@ -19,6 +19,10 @@ func ColumnsE(names ...litsql.Expression) mysql.SelectMod {
 	return ism.ColumnsE[tag.SelectTag](names...)
 }
 
+func ColumnsC(query string, args ...any) mysql.SelectMod {
+	return ism.ColumnsC[tag.SelectTag](query, args...)
+}
+
 func Distinct(on ...string) mysql.SelectMod {
 	return ism.Distinct[tag.SelectTag](on...)
 }
