@@ -47,6 +47,7 @@ func (r clause) convertClauseArgs(w litsql.Writer, d litsql.Dialect, startAt int
 	paramIndex := 0
 	total := 0
 	var args []any
+	var sb strings.Builder
 
 	parser := strings.NewReader(r.query)
 	for {
@@ -76,6 +77,11 @@ func (r clause) convertClauseArgs(w litsql.Writer, d litsql.Dialect, startAt int
 			}
 		}
 		if !ignoreArg && ch == '?' {
+			if sb.Len() > 0 {
+				w.Write(sb.String())
+				sb.Reset()
+			}
+
 			var arg any
 			if total < len(r.args) {
 				arg = r.args[total]
@@ -92,8 +98,14 @@ func (r clause) convertClauseArgs(w litsql.Writer, d litsql.Dialect, startAt int
 			total++
 			paramIndex++
 		} else {
-			w.Write(string(ch))
+			_, err = sb.WriteRune(ch)
+			if err != nil {
+				return 0, nil, err
+			}
 		}
+	}
+	if sb.Len() > 0 {
+		w.Write(sb.String())
 	}
 
 	return total, args, nil
