@@ -42,6 +42,10 @@ func TestExpressionIsError(t *testing.T, e litsql.Expression) {
 	TestExpressionErrorIs(t, e, nil)
 }
 
+type errorEquals interface {
+	Equal(I error) bool
+}
+
 func TestExpressionErrorIs(t *testing.T, e litsql.Expression, errIs error) {
 	t.Helper()
 	var buf bytes.Buffer
@@ -51,7 +55,11 @@ func TestExpressionErrorIs(t *testing.T, e litsql.Expression, errIs error) {
 
 	_, err := litsql.Express(w, NewTestDialect(), 1, e)
 	if errIs != nil {
-		assert.ErrorIs(t, err, errIs)
+		if eeq, ok := errIs.(errorEquals); ok {
+			assert.Assert(t, eeq.Equal(err))
+		} else {
+			assert.ErrorIs(t, err, errIs)
+		}
 	} else {
 		assert.Assert(t, err != nil)
 	}

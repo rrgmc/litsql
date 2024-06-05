@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"io"
 	"strings"
 
 	"github.com/rrgmc/litsql"
@@ -25,7 +26,8 @@ type clause struct {
 
 func (r clause) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
 	// replace the args with positional args appropriately
-	total, args, err := r.convertQuestionMarks(w, d, start)
+	// total, args, err := r.convertQuestionMarks(w, d, start)
+	total, args, err := r.convertClauseArgs(w, d, start)
 	if err != nil {
 		return nil, err
 	}
@@ -35,6 +37,66 @@ func (r clause) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, e
 	}
 
 	return args, nil
+}
+
+func (r clause) convertClauseArgs(w litsql.Writer, d litsql.Dialect, startAt int) (int, []any, error) {
+	if startAt == 0 {
+		panic("Not a valid start number.")
+	}
+
+	paramIndex := 0
+	total := 0
+	var args []any
+
+	parser := strings.NewReader(r.query)
+	for {
+		ch, _, err := parser.ReadRune()
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return 0, nil, err
+		}
+
+		ignoreArg := false
+
+		if ch == '\\' {
+			nch, _, err := parser.ReadRune()
+			if err != nil {
+				return 0, nil, err
+			}
+			if nch == '?' {
+				ch = nch
+				ignoreArg = true
+			} else {
+				err = parser.UnreadRune()
+				if err != nil {
+					return 0, nil, err
+				}
+			}
+		}
+		if !ignoreArg && ch == '?' {
+			var arg any
+			if total < len(r.args) {
+				arg = r.args[total]
+			}
+
+			newArgs, err := clauseWriteArg(w, d, startAt, arg)
+			if err != nil {
+				return total, nil, err
+			}
+
+			startAt += len(newArgs)
+			args = append(args, newArgs...)
+
+			total++
+			paramIndex++
+		} else {
+			w.Write(string(ch))
+		}
+	}
+
+	return total, args, nil
 }
 
 // convertQuestionMarks converts each occurrence of ? with $<number>
@@ -94,6 +156,7 @@ func (r clause) convertQuestionMarks(w litsql.Writer, d litsql.Dialect, startAt 
 
 func clauseWriteArg(w litsql.Writer, d litsql.Dialect, startAt int, arg any) (args []any, err error) {
 	if ex, ok := arg.(litsql.Expression); ok {
+		// return nil, fmt.Errorf("expression clause must use '&'")
 		// inner [litsql.Expression]
 		eargs, err := ex.WriteSQL(w, d, startAt)
 		if err != nil {
@@ -120,6 +183,20 @@ func clauseWriteArg(w litsql.Writer, d litsql.Dialect, startAt int, arg any) (ar
 		// dialect argument
 		d.WriteArg(w, startAt)
 		args = append(args, arg)
+	}
+	return
+}
+
+func clauseExprWriteArg(w litsql.Writer, d litsql.Dialect, startAt int, arg any) (args []any, err error) {
+	if ex, ok := arg.(litsql.Expression); ok {
+		// inner [litsql.Expression]
+		eargs, err := ex.WriteSQL(w, d, startAt)
+		if err != nil {
+			return nil, err
+		}
+		args = append(args, eargs...)
+	} else {
+		return nil, fmt.Errorf("clause argument type '%T' is not Expression", arg)
 	}
 	return
 }
