@@ -19,6 +19,10 @@ func ColumnsE(names ...litsql.Expression) sqlite.SelectMod {
 	return ism.ColumnsE[tag.SelectTag](names...)
 }
 
+func ColumnsC(query string, args ...any) sqlite.SelectMod {
+	return ism.ColumnsC[tag.SelectTag](query, args...)
+}
+
 func Distinct(on ...string) sqlite.SelectMod {
 	return ism.Distinct[tag.SelectTag](on...)
 }

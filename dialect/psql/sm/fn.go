@@ -19,6 +19,10 @@ func ColumnsE(names ...litsql.Expression) psql.SelectMod {
 	return ism.ColumnsE[tag.SelectTag](names...)
 }
 
+func ColumnsC(query string, args ...any) psql.SelectMod {
+	return ism.ColumnsC[tag.SelectTag](query, args...)
+}
+
 func Distinct(on ...string) psql.SelectMod {
 	return ism.Distinct[tag.SelectTag](on...)
 }
