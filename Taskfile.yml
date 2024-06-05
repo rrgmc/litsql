@@ -25,6 +25,7 @@ tasks:
     internal: true
     prompt: "Creating and pushing tag {{.VERSION}}. Are you sure?"
     cmds:
+      - 'cd sq/structargs; go mod edit -require=github.com/rrgmc/litsql@{{.VERSION}}'
       - 'git tag sq/structargs/{{.VERSION}}'
       - 'git tag {{.VERSION}}'
       - 'git push --tags'
