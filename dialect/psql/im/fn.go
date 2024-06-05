@@ -60,6 +60,10 @@ func ConflictSet(column string, arg any) InsertConflictUpdateMod {
 	return iim.ConflictSet[tag.InsertTag](column, arg)
 }
 
+func ConflictSetAN(column string, argumentName string) InsertConflictUpdateMod {
+	return iim.ConflictSetAN[tag.InsertTag](column, argumentName)
+}
+
 func ConflictSetE(column string, value litsql.Expression) InsertConflictUpdateMod {
 	return iim.ConflictSetE[tag.InsertTag](column, value)
 }

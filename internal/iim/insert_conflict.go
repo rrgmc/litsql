@@ -41,6 +41,10 @@ func ConflictSet[T any](column string, arg any) mod.InsertConflictUpdateMod[T, i
 	return ConflictSetRE[T](expr.JS(" = ", expr.S(column), expr.Arg(arg)))
 }
 
+func ConflictSetAN[T any](column string, argumentName string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
+	return ConflictSetRE[T](expr.JS(" = ", expr.S(column), expr.ArgNamed(argumentName)))
+}
+
 func ConflictSetE[T any](column string, value litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
 	return ConflictSetRE[T](expr.JS(" = ", expr.S(column), value))
 }
