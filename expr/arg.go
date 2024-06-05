@@ -62,7 +62,7 @@ func In(values []any) litsql.Expression {
 }
 
 // InT outputs the list of values as Arg separated by commas.
-func InT[T any](values ...T) litsql.Expression {
+func InT[T any](values []T) litsql.Expression {
 	return argList{
 		values:    internal.ToAnySlice(values),
 		separator: internal.CommaSpace,
@@ -80,7 +80,7 @@ func InP(values []any) litsql.Expression {
 }
 
 // InPT outputs the list of values as Arg separated by commas, wrapped in parentheses.
-func InPT[T any](values ...T) litsql.Expression {
+func InPT[T any](values []T) litsql.Expression {
 	return argList{
 		values:    internal.ToAnySlice(values),
 		separator: internal.CommaSpace,

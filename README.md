@@ -257,7 +257,7 @@ query := psql.Select(
 query := psql.Select(
     sm.Columns("id", "name", "age"),
     sm.From("users"),
-    sm.WhereC("age IN (?)", expr.InT(15, 30, 45)),
+    sm.WhereC("age IN (?)", expr.In([]any{15, 30, 45})),
 )
 ```
 

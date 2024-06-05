@@ -57,7 +57,7 @@ func TestClause(t *testing.T) {
 			name: "expr args",
 			expr: clause{
 				query: "SELECT a, b FROM alphabet WHERE c IN (?) AND d <= ?",
-				args:  []any{InT(5, 6, 7), 2},
+				args:  []any{In([]any{5, 6, 7}), 2},
 			},
 			expected:     `SELECT a, b FROM alphabet WHERE c IN ($1, $2, $3) AND d <= $4`,
 			expectedArgs: []any{5, 6, 7, 2},
@@ -66,7 +66,7 @@ func TestClause(t *testing.T) {
 			name: "expr args group",
 			expr: clause{
 				query: "SELECT a, b FROM alphabet WHERE c IN ? AND d <= ?",
-				args:  []any{InPT(5, 6, 7), 2},
+				args:  []any{InP([]any{5, 6, 7}), 2},
 			},
 			expected:     `SELECT a, b FROM alphabet WHERE c IN ($1, $2, $3) AND d <= $4`,
 			expectedArgs: []any{5, 6, 7, 2},

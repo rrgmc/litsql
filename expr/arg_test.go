@@ -22,7 +22,7 @@ func TestIn(t *testing.T) {
 }
 
 func TestInT(t *testing.T) {
-	ex := InT(15, 20, 25)
+	ex := InT([]int{15, 20, 25})
 	testutils.TestExpression(t, ex, "$1, $2, $3", 15, 20, 25)
 }
 
@@ -32,6 +32,6 @@ func TestInP(t *testing.T) {
 }
 
 func TestInPT(t *testing.T) {
-	ex := InPT(15, 20, 25)
+	ex := InPT([]int{15, 20, 25})
 	testutils.TestExpression(t, ex, "($1, $2, $3)", 15, 20, 25)
 }
