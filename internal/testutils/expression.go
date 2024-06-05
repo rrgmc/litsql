@@ -9,6 +9,10 @@ import (
 	"gotest.tools/v3/assert"
 )
 
+type errorEquals interface {
+	Equal(I error) bool
+}
+
 func TestExpression(t *testing.T, e litsql.Expression, output string, args ...any) {
 	t.Helper()
 
@@ -51,7 +55,11 @@ func TestExpressionErrorIs(t *testing.T, e litsql.Expression, errIs error) {
 
 	_, err := litsql.Express(w, NewTestDialect(), 1, e)
 	if errIs != nil {
-		assert.ErrorIs(t, err, errIs)
+		if eeq, ok := errIs.(errorEquals); ok {
+			assert.Assert(t, eeq.Equal(err))
+		} else {
+			assert.ErrorIs(t, err, errIs)
+		}
 	} else {
 		assert.Assert(t, err != nil)
 	}
@@ -71,7 +79,11 @@ func TestExpressionSliceErrorIs(t *testing.T, e []litsql.Expression, errIs error
 
 	_, err := litsql.ExpressSlice(w, NewTestDialect(), 1, e, nil, nil, nil)
 	if errIs != nil {
-		assert.ErrorIs(t, err, errIs)
+		if eeq, ok := errIs.(errorEquals); ok {
+			assert.Assert(t, eeq.Equal(err))
+		} else {
+			assert.ErrorIs(t, err, errIs)
+		}
 	} else {
 		assert.Assert(t, err != nil)
 	}
