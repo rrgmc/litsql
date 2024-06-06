@@ -4,7 +4,7 @@ go 1.22.0
 
 require (
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/rrgmc/litsql v0.6.10
+	github.com/rrgmc/litsql v0.7.0
 	gotest.tools/v3 v3.5.1
 )
 
