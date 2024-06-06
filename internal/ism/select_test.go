@@ -21,8 +21,8 @@ func TestSelect(t *testing.T) {
 }
 
 func TestSelectBasic(t *testing.T) {
-	expectedQuery := "SELECT DISTINCT u.id, u.name, ua.address FROM users AS u INNER JOIN users_address AS a ON users.id = a.user_id WHERE age < 10 ORDER BY name ASC OFFSET 10 LIMIT 100"
-	var expectedArgs []any
+	expectedQuery := "SELECT DISTINCT u.id, u.name, ua.address FROM users AS u INNER JOIN users_address AS a ON users.id = a.user_id WHERE age < 10 ORDER BY name ASC OFFSET $1 LIMIT $2"
+	expectedArgs := []any{10, 100}
 
 	query := Select[testutils.TestTag](testutils.NewTestDialect(),
 		Distinct[testutils.TestTag](),
