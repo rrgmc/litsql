@@ -10,26 +10,38 @@ import (
 
 // New returns a [litsql.ArgValues] from struct fields. If value is not a struct, returns nil.
 func New(value any, options ...Option) litsql.ArgValues {
-	v := reflect.ValueOf(value)
-	v = reflect.Indirect(v)
-	if k := v.Kind(); k != reflect.Struct {
+	v := getReflectValue(value)
+	if !v.IsValid() {
 		return nil
 	}
-
 	optns := argValuesOptions{
 		tagName: "json",
 	}
 	for _, opt := range options {
 		opt(&optns)
 	}
-	if optns.mapperFunc == nil {
-		optns.mapperFunc = strcase.ToSnake
+	if optns.mapper == nil {
+		if optns.mapperFunc == nil {
+			optns.mapperFunc = strcase.ToSnake
+		}
+		optns.mapper = reflectx.NewMapperFunc(optns.tagName, optns.mapperFunc)
 	}
+	return newFromMapper(v, optns.mapper)
+}
 
-	mapper := reflectx.NewMapperFunc(optns.tagName, optns.mapperFunc)
+// NewFromMapper returns a [litsql.ArgValues] from struct fields. If value is not a struct, returns nil.
+func NewFromMapper(value any, mapper *reflectx.Mapper) litsql.ArgValues {
+	v := getReflectValue(value)
+	if !v.IsValid() {
+		return nil
+	}
+	return newFromMapper(v, mapper)
+}
+
+func newFromMapper(value reflect.Value, mapper *reflectx.Mapper) litsql.ArgValues {
 	return &argValues{
-		sm:    mapper.TypeMap(v.Type()),
-		value: v,
+		sm:    mapper.TypeMap(value.Type()),
+		value: value,
 	}
 }
 
@@ -49,6 +61,7 @@ func (s *argValues) Get(name string) (any, bool) {
 type Option func(*argValuesOptions)
 
 type argValuesOptions struct {
+	mapper     *reflectx.Mapper
 	tagName    string
 	mapperFunc func(string) string
 }
@@ -64,5 +77,12 @@ func WithTagName(tagName string) Option {
 func WithMapperFunc(mapperFunc func(string) string) Option {
 	return func(o *argValuesOptions) {
 		o.mapperFunc = mapperFunc
+	}
+}
+
+// WithMapper sets the [reflectx.Mapper] instance. If set, the other options will be ignored
+func WithMapper(mapper *reflectx.Mapper) Option {
+	return func(o *argValuesOptions) {
+		o.mapper = mapper
 	}
 }
