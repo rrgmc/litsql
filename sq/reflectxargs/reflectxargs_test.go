@@ -52,7 +52,8 @@ func TestNewGetter(t *testing.T) {
 	)
 	queryStr, args, err := query.Build(
 		sq.WithWriterOptions(sq.WithUseNewLine(false)),
-		sq.WithParseArgs(pargs, WithGetArgsValuesOption()),
+		sq.WithGetArgValuesInstanceOptions(WithGetArgsValuesOption()),
+		sq.WithParseArgs(pargs),
 	)
 
 	assert.NilError(t, err)
