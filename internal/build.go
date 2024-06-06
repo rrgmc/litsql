@@ -30,9 +30,11 @@ func BuildQuery(q litsql.Query, options ...BuildQueryOption) (string, []any, err
 		return "", nil, err
 	}
 
-	args, err = ParseArgValues(args, optns.argValues)
-	if err != nil {
-		return "", nil, err
+	if optns.parseArgs {
+		args, err = ParseArgValues(args, optns.argValues)
+		if err != nil {
+			return "", nil, err
+		}
 	}
 
 	return b.String(), args, nil
@@ -43,6 +45,7 @@ type BuildQueryOption func(options *buildQueryOptions)
 type buildQueryOptions struct {
 	writerOptions              []WriterOption
 	getArgValuesInstanceOption []GetArgValuesInstanceOption
+	parseArgs                  bool
 	rawArgValues               any
 	argValues                  litsql.ArgValues
 }
@@ -64,6 +67,7 @@ func WithBuildQueryGetArgValuesInstanceOptions(options ...GetArgValuesInstanceOp
 // WithBuildQueryParseArgs adds named argument values.
 func WithBuildQueryParseArgs(argValues any) BuildQueryOption {
 	return func(o *buildQueryOptions) {
+		o.parseArgs = true
 		o.rawArgValues = argValues
 	}
 }
@@ -71,6 +75,7 @@ func WithBuildQueryParseArgs(argValues any) BuildQueryOption {
 // WithBuildQueryParseArgValues adds named argument values.
 func WithBuildQueryParseArgValues(argValues litsql.ArgValues) BuildQueryOption {
 	return func(options *buildQueryOptions) {
+		options.parseArgs = true
 		options.argValues = argValues
 	}
 }
