@@ -1,6 +1,14 @@
 version: '3'
 
 tasks:
+  multimod:
+    dir: tools
+    cmds:
+      - 'go run go.opentelemetry.io/build-tools/multimod'
+  multimod-verify:
+    dir: tools
+    cmds:
+      - 'go run go.opentelemetry.io/build-tools/multimod verify'
   update-version:
     cmds:
       - 'cd sq/structargs; go mod edit -require=github.com/rrgmc/litsql@{{.VERSION}}'

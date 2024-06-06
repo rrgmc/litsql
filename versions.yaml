@@ -1,0 +1,9 @@
+module-sets:
+  stable-v1:
+    version: v0.7.1
+    modules:
+      - github.com/rrgmc/litsql
+      - github.com/rrgmc/litsql/sq/structargs
+      - github.com/rrgmc/litsql/sq/reflectxargs
+excluded-modules:
+  - github.com/rrgmc/litsql/tools
