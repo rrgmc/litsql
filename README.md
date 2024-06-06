@@ -92,6 +92,7 @@ library heavily discourages.
 ## Sub-packages
 
  * [structargs](https://pkg.go.dev/github.com/rrgmc/litsql/sq/structargs): get named arguments from struct fields
+ * [reflectxargs](https://pkg.go.dev/github.com/rrgmc/litsql/sq/reflectxargs): get named arguments from struct fields using reflectx
 
 ## Examples
 
