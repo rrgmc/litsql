@@ -9,6 +9,16 @@ tasks:
     dir: tools
     cmds:
       - 'go run go.opentelemetry.io/build-tools/multimod verify'
+  multimod-prerelease:
+    dir: tools
+    cmds:
+      - 'go run go.opentelemetry.io/build-tools/multimod prerelease --module-set-name stable-v0'
+  multimod-tag:
+    dir: tools
+    cmds:
+      - 'go run go.opentelemetry.io/build-tools/multimod tag --module-set-name stable-v0 --print-tags --commit-hash {{.HASH}}'
+    requires:
+      vars: [HASH]
   update-version:
     cmds:
       - 'cd sq/structargs; go mod edit -require=github.com/rrgmc/litsql@{{.VERSION}}'
