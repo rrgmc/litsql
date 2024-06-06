@@ -33,6 +33,13 @@ jobs:
       working-directory: ./sq/structargs
       run: go test -v ./...
 
+    - name: Build reflectxargs
+      working-directory: ./sq/reflectxargs
+      run: go build -v ./...
+    - name: Test reflectxargs
+      working-directory: ./sq/reflectxargs
+      run: go test -v ./...
+
     - name: Upload coverage
       uses: shogo82148/actions-goveralls@v1
       with:
