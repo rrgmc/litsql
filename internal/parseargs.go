@@ -2,6 +2,7 @@ package internal
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/rrgmc/litsql"
@@ -21,10 +22,16 @@ func GetArgValuesInstance(values any, options ...GetArgValuesInstanceOption) (li
 		return litsql.MapArgValues(xv), nil
 	default:
 		if optns.custom != nil {
-			if c, err := optns.custom(values); err != nil {
-				return nil, err
-			} else if c != nil {
-				return c, nil
+			var allErr error
+			for _, curcustom := range optns.custom {
+				if c, err := curcustom(values); err != nil {
+					allErr = errors.Join(allErr, err)
+				} else if c != nil {
+					return c, nil
+				}
+			}
+			if allErr != nil {
+				return nil, allErr
 			}
 		}
 		return nil, fmt.Errorf("unsupported arg values type: %T", values)
@@ -33,15 +40,15 @@ func GetArgValuesInstance(values any, options ...GetArgValuesInstanceOption) (li
 
 type GetArgValuesInstanceOption func(*getArgValuesInstanceOptions)
 
-// WithGetArgValuesInstanceOptionCustom sets a custom [litsql.ArgValues] detector.
+// WithGetArgValuesInstanceOptionCustom adds a custom [litsql.ArgValues] detector.
 func WithGetArgValuesInstanceOptionCustom(custom func(values any) (litsql.ArgValues, error)) GetArgValuesInstanceOption {
 	return func(options *getArgValuesInstanceOptions) {
-		options.custom = custom
+		options.custom = append(options.custom, custom)
 	}
 }
 
 type getArgValuesInstanceOptions struct {
-	custom func(values any) (litsql.ArgValues, error)
+	custom []func(values any) (litsql.ArgValues, error)
 }
 
 // ParseArgs replaces all [litsql.Argument] instances in args with named values.
