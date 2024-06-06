@@ -1,4 +1,4 @@
-package structargs
+package reflectxargs
 
 import (
 	"testing"
@@ -20,8 +20,8 @@ func TestNew(t *testing.T) {
 		Name: "John Doe",
 	}
 
-	pargs, err := New(user)
-	assert.NilError(t, err)
+	pargs := New(user)
+	assert.Assert(t, pargs != nil)
 
 	query := psql.Insert(
 		im.Into("users", "id", "name"),
@@ -37,14 +37,14 @@ func TestNew(t *testing.T) {
 	assert.DeepEqual(t, []any{123, "John Doe"}, args)
 }
 
-func TestNewSetter(t *testing.T) {
+func TestNewGetter(t *testing.T) {
 	user := sampleUser{
 		Id:   123,
 		Name: "John Doe",
 	}
 
-	pargs, err := New(user)
-	assert.NilError(t, err)
+	pargs := New(user)
+	assert.Assert(t, pargs != nil)
 
 	query := psql.Insert(
 		im.Into("users", "id", "name"),

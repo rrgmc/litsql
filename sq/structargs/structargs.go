@@ -5,21 +5,21 @@ import (
 	"github.com/rrgmc/litsql"
 )
 
-// ArgValues returns a [litsql.ArgValues] from struct fields.
-func ArgValues(v any, options ...ArgValuesOption) (litsql.ArgValues, error) {
+// New returns a [litsql.ArgValues] from struct fields.
+func New(v any, options ...Option) (litsql.ArgValues, error) {
 	optns := argValuesOptions{
 		tagName: "json",
 	}
 	for _, opt := range options {
 		opt(&optns)
 	}
-	return ArgValuesFromConfig(&mapstructure.DecoderConfig{
+	return NewFromConfig(&mapstructure.DecoderConfig{
 		TagName: optns.tagName,
 	}, v)
 }
 
-// ArgValuesFromConfig returns a [litsql.ArgValues] from struct fields using a [mapstructure.DecoderConfig].
-func ArgValuesFromConfig(config *mapstructure.DecoderConfig, v any) (litsql.ArgValues, error) {
+// NewFromConfig returns a [litsql.ArgValues] from struct fields using a [mapstructure.DecoderConfig].
+func NewFromConfig(config *mapstructure.DecoderConfig, v any) (litsql.ArgValues, error) {
 	result := map[string]any{}
 	config.Result = &result
 
@@ -36,14 +36,14 @@ func ArgValuesFromConfig(config *mapstructure.DecoderConfig, v any) (litsql.ArgV
 	return litsql.MapArgValues(result), nil
 }
 
-type ArgValuesOption func(*argValuesOptions)
+type Option func(*argValuesOptions)
 
 type argValuesOptions struct {
 	tagName string
 }
 
 // WithTagName sets the struct tag name to use. Default is "json".
-func WithTagName(tagName string) ArgValuesOption {
+func WithTagName(tagName string) Option {
 	return func(o *argValuesOptions) {
 		o.tagName = tagName
 	}
