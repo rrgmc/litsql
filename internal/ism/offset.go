@@ -1,8 +1,6 @@
 package ism
 
 import (
-	"fmt"
-
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
 	"github.com/rrgmc/litsql/internal/iclause"
@@ -10,7 +8,7 @@ import (
 )
 
 func Offset[T any](count int) sq.QueryMod[T] {
-	return OffsetE[T](expr.S(fmt.Sprint(count)))
+	return OffsetE[T](expr.Arg(count))
 }
 
 func OffsetE[T any](count litsql.Expression) sq.QueryMod[T] {

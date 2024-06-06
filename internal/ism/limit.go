@@ -1,8 +1,6 @@
 package ism
 
 import (
-	"fmt"
-
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
 	"github.com/rrgmc/litsql/internal/iclause"
@@ -10,7 +8,7 @@ import (
 )
 
 func Limit[T any](count int) sq.QueryMod[T] {
-	return LimitE[T](expr.S(fmt.Sprint(count)))
+	return LimitE[T](expr.Arg(count))
 }
 
 func LimitE[T any](count litsql.Expression) sq.QueryMod[T] {

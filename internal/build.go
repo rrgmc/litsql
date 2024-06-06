@@ -30,11 +30,9 @@ func BuildQuery(q litsql.Query, options ...BuildQueryOption) (string, []any, err
 		return "", nil, err
 	}
 
-	if optns.argValues != nil {
-		args, err = ParseArgValues(args, optns.argValues)
-		if err != nil {
-			return "", nil, err
-		}
+	args, err = ParseArgValues(args, optns.argValues)
+	if err != nil {
+		return "", nil, err
 	}
 
 	return b.String(), args, nil
