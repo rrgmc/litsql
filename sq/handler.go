@@ -8,7 +8,7 @@ import (
 
 // Handler bundles default parameters for functions.
 type Handler interface {
-	Build(q litsql.Query, options ...BuildQueryOption) (string, []any, error)
+	Build(q litsql.Query, options ...BuildOption) (string, []any, error)
 	ParseArgs(args []any, values any, options ...GetArgValuesInstanceOption) ([]any, error)
 	ParseArgValues(args []any, values litsql.ArgValues) ([]any, error)
 	GetArgValuesInstance(values any, options ...GetArgValuesInstanceOption) (litsql.ArgValues, error)
@@ -24,13 +24,13 @@ func NewHandler(options ...HandlerOption) Handler {
 
 type handler struct {
 	getArgValuesInstanceOption []GetArgValuesInstanceOption
-	buildQueryOptions          []BuildQueryOption
+	buildOptions               []BuildOption
 }
 
-func (h *handler) Build(q litsql.Query, options ...BuildQueryOption) (string, []any, error) {
+func (h *handler) Build(q litsql.Query, options ...BuildOption) (string, []any, error) {
 	return Build(q, slices.Concat(
-		[]BuildQueryOption{WithBuildQueryGetArgValuesInstanceOptions(h.getArgValuesInstanceOption...)},
-		h.buildQueryOptions,
+		[]BuildOption{WithGetArgValuesInstanceOptions(h.getArgValuesInstanceOption...)},
+		h.buildOptions,
 		options,
 	)...)
 }
@@ -49,10 +49,10 @@ func (h *handler) GetArgValuesInstance(values any, options ...GetArgValuesInstan
 
 type HandlerOption func(h *handler)
 
-// WithDefaultBuildQueryOptions sets default options for [Handler.Build].
-func WithDefaultBuildQueryOptions(options ...BuildQueryOption) HandlerOption {
+// WithDefaultBuildOptions sets default options for [Handler.Build].
+func WithDefaultBuildOptions(options ...BuildOption) HandlerOption {
 	return func(h *handler) {
-		h.buildQueryOptions = append(h.buildQueryOptions, options...)
+		h.buildOptions = append(h.buildOptions, options...)
 	}
 }
 

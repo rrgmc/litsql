@@ -12,5 +12,5 @@ type Query[T any] interface {
 
 // BuildQuery builds query strings and arguments.
 type BuildQuery interface {
-	Build(options ...BuildQueryOption) (string, []any, error)
+	Build(options ...BuildOption) (string, []any, error)
 }
