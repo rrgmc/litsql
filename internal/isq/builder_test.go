@@ -1,4 +1,4 @@
-package sq
+package isq
 
 import (
 	"bytes"
@@ -6,6 +6,7 @@ import (
 
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal"
 	"github.com/rrgmc/litsql/internal/testutils"
 	"gotest.tools/v3/assert"
 )
@@ -128,8 +129,8 @@ func builderTest(t *testing.T, d litsql.Dialect, qb *QueryBuilder, querystr stri
 	t.Helper()
 
 	var buf bytes.Buffer
-	w := NewWriter(&buf,
-		WithUseNewLine(false))
+	w := internal.NewWriter(&buf,
+		internal.WithWriterUseNewLine(false))
 	eb := litsql.NewExpressBuilder(w, d, 1)
 	clauses, err := qb.QueryClauseList()
 	assert.NilError(t, err)

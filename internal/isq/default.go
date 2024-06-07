@@ -7,14 +7,14 @@ import (
 )
 
 type DefaultQuery[T any] struct {
-	builder    *sq.QueryBuilder
+	builder    *QueryBuilder
 	startOrder int
 	startStr   string
 }
 
 func NewDefaultQuery[T any](d litsql.Dialect, startOrder int, startStr string) *DefaultQuery[T] {
 	return &DefaultQuery[T]{
-		builder:    sq.NewQueryBuilder(d),
+		builder:    NewQueryBuilder(d),
 		startOrder: startOrder,
 		startStr:   startStr,
 	}
