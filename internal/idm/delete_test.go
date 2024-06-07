@@ -15,7 +15,7 @@ func TestDelete(t *testing.T) {
 
 	query := Delete[testutils.TestTag](testutils.NewTestDialect(),
 		From[testutils.TestTag]("users"),
-		WhereC[testutils.TestTag]("id = ?", 15),
+		WhereClause[testutils.TestTag]("id = ?", 15),
 	)
 
 	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)
@@ -28,7 +28,7 @@ func TestDeleteBasic(t *testing.T) {
 	query := Delete[testutils.TestTag](testutils.NewTestDialect(),
 		From[testutils.TestTag]("users"),
 		Only[testutils.TestTag](true),
-		WhereC[testutils.TestTag]("id = ?", 15),
+		WhereClause[testutils.TestTag]("id = ?", 15),
 		Returning[testutils.TestTag]("id"),
 	)
 
@@ -45,7 +45,7 @@ func TestDeleteUsing(t *testing.T) {
 		From[testutils.TestTag]("users"),
 		Using[testutils.TestTag]("address AS adr"),
 		InnerJoin[testutils.TestTag]("cities AS ct").On("adr.city_id = ct.id"),
-		WhereC[testutils.TestTag]("users.address_id = adr.address_id"),
+		WhereClause[testutils.TestTag]("users.address_id = adr.address_id"),
 	)
 
 	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)
@@ -59,14 +59,14 @@ func TestDeleteUsingQuery(t *testing.T) {
 
 	query := Delete[testutils.TestTag](d,
 		From[testutils.TestTag]("users"),
-		UsingQ[testutils.TestTag, testutils.TestTag](
+		UsingQuery[testutils.TestTag, testutils.TestTag](
 			ism.Select[testutils.TestTag](d,
 				ism.Columns[testutils.TestTag]("address", "city", "state"),
 				ism.From[testutils.TestTag]("address"),
 				ism.WhereClause[testutils.TestTag]("id IN (?)", expr.In([]any{15, 16, 17})),
 			),
 		).As("adr"),
-		WhereC[testutils.TestTag]("users.address_id = adr.address_id"),
+		WhereClause[testutils.TestTag]("users.address_id = adr.address_id"),
 	)
 
 	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)
@@ -85,7 +85,7 @@ func TestDeleteWith(t *testing.T) {
 			),
 		),
 		From[testutils.TestTag]("users"),
-		WhereC[testutils.TestTag]("id = ?", 15),
+		WhereClause[testutils.TestTag]("id = ?", 15),
 	)
 
 	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)
@@ -99,7 +99,7 @@ func TestDeleteApply(t *testing.T) {
 		From[testutils.TestTag]("users"),
 		Apply[testutils.TestTag](func(a sq.QueryModApply[testutils.TestTag]) {
 			a.Apply(
-				WhereC[testutils.TestTag]("id = ?", 15),
+				WhereClause[testutils.TestTag]("id = ?", 15),
 			)
 		}),
 	)

@@ -20,7 +20,7 @@ func InnerJoin(table string) JoinChain {
 }
 
 func InnerJoinE(table litsql.Expression) JoinChain {
-	return idm.InnerJoinE[tag.DeleteTag](table)
+	return idm.InnerJoinExpr[tag.DeleteTag](table)
 }
 
 func LeftJoin(table string) JoinChain {
@@ -28,7 +28,7 @@ func LeftJoin(table string) JoinChain {
 }
 
 func LeftJoinE(table litsql.Expression) JoinChain {
-	return idm.LeftJoinE[tag.DeleteTag](table)
+	return idm.LeftJoinExpr[tag.DeleteTag](table)
 }
 
 func RightJoin(table string) JoinChain {
@@ -36,7 +36,7 @@ func RightJoin(table string) JoinChain {
 }
 
 func RightJoinE(table litsql.Expression) JoinChain {
-	return idm.RightJoinE[tag.DeleteTag](table)
+	return idm.RightJoinExpr[tag.DeleteTag](table)
 }
 
 func FullJoin(table string) JoinChain {
@@ -44,7 +44,7 @@ func FullJoin(table string) JoinChain {
 }
 
 func FullJoinE(table litsql.Expression) JoinChain {
-	return idm.FullJoinE[tag.DeleteTag](table)
+	return idm.FullJoinExpr[tag.DeleteTag](table)
 }
 
 func CrossJoin(table string) JoinChain {
@@ -52,7 +52,7 @@ func CrossJoin(table string) JoinChain {
 }
 
 func CrossJoinE(table litsql.Expression) JoinChain {
-	return idm.CrossJoinE[tag.DeleteTag](table)
+	return idm.CrossJoinExpr[tag.DeleteTag](table)
 }
 
 func StraightJoin(table string) JoinChain {
@@ -60,7 +60,7 @@ func StraightJoin(table string) JoinChain {
 }
 
 func StraightJoinE(table litsql.Expression) JoinChain {
-	return idm.StraightJoinE[tag.DeleteTag](table)
+	return idm.StraightJoinExpr[tag.DeleteTag](table)
 }
 
 func Only() mysql.DeleteMod {
@@ -76,11 +76,11 @@ func Using(table string) FromChain {
 }
 
 func UsingE(table litsql.Expression) FromChain {
-	return idm.UsingE[tag.DeleteTag](table)
+	return idm.UsingExpr[tag.DeleteTag](table)
 }
 
 func UsingQ(q mysql.SelectQuery) FromChain {
-	return idm.UsingQ[tag.DeleteTag, tag.SelectTag](q)
+	return idm.UsingQuery[tag.DeleteTag, tag.SelectTag](q)
 }
 
 func Where(condition string) mysql.DeleteMod {
@@ -88,11 +88,11 @@ func Where(condition string) mysql.DeleteMod {
 }
 
 func WhereE(condition litsql.Expression) mysql.DeleteMod {
-	return idm.WhereE[tag.DeleteTag](condition)
+	return idm.WhereExpr[tag.DeleteTag](condition)
 }
 
 func WhereC(query string, args ...any) mysql.DeleteMod {
-	return idm.WhereC[tag.DeleteTag](query, args...)
+	return idm.WhereClause[tag.DeleteTag](query, args...)
 }
 
 func With(name string, columns ...string) WithChain {
@@ -100,5 +100,5 @@ func With(name string, columns ...string) WithChain {
 }
 
 func WithE(name string, columns ...litsql.Expression) WithChain {
-	return idm.WithE[tag.DeleteTag](name, columns...)
+	return idm.WithExpr[tag.DeleteTag](name, columns...)
 }

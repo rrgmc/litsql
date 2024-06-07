@@ -10,13 +10,13 @@ import (
 )
 
 func Using[T any](table string) chain.From[T] {
-	return UsingE[T](expr.String(table))
+	return UsingExpr[T](expr.String(table))
 }
 
-func UsingE[T any](table litsql.Expression) chain.From[T] {
+func UsingExpr[T any](table litsql.Expression) chain.From[T] {
 	return &ichain.FromChain[T]{From: &iclause.From{Table: table, Starter: true, Clause: "USING"}}
 }
 
-func UsingQ[T, A any](q isq.Query[A]) chain.From[T] {
-	return UsingE[T](q)
+func UsingQuery[T, A any](q isq.Query[A]) chain.From[T] {
+	return UsingExpr[T](q)
 }
