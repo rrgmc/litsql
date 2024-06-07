@@ -142,6 +142,65 @@ func TestReflectDeref(t *testing.T) {
 	}
 }
 
+func TestReflectEmptyTagName(t *testing.T) {
+	type x struct {
+		H string
+		J int
+		L int `r:"LA"`
+		M int `r:"MM,omitempty,x=15"`
+	}
+
+	value := &x{
+		H: "99",
+		J: 11,
+		L: 45,
+		M: 91,
+	}
+
+	a := New(value)
+
+	for _, test := range []struct {
+		name             string
+		expected         any
+		expectedNotFound bool
+	}{
+		{
+			name:     "H",
+			expected: "99",
+		},
+		{
+			name:     "J",
+			expected: 11,
+		},
+		{
+			name:     "L",
+			expected: 45,
+		},
+		{
+			name:             "LA",
+			expectedNotFound: true,
+		},
+		{
+			name:     "M",
+			expected: 91,
+		},
+		{
+			name:             "MM",
+			expectedNotFound: true,
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			v, ok := a.Get(test.name)
+			if test.expectedNotFound {
+				assert.Assert(t, !ok)
+			} else {
+				assert.Assert(t, ok)
+				assert.DeepEqual(t, test.expected, v)
+			}
+		})
+	}
+}
+
 func TestReflectMapperFunc(t *testing.T) {
 	type x struct {
 		H string

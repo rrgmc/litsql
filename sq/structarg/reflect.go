@@ -19,9 +19,6 @@ func (s *argValues) getStructFieldByName(value reflect.Value, fieldName string) 
 		// to the map value.
 		v := value.Field(i)
 
-		tagValue := f.Tag.Get(s.tagName)
-		keyName := f.Name
-
 		if f.Anonymous && reflect.Indirect(v).Kind() == reflect.Struct {
 			// embedded struct
 			eval, ok := s.getStructFieldByName(reflect.Indirect(v), fieldName)
@@ -29,6 +26,9 @@ func (s *argValues) getStructFieldByName(value reflect.Value, fieldName string) 
 				return eval, true
 			}
 		} else {
+			tagValue := f.Tag.Get(s.tagName)
+			keyName := f.Name
+
 			// Determine the name of the key in the map
 			if index := strings.Index(tagValue, ","); index != -1 {
 				if tagValue[:index] == "-" {
