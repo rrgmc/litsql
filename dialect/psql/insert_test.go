@@ -11,7 +11,7 @@ import (
 func TestInsert(t *testing.T) {
 	query := psql.Insert(
 		im.Into("device", "id", "name"),
-		im.ValuesS("d1"),
+		im.ValuesString("d1"),
 	)
 	queryStr, params, err := query.Build()
 

@@ -25,7 +25,7 @@ func TestNew(t *testing.T) {
 
 	query := psql.Insert(
 		im.Into("users", "id", "name"),
-		im.ValuesAN("id", "name"),
+		im.ValuesArgNamed("id", "name"),
 	)
 	queryStr, args, err := query.Build(
 		sq.WithWriterOptions(sq.WithUseNewLine(false)),
@@ -48,7 +48,7 @@ func TestNewGetter(t *testing.T) {
 
 	query := psql.Insert(
 		im.Into("users", "id", "name"),
-		im.ValuesAN("id", "name"),
+		im.ValuesArgNamed("id", "name"),
 	)
 	queryStr, args, err := query.Build(
 		sq.WithWriterOptions(sq.WithUseNewLine(false)),

@@ -19,9 +19,9 @@ func ExampleSelect_literalSimple() {
 		// FROM users AS u
 		sm.From("users AS u"),
 		// WHERE u.age > $1
-		sm.WhereC("u.age > ?", 40),
+		sm.WhereClause("u.age > ?", 40),
 		// WHERE u.city_id = $2
-		sm.WhereC("u.city_id = ?", sq.NamedArg("city_id")),
+		sm.WhereClause("u.city_id = ?", sq.NamedArg("city_id")),
 		// AND u.deleted_at IS NOT NULL
 		sm.Where("u.deleted_at IS NOT NULL"),
 		// ORDER BY u.name ASC, u.age DESC
@@ -84,7 +84,7 @@ func ExampleSelect_literalJoin() {
 		// INNER JOIN users AS u ON orders.user_id = u.id
 		sm.InnerJoin("users AS u").On("orders.user_id = u.id"),
 		// WHERE u.age > $1
-		sm.WhereC("u.age ?",
+		sm.WhereClause("u.age ?",
 			// example to use either IS NULL or a comparison
 			expr.IfElse(true, // some condition
 				expr.Clause("> ?", 32),
@@ -135,7 +135,7 @@ func ExampleSelect_literalWith() {
 				// FROM regional_sales
 				sm.From("regional_sales"),
 				// WHERE total_sales > (SELECT SUM(total_sales)/10 FROM regional_sales)
-				sm.WhereC("total_sales > ?",
+				sm.WhereClause("total_sales > ?",
 					psql.Select(
 						sm.Columns("SUM(total_sales)/10"),
 						sm.From("regional_sales"),
@@ -150,7 +150,7 @@ func ExampleSelect_literalWith() {
 		// FROM orders
 		sm.From("orders"),
 		// WHERE region IN (SELECT region FROM top_regions)
-		sm.WhereC("region IN ?",
+		sm.WhereClause("region IN ?",
 			psql.Select(
 				sm.Columns("region"),
 				sm.From("top_regions"),
