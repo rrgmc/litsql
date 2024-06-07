@@ -1,5 +1,10 @@
 package clause
 
+// general
+const (
+	OrderRawQuery = -10
+)
+
 // select
 const (
 	OrderWith        = 50

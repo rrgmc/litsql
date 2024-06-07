@@ -19,3 +19,12 @@ func TestSelect(t *testing.T) {
 	assert.Assert(t, queryStr != "")
 	assert.Assert(t, len(params) == 0)
 }
+
+func TestSelectRaw(t *testing.T) {
+	query := psql.SelectRaw("select * from users where id = ?", 12, 15)
+	queryStr, params, err := query.Build()
+
+	assert.NilError(t, err)
+	assert.Equal(t, "select * from users where id = ?", queryStr)
+	assert.DeepEqual(t, []any{12, 15}, params)
+}
