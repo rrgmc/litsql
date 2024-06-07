@@ -26,14 +26,14 @@ func New(value any, options ...Option) litsql.ArgValues {
 type argValues struct {
 	value reflect.Value
 
-	tagName    string
-	mapperFunc func(string) string
+	tagName      string
+	derefPointer bool
+	mapperFunc   func(string) string
 }
 
 func (s *argValues) Get(name string) (any, bool) {
 	return s.getStructFieldByName(s.value, name)
 }
-
 
 type Option func(*argValues)
 
@@ -41,6 +41,13 @@ type Option func(*argValues)
 func WithTagName(tagName string) Option {
 	return func(o *argValues) {
 		o.tagName = tagName
+	}
+}
+
+// WithDerefPointer dereferences pointers in struct field values.
+func WithDerefPointer(deref bool) Option {
+	return func(o *argValues) {
+		o.derefPointer = deref
 	}
 }
 

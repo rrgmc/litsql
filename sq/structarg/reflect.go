@@ -57,6 +57,9 @@ func (s *argValues) getStructFieldByName(value reflect.Value, fieldName string) 
 				// avoid sending a pointer to a nil
 				return nil, true
 			}
+			if s.derefPointer {
+				return deref(v), true
+			}
 			return v.Interface(), true
 		}
 	}
@@ -71,4 +74,17 @@ func getReflectValue(value any) reflect.Value {
 		return reflect.Value{}
 	}
 	return v
+}
+
+func deref(v reflect.Value) any {
+	for {
+		if v.Kind() == reflect.Ptr {
+			if v.IsNil() {
+				return nil
+			}
+			v = v.Elem()
+		} else {
+			return v.Interface()
+		}
+	}
 }

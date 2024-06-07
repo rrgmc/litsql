@@ -60,11 +60,68 @@ func TestReflect(t *testing.T) {
 		},
 		{
 			name:     "O",
-			expected: 45,
+			expected: &oval,
 		},
 		{
 			name:     "P",
 			expected: nil,
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			v, ok := a.Get(test.name)
+			if test.expectedNotFound {
+				assert.Assert(t, !ok)
+			} else {
+				assert.Assert(t, ok)
+				assert.DeepEqual(t, test.expected, v)
+			}
+		})
+	}
+}
+
+func TestReflectDeref(t *testing.T) {
+	type x struct {
+		H *string
+		T *string
+		J **int
+		L ***int
+	}
+
+	hval := "99"
+	jval := 11
+	jval1 := &jval
+	lval := 45
+	lval1 := &lval
+	lval2 := &lval1
+
+	value := &x{
+		H: &hval,
+		J: &jval1,
+		L: &lval2,
+	}
+
+	a := New(value, WithDerefPointer(true))
+
+	for _, test := range []struct {
+		name             string
+		expected         any
+		expectedNotFound bool
+	}{
+		{
+			name:     "H",
+			expected: "99",
+		},
+		{
+			name:     "T",
+			expected: nil,
+		},
+		{
+			name:     "J",
+			expected: 11,
+		},
+		{
+			name:     "L",
+			expected: 45,
 		},
 	} {
 		t.Run(test.name, func(t *testing.T) {
