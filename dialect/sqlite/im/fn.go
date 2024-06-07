@@ -36,11 +36,11 @@ func Values(values ...any) sqlite.InsertMod {
 	return iim.Values[tag.InsertTag](values...)
 }
 
-func ValuesE(clauses ...litsql.Expression) sqlite.InsertMod {
+func ValuesExpr(clauses ...litsql.Expression) sqlite.InsertMod {
 	return iim.ValuesExpr[tag.InsertTag](clauses...)
 }
 
-func ValuesS(clauses ...string) sqlite.InsertMod {
+func ValuesString(clauses ...string) sqlite.InsertMod {
 	return iim.ValuesString[tag.InsertTag](clauses...)
 }
 
@@ -56,27 +56,27 @@ func ConflictSet(column string, arg any) InsertConflictUpdateMod {
 	return iim.ConflictSet[tag.InsertTag](column, arg)
 }
 
-func ConflictSetAN(column string, argumentName string) InsertConflictUpdateMod {
+func ConflictSetArgNamed(column string, argumentName string) InsertConflictUpdateMod {
 	return iim.ConflictSetArgNamed[tag.InsertTag](column, argumentName)
 }
 
-func ConflictSetE(column string, value litsql.Expression) InsertConflictUpdateMod {
+func ConflictSetExpr(column string, value litsql.Expression) InsertConflictUpdateMod {
 	return iim.ConflictSetExpr[tag.InsertTag](column, value)
 }
 
-func ConflictSetQ(column string, q sqlite.SelectQuery) InsertConflictUpdateMod {
+func ConflictSetQuery(column string, q sqlite.SelectQuery) InsertConflictUpdateMod {
 	return iim.ConflictSetQuery[tag.InsertTag, tag.SelectTag](column, q)
 }
 
-func ConflictSetS(column string, right string) InsertConflictUpdateMod {
+func ConflictSetString(column string, right string) InsertConflictUpdateMod {
 	return iim.ConflictSetString[tag.InsertTag](column, right)
 }
 
-func ConflictSetC(query string, args ...any) InsertConflictUpdateMod {
+func ConflictSetClause(query string, args ...any) InsertConflictUpdateMod {
 	return iim.ConflictSetClause[tag.InsertTag](query, args...)
 }
 
-func ConflictSetEC(assignment litsql.Expression) InsertConflictUpdateMod {
+func ConflictSetExprClause(assignment litsql.Expression) InsertConflictUpdateMod {
 	return iim.ConflictSetExprClause[tag.InsertTag](assignment)
 }
 
@@ -84,11 +84,11 @@ func ConflictWhere(condition string) InsertConflictUpdateMod {
 	return iim.Where[tag.InsertTag](condition)
 }
 
-func ConflictWhereE(condition litsql.Expression) InsertConflictUpdateMod {
+func ConflictWhereExpr(condition litsql.Expression) InsertConflictUpdateMod {
 	return iim.WhereExpr[tag.InsertTag](condition)
 }
 
-func ConflictWhereC(query string, args ...any) InsertConflictUpdateMod {
+func ConflictWhereClause(query string, args ...any) InsertConflictUpdateMod {
 	return iim.WhereClause[tag.InsertTag](query, args...)
 }
 
@@ -96,6 +96,6 @@ func With(name string, columns ...string) WithChain {
 	return iim.With[tag.InsertTag](name, columns...)
 }
 
-func WithE(name string, columns ...litsql.Expression) WithChain {
+func WithExpr(name string, columns ...litsql.Expression) WithChain {
 	return iim.WithExpr[tag.InsertTag](name, columns...)
 }
