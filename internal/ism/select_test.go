@@ -47,10 +47,10 @@ func TestSelectBasicArgs(t *testing.T) {
 		Columns[testutils.TestTag]("u.id", "u.name", "ua.address"),
 		From[testutils.TestTag]("users AS u"),
 		InnerJoin[testutils.TestTag]("users_address AS a").On("users.id = a.user_id"),
-		WhereC[testutils.TestTag]("age < ?", 10),
+		WhereClause[testutils.TestTag]("age < ?", 10),
 		OrderBy[testutils.TestTag]("name ASC"),
-		OffsetA[testutils.TestTag](10),
-		LimitA[testutils.TestTag](100),
+		OffsetArg[testutils.TestTag](10),
+		LimitArg[testutils.TestTag](100),
 	)
 
 	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)
@@ -65,10 +65,10 @@ func TestSelectBasicNamedArgs(t *testing.T) {
 		Columns[testutils.TestTag]("u.id", "u.name", "ua.address"),
 		From[testutils.TestTag]("users AS u"),
 		InnerJoin[testutils.TestTag]("users_address AS a").On("users.id = a.user_id"),
-		WhereC[testutils.TestTag]("age < ?", sq.NamedArg("age")),
+		WhereClause[testutils.TestTag]("age < ?", sq.NamedArg("age")),
 		OrderBy[testutils.TestTag]("name ASC"),
-		OffsetA[testutils.TestTag](sq.NamedArg("offset")),
-		LimitA[testutils.TestTag](sq.NamedArg("limit")),
+		OffsetArg[testutils.TestTag](sq.NamedArg("offset")),
+		LimitArg[testutils.TestTag](sq.NamedArg("limit")),
 	)
 
 	testutils.TestQueryParseArgs(t, query, expectedQuery, map[string]any{
@@ -100,7 +100,7 @@ func TestSelectFromQuery(t *testing.T) {
 
 	query := Select[testutils.TestTag](d,
 		Columns[testutils.TestTag]("id", "name"),
-		FromQ[testutils.TestTag, testutils.TestTag](
+		FromQuery[testutils.TestTag, testutils.TestTag](
 			Select[testutils.TestTag](d,
 				Columns[testutils.TestTag]("address", "city", "state"),
 				From[testutils.TestTag]("user_address ua"),
@@ -176,7 +176,7 @@ func TestSelectJoinSubSelect(t *testing.T) {
 	query := Select[testutils.TestTag](d,
 		Columns[testutils.TestTag]("u.id", "u.name", "ai.address"),
 		From[testutils.TestTag]("users AS u"),
-		InnerJoinE[testutils.TestTag](
+		InnerJoinExpr[testutils.TestTag](
 			Select[testutils.TestTag](d,
 				Columns[testutils.TestTag]("address", "city", "state"),
 				From[testutils.TestTag]("users_address AS ua"),
@@ -206,7 +206,7 @@ func TestSelectWith(t *testing.T) {
 			Select[testutils.TestTag](d,
 				Columns[testutils.TestTag]("region"),
 				From[testutils.TestTag]("regional_sales"),
-				WhereC[testutils.TestTag]("total_sales > ?",
+				WhereClause[testutils.TestTag]("total_sales > ?",
 					Select[testutils.TestTag](d,
 						Columns[testutils.TestTag]("SUM(total_sales)/10"),
 						From[testutils.TestTag]("regional_sales"),
@@ -216,7 +216,7 @@ func TestSelectWith(t *testing.T) {
 		),
 		Columns[testutils.TestTag]("region", "product", "SUM(quantity) AS product_units", "SUM(amount) AS product_sales"),
 		From[testutils.TestTag]("orders"),
-		WhereC[testutils.TestTag]("region IN ?",
+		WhereClause[testutils.TestTag]("region IN ?",
 			Select[testutils.TestTag](d,
 				Columns[testutils.TestTag]("region"),
 				From[testutils.TestTag]("top_regions"),

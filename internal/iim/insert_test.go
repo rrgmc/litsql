@@ -59,7 +59,7 @@ func TestInsertWith(t *testing.T) {
 			ism.Select[testutils.TestTag](testutils.NewTestDialect(),
 				ism.Columns[testutils.TestTag]("city"),
 				ism.From[testutils.TestTag]("users"),
-				ism.WhereC[testutils.TestTag]("id = ?", 2),
+				ism.WhereClause[testutils.TestTag]("id = ?", 2),
 			),
 		),
 		Into[testutils.TestTag]("users", "id", "name"),

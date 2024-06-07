@@ -9,10 +9,10 @@ import (
 )
 
 func GroupBy[T any](columns ...string) chain.GroupBy[T] {
-	return GroupByE[T](expr.StringList(columns)...)
+	return GroupByExpr[T](expr.StringList(columns)...)
 }
 
-func GroupByE[T any](columns ...litsql.Expression) chain.GroupBy[T] {
+func GroupByExpr[T any](columns ...litsql.Expression) chain.GroupBy[T] {
 	return &ichain.GroupByChain[T]{
 		GroupBy: &iclause.GroupBy{
 			Groups: columns,

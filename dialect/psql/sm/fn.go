@@ -16,11 +16,11 @@ func Columns(names ...string) psql.SelectMod {
 }
 
 func ColumnsE(names ...litsql.Expression) psql.SelectMod {
-	return ism.ColumnsE[tag.SelectTag](names...)
+	return ism.ColumnsExpr[tag.SelectTag](names...)
 }
 
 func ColumnsC(query string, args ...any) psql.SelectMod {
-	return ism.ColumnsC[tag.SelectTag](query, args...)
+	return ism.ColumnsClause[tag.SelectTag](query, args...)
 }
 
 func Distinct(on ...string) psql.SelectMod {
@@ -28,7 +28,7 @@ func Distinct(on ...string) psql.SelectMod {
 }
 
 func DistinctE(on ...litsql.Expression) psql.SelectMod {
-	return ism.DistinctE[tag.SelectTag](on...)
+	return ism.DistinctExpr[tag.SelectTag](on...)
 }
 
 func From(table string) FromChain {
@@ -36,11 +36,11 @@ func From(table string) FromChain {
 }
 
 func FromE(table litsql.Expression) FromChain {
-	return ism.FromE[tag.SelectTag](table)
+	return ism.FromExpr[tag.SelectTag](table)
 }
 
 func FromQ(q psql.SelectQuery) FromChain {
-	return ism.FromQ[tag.SelectTag, tag.SelectTag](q)
+	return ism.FromQuery[tag.SelectTag, tag.SelectTag](q)
 }
 
 func GroupBy(columns ...string) GroupByChain {
@@ -48,7 +48,7 @@ func GroupBy(columns ...string) GroupByChain {
 }
 
 func GroupByE(columns ...litsql.Expression) GroupByChain {
-	return ism.GroupByE[tag.SelectTag](columns...)
+	return ism.GroupByExpr[tag.SelectTag](columns...)
 }
 
 func Having(condition string) psql.SelectMod {
@@ -56,11 +56,11 @@ func Having(condition string) psql.SelectMod {
 }
 
 func HavingE(condition litsql.Expression) psql.SelectMod {
-	return ism.HavingE[tag.SelectTag](condition)
+	return ism.HavingExpr[tag.SelectTag](condition)
 }
 
 func HavingC(query string, args ...any) psql.SelectMod {
-	return ism.HavingC[tag.SelectTag](query, args...)
+	return ism.HavingClause[tag.SelectTag](query, args...)
 }
 
 func InnerJoin(table string) JoinChain {
@@ -68,7 +68,7 @@ func InnerJoin(table string) JoinChain {
 }
 
 func InnerJoinE(table litsql.Expression) JoinChain {
-	return ism.InnerJoinE[tag.SelectTag](table)
+	return ism.InnerJoinExpr[tag.SelectTag](table)
 }
 
 func LeftJoin(table string) JoinChain {
@@ -76,7 +76,7 @@ func LeftJoin(table string) JoinChain {
 }
 
 func LeftJoinE(table litsql.Expression) JoinChain {
-	return ism.LeftJoinE[tag.SelectTag](table)
+	return ism.LeftJoinExpr[tag.SelectTag](table)
 }
 
 func RightJoin(table string) JoinChain {
@@ -84,7 +84,7 @@ func RightJoin(table string) JoinChain {
 }
 
 func RightJoinE(table litsql.Expression) JoinChain {
-	return ism.RightJoinE[tag.SelectTag](table)
+	return ism.RightJoinExpr[tag.SelectTag](table)
 }
 
 func FullJoin(table string) JoinChain {
@@ -92,7 +92,7 @@ func FullJoin(table string) JoinChain {
 }
 
 func FullJoinE(table litsql.Expression) JoinChain {
-	return ism.FullJoinE[tag.SelectTag](table)
+	return ism.FullJoinExpr[tag.SelectTag](table)
 }
 
 func CrossJoin(table string) JoinChain {
@@ -100,7 +100,7 @@ func CrossJoin(table string) JoinChain {
 }
 
 func CrossJoinE(table litsql.Expression) JoinChain {
-	return ism.CrossJoinE[tag.SelectTag](table)
+	return ism.CrossJoinExpr[tag.SelectTag](table)
 }
 
 func StraightJoin(table string) JoinChain {
@@ -108,7 +108,7 @@ func StraightJoin(table string) JoinChain {
 }
 
 func StraightJoinE(table litsql.Expression) JoinChain {
-	return ism.StraightJoinE[tag.SelectTag](table)
+	return ism.StraightJoinExpr[tag.SelectTag](table)
 }
 
 func Limit(count int) psql.SelectMod {
@@ -116,15 +116,15 @@ func Limit(count int) psql.SelectMod {
 }
 
 func LimitE(count litsql.Expression) psql.SelectMod {
-	return ism.LimitE[tag.SelectTag](count)
+	return ism.LimitExpr[tag.SelectTag](count)
 }
 
 func LimitA(arg any) psql.SelectMod {
-	return ism.LimitA[tag.SelectTag](arg)
+	return ism.LimitArg[tag.SelectTag](arg)
 }
 
 func LimitAN(argumentName string) psql.SelectMod {
-	return ism.LimitAN[tag.SelectTag](argumentName)
+	return ism.LimitArgNamed[tag.SelectTag](argumentName)
 }
 
 func Offset(count int) psql.SelectMod {
@@ -132,15 +132,15 @@ func Offset(count int) psql.SelectMod {
 }
 
 func OffsetE(count litsql.Expression) psql.SelectMod {
-	return ism.OffsetE[tag.SelectTag](count)
+	return ism.OffsetExpr[tag.SelectTag](count)
 }
 
 func OffsetA(arg any) psql.SelectMod {
-	return ism.OffsetA[tag.SelectTag](arg)
+	return ism.OffsetArg[tag.SelectTag](arg)
 }
 
 func OffsetAN(argumentName string) psql.SelectMod {
-	return ism.OffsetAN[tag.SelectTag](argumentName)
+	return ism.OffsetArgNamed[tag.SelectTag](argumentName)
 }
 
 func OrderBy(names ...string) psql.SelectMod {
@@ -148,7 +148,7 @@ func OrderBy(names ...string) psql.SelectMod {
 }
 
 func OrderByE(names ...litsql.Expression) psql.SelectMod {
-	return ism.OrderByE[tag.SelectTag](names...)
+	return ism.OrderByExpr[tag.SelectTag](names...)
 }
 
 func Union(q psql.SelectQuery) psql.SelectMod {
@@ -180,11 +180,11 @@ func Where(condition string) psql.SelectMod {
 }
 
 func WhereE(condition litsql.Expression) psql.SelectMod {
-	return ism.WhereE[tag.SelectTag](condition)
+	return ism.WhereExpr[tag.SelectTag](condition)
 }
 
 func WhereC(query string, args ...any) psql.SelectMod {
-	return ism.WhereC[tag.SelectTag](query, args...)
+	return ism.WhereClause[tag.SelectTag](query, args...)
 }
 
 func Window(name string) WindowChain {
@@ -196,5 +196,5 @@ func With(name string, columns ...string) WithChain {
 }
 
 func WithE(name string, columns ...litsql.Expression) WithChain {
-	return ism.WithE[tag.SelectTag](name, columns...)
+	return ism.WithExpr[tag.SelectTag](name, columns...)
 }

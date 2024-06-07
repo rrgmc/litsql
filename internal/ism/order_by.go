@@ -8,10 +8,10 @@ import (
 )
 
 func OrderBy[T any](names ...string) sq.QueryMod[T] {
-	return OrderByE[T](expr.StringList(names)...)
+	return OrderByExpr[T](expr.StringList(names)...)
 }
 
-func OrderByE[T any](names ...litsql.Expression) sq.QueryMod[T] {
+func OrderByExpr[T any](names ...litsql.Expression) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
 		a.AddQueryClause(&iclause.OrderBy{Expressions: names})
 	})

@@ -8,19 +8,19 @@ import (
 )
 
 func Limit[T any](count int) sq.QueryMod[T] {
-	return LimitE[T](expr.Arg(count))
+	return LimitExpr[T](expr.Arg(count))
 }
 
-func LimitE[T any](count litsql.Expression) sq.QueryMod[T] {
+func LimitExpr[T any](count litsql.Expression) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
 		a.AddQueryClause(&iclause.Limit{Count: count})
 	})
 }
 
-func LimitA[T any](arg any) sq.QueryMod[T] {
-	return LimitE[T](expr.Arg(arg))
+func LimitArg[T any](arg any) sq.QueryMod[T] {
+	return LimitExpr[T](expr.Arg(arg))
 }
 
-func LimitAN[T any](argumentName string) sq.QueryMod[T] {
-	return LimitE[T](expr.ArgNamed(argumentName))
+func LimitArgNamed[T any](argumentName string) sq.QueryMod[T] {
+	return LimitExpr[T](expr.ArgNamed(argumentName))
 }

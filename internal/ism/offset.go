@@ -8,19 +8,19 @@ import (
 )
 
 func Offset[T any](count int) sq.QueryMod[T] {
-	return OffsetE[T](expr.Arg(count))
+	return OffsetExpr[T](expr.Arg(count))
 }
 
-func OffsetE[T any](count litsql.Expression) sq.QueryMod[T] {
+func OffsetExpr[T any](count litsql.Expression) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
 		a.AddQueryClause(&iclause.Offset{Count: count})
 	})
 }
 
-func OffsetA[T any](arg any) sq.QueryMod[T] {
-	return OffsetE[T](expr.Arg(arg))
+func OffsetArg[T any](arg any) sq.QueryMod[T] {
+	return OffsetExpr[T](expr.Arg(arg))
 }
 
-func OffsetAN[T any](argumentName string) sq.QueryMod[T] {
-	return OffsetE[T](expr.ArgNamed(argumentName))
+func OffsetArgNamed[T any](argumentName string) sq.QueryMod[T] {
+	return OffsetExpr[T](expr.ArgNamed(argumentName))
 }

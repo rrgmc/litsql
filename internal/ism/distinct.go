@@ -8,10 +8,10 @@ import (
 )
 
 func Distinct[T any](on ...string) sq.QueryMod[T] {
-	return DistinctE[T](expr.StringList(on)...)
+	return DistinctExpr[T](expr.StringList(on)...)
 }
 
-func DistinctE[T any](on ...litsql.Expression) sq.QueryMod[T] {
+func DistinctExpr[T any](on ...litsql.Expression) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
 		a.AddQueryClause(&iclause.Distinct{On: on})
 	})
