@@ -10,13 +10,13 @@ import (
 )
 
 func From[T any](table string) chain.From[T] {
-	return FromE[T](expr.String(table))
+	return FromExpr[T](expr.String(table))
 }
 
-func FromE[T any](table litsql.Expression) chain.From[T] {
+func FromExpr[T any](table litsql.Expression) chain.From[T] {
 	return &ichain.FromChain[T]{From: &iclause.From{Table: table, Starter: true}}
 }
 
-func FromQ[T, A any](q isq.Query[A]) chain.From[T] {
-	return FromE[T](q)
+func FromQuery[T, A any](q isq.Query[A]) chain.From[T] {
+	return FromExpr[T](q)
 }

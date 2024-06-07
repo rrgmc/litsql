@@ -16,7 +16,7 @@ func TestUpdate(t *testing.T) {
 	query := Update[testutils.TestTag](testutils.NewTestDialect(),
 		Table[testutils.TestTag]("users"),
 		Set[testutils.TestTag]("name", "John"),
-		WhereC[testutils.TestTag]("id = ?", 15),
+		WhereClause[testutils.TestTag]("id = ?", 15),
 	)
 
 	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)
@@ -30,8 +30,8 @@ func TestUpdateBasic(t *testing.T) {
 		Table[testutils.TestTag]("users"),
 		Only[testutils.TestTag](true),
 		Set[testutils.TestTag]("name", "John"),
-		SetS[testutils.TestTag]("created_at", "TIME()"),
-		WhereC[testutils.TestTag]("id = ?", 15),
+		SetString[testutils.TestTag]("created_at", "TIME()"),
+		WhereClause[testutils.TestTag]("id = ?", 15),
 		Returning[testutils.TestTag]("id"),
 	)
 
@@ -48,10 +48,10 @@ func TestUpdateFrom(t *testing.T) {
 		Table[testutils.TestTag]("users"),
 		From[testutils.TestTag]("address AS adr"),
 		InnerJoin[testutils.TestTag]("cities AS ct").On("adr.city_id = ct.id"),
-		SetS[testutils.TestTag]("address", "adr.address"),
-		SetS[testutils.TestTag]("city", "ct.city"),
-		SetS[testutils.TestTag]("state", "adr.state"),
-		WhereC[testutils.TestTag]("users.address_id = adr.address_id"),
+		SetString[testutils.TestTag]("address", "adr.address"),
+		SetString[testutils.TestTag]("city", "ct.city"),
+		SetString[testutils.TestTag]("state", "adr.state"),
+		WhereClause[testutils.TestTag]("users.address_id = adr.address_id"),
 	)
 
 	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)
@@ -65,17 +65,17 @@ func TestUpdateFromQuery(t *testing.T) {
 
 	query := Update[testutils.TestTag](d,
 		Table[testutils.TestTag]("users"),
-		FromQ[testutils.TestTag, testutils.TestTag](
+		FromQuery[testutils.TestTag, testutils.TestTag](
 			ism.Select[testutils.TestTag](d,
 				ism.Columns[testutils.TestTag]("address", "city", "state"),
 				ism.From[testutils.TestTag]("address"),
 				ism.WhereClause[testutils.TestTag]("id IN (?)", expr.In([]any{15, 16, 17})),
 			),
 		).As("adr"),
-		SetS[testutils.TestTag]("address", "adr.address"),
-		SetS[testutils.TestTag]("city", "adr.city"),
-		SetS[testutils.TestTag]("state", "adr.state"),
-		WhereC[testutils.TestTag]("users.address_id = adr.address_id"),
+		SetString[testutils.TestTag]("address", "adr.address"),
+		SetString[testutils.TestTag]("city", "adr.city"),
+		SetString[testutils.TestTag]("state", "adr.state"),
+		WhereClause[testutils.TestTag]("users.address_id = adr.address_id"),
 	)
 
 	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)
@@ -95,8 +95,8 @@ func TestUpdateWith(t *testing.T) {
 		),
 		Table[testutils.TestTag]("users"),
 		Set[testutils.TestTag]("name", "John"),
-		SetS[testutils.TestTag]("name", "city.city_id"),
-		WhereC[testutils.TestTag]("id = ?", 15),
+		SetString[testutils.TestTag]("name", "city.city_id"),
+		WhereClause[testutils.TestTag]("id = ?", 15),
 	)
 
 	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)
@@ -114,7 +114,7 @@ func TestUpdateApply(t *testing.T) {
 				Set[testutils.TestTag]("age", 51),
 			)
 		}),
-		WhereC[testutils.TestTag]("id = ?", 15),
+		WhereClause[testutils.TestTag]("id = ?", 15),
 	)
 
 	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)

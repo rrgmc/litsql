@@ -16,11 +16,11 @@ func From(table string) FromChain {
 }
 
 func FromE(table litsql.Expression) FromChain {
-	return ium.FromE[tag.UpdateTag](table)
+	return ium.FromExpr[tag.UpdateTag](table)
 }
 
 func FromQ(q psql.SelectQuery) FromChain {
-	return ium.FromQ[tag.UpdateTag, tag.SelectTag](q)
+	return ium.FromQuery[tag.UpdateTag, tag.SelectTag](q)
 }
 
 func InnerJoin(table string) JoinChain {
@@ -28,7 +28,7 @@ func InnerJoin(table string) JoinChain {
 }
 
 func InnerJoinE(table litsql.Expression) JoinChain {
-	return ium.InnerJoinE[tag.UpdateTag](table)
+	return ium.InnerJoinExpr[tag.UpdateTag](table)
 }
 
 func LeftJoin(table string) JoinChain {
@@ -36,7 +36,7 @@ func LeftJoin(table string) JoinChain {
 }
 
 func LeftJoinE(table litsql.Expression) JoinChain {
-	return ium.LeftJoinE[tag.UpdateTag](table)
+	return ium.LeftJoinExpr[tag.UpdateTag](table)
 }
 
 func RightJoin(table string) JoinChain {
@@ -44,7 +44,7 @@ func RightJoin(table string) JoinChain {
 }
 
 func RightJoinE(table litsql.Expression) JoinChain {
-	return ium.RightJoinE[tag.UpdateTag](table)
+	return ium.RightJoinExpr[tag.UpdateTag](table)
 }
 
 func FullJoin(table string) JoinChain {
@@ -52,7 +52,7 @@ func FullJoin(table string) JoinChain {
 }
 
 func FullJoinE(table litsql.Expression) JoinChain {
-	return ium.FullJoinE[tag.UpdateTag](table)
+	return ium.FullJoinExpr[tag.UpdateTag](table)
 }
 
 func CrossJoin(table string) JoinChain {
@@ -60,7 +60,7 @@ func CrossJoin(table string) JoinChain {
 }
 
 func CrossJoinE(table litsql.Expression) JoinChain {
-	return ium.CrossJoinE[tag.UpdateTag](table)
+	return ium.CrossJoinExpr[tag.UpdateTag](table)
 }
 
 func StraightJoin(table string) JoinChain {
@@ -68,7 +68,7 @@ func StraightJoin(table string) JoinChain {
 }
 
 func StraightJoinE(table litsql.Expression) JoinChain {
-	return ium.StraightJoinE[tag.UpdateTag](table)
+	return ium.StraightJoinExpr[tag.UpdateTag](table)
 }
 
 func Only() psql.UpdateMod {
@@ -84,27 +84,27 @@ func Set(column string, arg any) psql.UpdateMod {
 }
 
 func SetAN(column string, argumentName string) psql.UpdateMod {
-	return ium.SetAN[tag.UpdateTag](column, argumentName)
+	return ium.SetArgNamed[tag.UpdateTag](column, argumentName)
 }
 
 func SetE(column string, value litsql.Expression) psql.UpdateMod {
-	return ium.SetE[tag.UpdateTag](column, value)
+	return ium.SetExpr[tag.UpdateTag](column, value)
 }
 
 func SetQ(column string, q psql.SelectQuery) psql.UpdateMod {
-	return ium.SetQ[tag.UpdateTag, tag.SelectTag](column, q)
+	return ium.SetQuery[tag.UpdateTag, tag.SelectTag](column, q)
 }
 
 func SetS(column string, right string) psql.UpdateMod {
-	return ium.SetS[tag.UpdateTag](column, right)
+	return ium.SetString[tag.UpdateTag](column, right)
 }
 
 func SetC(query string, args ...any) psql.UpdateMod {
-	return ium.SetC[tag.UpdateTag](query, args...)
+	return ium.SetClause[tag.UpdateTag](query, args...)
 }
 
 func SetEC(assignment litsql.Expression) psql.UpdateMod {
-	return ium.SetEC[tag.UpdateTag](assignment)
+	return ium.SetExprClause[tag.UpdateTag](assignment)
 }
 
 func Table(name string) psql.UpdateMod {
@@ -116,11 +116,11 @@ func Where(condition string) psql.UpdateMod {
 }
 
 func WhereE(condition litsql.Expression) psql.UpdateMod {
-	return ium.WhereE[tag.UpdateTag](condition)
+	return ium.WhereExpr[tag.UpdateTag](condition)
 }
 
 func WhereC(query string, args ...any) psql.UpdateMod {
-	return ium.WhereC[tag.UpdateTag](query, args...)
+	return ium.WhereClause[tag.UpdateTag](query, args...)
 }
 
 func With(name string, columns ...string) WithChain {
@@ -128,5 +128,5 @@ func With(name string, columns ...string) WithChain {
 }
 
 func WithE(name string, columns ...litsql.Expression) WithChain {
-	return ium.WithE[tag.UpdateTag](name, columns...)
+	return ium.WithExpr[tag.UpdateTag](name, columns...)
 }

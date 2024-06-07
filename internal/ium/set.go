@@ -9,30 +9,30 @@ import (
 )
 
 func Set[T any](column string, arg any) sq.QueryMod[T] {
-	return SetEC[T](expr.JoinSep(" = ", expr.String(column), expr.Arg(arg)))
+	return SetExprClause[T](expr.JoinSep(" = ", expr.String(column), expr.Arg(arg)))
 }
 
-func SetAN[T any](column string, argumentName string) sq.QueryMod[T] {
-	return SetEC[T](expr.JoinSep(" = ", expr.String(column), expr.ArgNamed(argumentName)))
+func SetArgNamed[T any](column string, argumentName string) sq.QueryMod[T] {
+	return SetExprClause[T](expr.JoinSep(" = ", expr.String(column), expr.ArgNamed(argumentName)))
 }
 
-func SetE[T any](column string, value litsql.Expression) sq.QueryMod[T] {
-	return SetEC[T](expr.JoinSep(" = ", expr.String(column), value))
+func SetExpr[T any](column string, value litsql.Expression) sq.QueryMod[T] {
+	return SetExprClause[T](expr.JoinSep(" = ", expr.String(column), value))
 }
 
-func SetQ[T, A any](column string, q isq.Query[A]) sq.QueryMod[T] {
-	return SetE[T](column, q)
+func SetQuery[T, A any](column string, q isq.Query[A]) sq.QueryMod[T] {
+	return SetExpr[T](column, q)
 }
 
-func SetS[T any](column string, right string) sq.QueryMod[T] {
-	return SetE[T](column, expr.String(right))
+func SetString[T any](column string, right string) sq.QueryMod[T] {
+	return SetExpr[T](column, expr.String(right))
 }
 
-func SetC[T any](query string, args ...any) sq.QueryMod[T] {
-	return SetEC[T](expr.Clause(query, args...))
+func SetClause[T any](query string, args ...any) sq.QueryMod[T] {
+	return SetExprClause[T](expr.Clause(query, args...))
 }
 
-func SetEC[T any](assignment litsql.Expression) sq.QueryMod[T] {
+func SetExprClause[T any](assignment litsql.Expression) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
 		a.AddQueryClause(&iclause.Set{
 			Set:     []litsql.Expression{assignment},
