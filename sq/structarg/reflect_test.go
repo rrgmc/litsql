@@ -81,6 +81,7 @@ func TestReflect(t *testing.T) {
 
 func TestReflectDeref(t *testing.T) {
 	type x struct {
+		X string
 		H *string
 		T *string
 		J **int
@@ -95,6 +96,7 @@ func TestReflectDeref(t *testing.T) {
 	lval2 := &lval1
 
 	value := &x{
+		X: "889",
 		H: &hval,
 		J: &jval1,
 		L: &lval2,
@@ -107,6 +109,10 @@ func TestReflectDeref(t *testing.T) {
 		expected         any
 		expectedNotFound bool
 	}{
+		{
+			name:     "X",
+			expected: "889",
+		},
 		{
 			name:     "H",
 			expected: "99",
