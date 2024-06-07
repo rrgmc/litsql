@@ -1,4 +1,4 @@
-package structarg
+package argstruct
 
 import (
 	"testing"

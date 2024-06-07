@@ -1,4 +1,4 @@
-package structarg
+package argstruct
 
 import (
 	"github.com/rrgmc/litsql"
