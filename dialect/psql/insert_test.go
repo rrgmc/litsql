@@ -19,3 +19,12 @@ func TestInsert(t *testing.T) {
 	assert.Assert(t, queryStr != "")
 	assert.Assert(t, len(params) == 0)
 }
+
+func TestInsertRaw(t *testing.T) {
+	query := psql.InsertRaw("insert into users (id) values (?)", 12, 15)
+	queryStr, params, err := query.Build()
+
+	assert.NilError(t, err)
+	assert.Equal(t, "insert into users (id) values (?)", queryStr)
+	assert.DeepEqual(t, []any{12, 15}, params)
+}

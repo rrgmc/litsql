@@ -19,3 +19,12 @@ func TestDelete(t *testing.T) {
 	assert.Assert(t, queryStr != "")
 	assert.Assert(t, len(params) == 0)
 }
+
+func TestDeleteRaw(t *testing.T) {
+	query := psql.DeleteRaw("delete * from users where id = ?", 12, 15)
+	queryStr, params, err := query.Build()
+
+	assert.NilError(t, err)
+	assert.Equal(t, "delete * from users where id = ?", queryStr)
+	assert.DeepEqual(t, []any{12, 15}, params)
+}
