@@ -88,12 +88,6 @@ library heavily discourages.
 * [MySQL](https://pkg.go.dev/github.com/rrgmc/litsql/dialect/mysql)
 * [SQLite](https://pkg.go.dev/github.com/rrgmc/litsql/dialect/sqlite)
 
-
-## Sub-packages
-
- * [structargs](https://pkg.go.dev/github.com/rrgmc/litsql/sq/structargs): get named arguments from struct fields
- * [reflectxargs](https://pkg.go.dev/github.com/rrgmc/litsql/sq/reflectxargs): get named arguments from struct fields using reflectx
-
 ## Examples
 
 ```go

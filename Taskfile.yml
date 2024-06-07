@@ -1,12 +1,6 @@
 version: '3'
 
 tasks:
-  update-version:
-    cmds:
-      - 'cd sq/structargs; go mod edit -require=github.com/rrgmc/litsql@{{.VERSION}}'
-      - 'cd sq/reflectxargs; go mod edit -require=github.com/rrgmc/litsql@{{.VERSION}}'
-    requires:
-      vars: [VERSION]
   current-version:
     cmds:
       - 'echo "Version: {{.GIT_TAG_CURRENT}}"'
@@ -31,8 +25,6 @@ tasks:
     internal: true
     prompt: "Creating and pushing tag {{.VERSION}}. Are you sure?"
     cmds:
-      - 'git tag sq/structargs/{{.VERSION}}'
-      - 'git tag sq/reflectxargs/{{.VERSION}}'
       - 'git tag {{.VERSION}}'
       - 'git push --tags'
     requires:
