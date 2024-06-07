@@ -378,6 +378,18 @@ query := psql.Select(
 )
 ```
 
+#### Full raw query (the query and parameters will be returned as-is)
+
+```go
+query := psql.SelectRaw("select * from users where user_id = $1", 55)
+```
+
+#### Full raw query (with clause processing)
+
+```go
+query := psql.SelectRawExpr(expr.Clause("select * from users where user_id = ?", 55))
+```
+
 #### Prepared statements
 
 When using prepared statements, the use of named arguments is required, as it would be impossible to know which
