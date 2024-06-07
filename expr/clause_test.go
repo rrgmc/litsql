@@ -7,12 +7,12 @@ import (
 	"github.com/rrgmc/litsql/internal/testutils"
 )
 
-func TestC(t *testing.T) {
+func TestClause(t *testing.T) {
 	ex := Clause("test_me = ?", 98)
 	testutils.TestExpression(t, ex, "test_me = $1", 98)
 }
 
-func TestClause(t *testing.T) {
+func TestClauses(t *testing.T) {
 	for _, test := range []struct {
 		name          string
 		expr          litsql.Expression

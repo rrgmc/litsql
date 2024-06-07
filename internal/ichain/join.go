@@ -56,12 +56,12 @@ func (c *JoinChain[T]) On(on string) chain.Join[T] {
 }
 
 func (c *JoinChain[T]) OnExpr(on litsql.Expression) chain.Join[T] {
-	c.SetOnE(on)
+	c.SetOnExpr(on)
 	return c
 }
 
 func (c *JoinChain[T]) OnClause(query string, args ...any) chain.Join[T] {
-	c.SetOnC(query, args...)
+	c.SetOnClause(query, args...)
 	return c
 }
 

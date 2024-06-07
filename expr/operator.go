@@ -16,21 +16,21 @@ func JoinSep(sep string, exprs ...litsql.Expression) litsql.Expression {
 
 // Or outputs the list of expressions separated by " OR ".
 func Or(expr ...string) litsql.Expression {
-	return OrE(StringList(expr)...)
+	return OrExpr(StringList(expr)...)
 }
 
-// OrE outputs the list of expressions separated by " OR ".
-func OrE(expr ...litsql.Expression) litsql.Expression {
+// OrExpr outputs the list of expressions separated by " OR ".
+func OrExpr(expr ...litsql.Expression) litsql.Expression {
 	return join{expressions: expr, sep: " OR "}
 }
 
 // And outputs the list of expressions separated by " AND ".
 func And(expr ...string) litsql.Expression {
-	return AndE(StringList(expr)...)
+	return AndExpr(StringList(expr)...)
 }
 
-// AndE outputs the list of expressions separated by " AND ".
-func AndE(expr ...litsql.Expression) litsql.Expression {
+// AndExpr outputs the list of expressions separated by " AND ".
+func AndExpr(expr ...litsql.Expression) litsql.Expression {
 	return join{expressions: expr, sep: " AND "}
 }
 

@@ -6,7 +6,7 @@ import (
 	"github.com/rrgmc/litsql/internal/testutils"
 )
 
-func TestExprIf(t *testing.T) {
+func TestIf(t *testing.T) {
 	ex := If(true, Raw("test_me"))
 	testutils.TestExpression(t, ex, "test_me")
 
@@ -14,7 +14,7 @@ func TestExprIf(t *testing.T) {
 	testutils.TestExpression(t, ex, "")
 }
 
-func TestExprIfElse(t *testing.T) {
+func TestIfElse(t *testing.T) {
 	ex := IfElse(true, Raw("test1"), Raw("test2"))
 	testutils.TestExpression(t, ex, "test1")
 

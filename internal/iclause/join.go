@@ -71,11 +71,11 @@ func (c *Join) SetOn(on string) {
 	c.On = append(c.On, expr.String(on))
 }
 
-func (c *Join) SetOnE(on litsql.Expression) {
+func (c *Join) SetOnExpr(on litsql.Expression) {
 	c.On = append(c.On, on)
 }
 
-func (c *Join) SetOnC(query string, args ...any) {
+func (c *Join) SetOnClause(query string, args ...any) {
 	c.On = append(c.On, expr.Clause(query, args...))
 }
 

@@ -6,12 +6,12 @@ import (
 	"github.com/rrgmc/litsql/internal/testutils"
 )
 
-func TestJ(t *testing.T) {
+func TestJoin(t *testing.T) {
 	ex := Join(Raw("test_me"), Raw("test2"))
 	testutils.TestExpression(t, ex, "test_metest2")
 }
 
-func TestJS(t *testing.T) {
+func TestJoinSep(t *testing.T) {
 	ex := JoinSep("--", Raw("test_me"), Raw("test2"))
 	testutils.TestExpression(t, ex, "test_me--test2")
 }
