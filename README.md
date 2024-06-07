@@ -21,9 +21,9 @@ func ExampleSelect_literalSimple() {
         // FROM users AS u
         sm.From("users AS u"),
         // WHERE u.age > $1
-        sm.WhereC("u.age > ?", 40),
+        sm.WhereClause("u.age > ?", 40),
         // WHERE u.city_id = $2
-        sm.WhereC("u.city_id = ?", sq.NamedArg("city_id")),
+        sm.WhereClause("u.city_id = ?", sq.NamedArg("city_id")),
         // AND u.deleted_at IS NOT NULL
         sm.Where("u.deleted_at IS NOT NULL"),
         // ORDER BY u.name ASC, u.age DESC
@@ -109,11 +109,11 @@ func ExampleSelect_literalJoin() {
         // INNER JOIN users AS u ON orders.user_id = u.id
         sm.InnerJoin("users AS u").On("orders.user_id = u.id"),
         // WHERE u.age > $1
-        sm.WhereC("u.age ?",
+        sm.WhereClause("u.age ?",
             // example to use either IS NULL or a comparison
-            expr.ExprIfElse(true, // some condition
-                expr.C("> ?", 32),
-                expr.S("IS NULL"))),
+            expr.IfElse(true, // some condition
+                expr.Clause("> ?", 32),
+                expr.String("IS NULL"))),
         // AND u.deleted_at IS NOT NULL
         sm.Where("u.deleted_at IS NOT NULL"),
         // ORDER BY order.date DESC, u.name ASC
@@ -163,7 +163,7 @@ func ExampleSelect_literalWith() {
                 // FROM regional_sales
                 sm.From("regional_sales"),
                 // WHERE total_sales > (SELECT SUM(total_sales)/10 FROM regional_sales)
-                sm.WhereC("total_sales > ?",
+                sm.WhereClause("total_sales > ?",
                     psql.Select(
                         sm.Columns("SUM(total_sales)/10"),
                         sm.From("regional_sales"),
@@ -178,7 +178,7 @@ func ExampleSelect_literalWith() {
         // FROM orders
         sm.From("orders"),
         // WHERE region IN (SELECT region FROM top_regions)
-        sm.WhereC("region IN ?",
+        sm.WhereClause("region IN ?",
             psql.Select(
                 sm.Columns("region"),
                 sm.From("top_regions"),
@@ -234,7 +234,7 @@ query := psql.Select(
 )
 if filter.Name != "" {
     query.Apply(
-        sm.WhereC("name = ?", filter.Name),
+        sm.WhereClause("name = ?", filter.Name),
     )
 }
 ```
@@ -244,7 +244,7 @@ if filter.Name != "" {
 ```go
 query := psql.Select(
     sm.Columns("id", "name", "age"),
-    sm.FromQ(psql.Select(
+    sm.FromQuery(psql.Select(
         sm.Columns("id", "name", "age"),
         sm.From("users"),
         sm.Where("age > 10"),
@@ -258,7 +258,7 @@ query := psql.Select(
 query := psql.Select(
     sm.Columns("id", "name", "age"),
     sm.From("users"),
-    sm.WhereC("age IN (?)", expr.In([]any{15, 30, 45})),
+    sm.WhereClause("age IN (?)", expr.In([]any{15, 30, 45})),
 )
 ```
 
@@ -268,7 +268,7 @@ query := psql.Select(
 query := psql.Select(
     sm.Columns("id", "name", "age"),
     sm.From("users"),
-    sm.WhereC("age IN (?)", expr.In([]any{
+    sm.WhereClause("age IN (?)", expr.In([]any{
         sq.NamedArg("first"),
         sq.NamedArg("second"),
         sq.NamedArg("third"),
@@ -289,7 +289,7 @@ qs, args, err := query.Build(
 query := psql.Select(
     sm.Columns("id", "name", "age"),
     sm.From("users"),
-    sm.WhereC("region IN ?",
+    sm.WhereClause("region IN ?",
         psql.Select(
             sm.Columns("region"),
             sm.From("top_regions"),
@@ -304,8 +304,8 @@ query := psql.Select(
 query := psql.Select(
     sm.Columns("id", "name", "age"),
     sm.From("users"),
-    sm.WhereC("age > ?",
-        expr.F(func() (litsql.Expression, error) {
+    sm.WhereClause("age > ?",
+        expr.Func(func() (litsql.Expression, error) {
             r := rand.Intn(3)
             switch r {
             case 0:
@@ -341,10 +341,10 @@ v := any(32)
 query := psql.Select(
     sm.Columns("id", "name", "age"),
     sm.From("users"),
-    sm.WhereC("u.age ?",
-        expr.ExprIfElse(v != nil,
-            expr.C("> ?", 32),
-            expr.S("IS NULL"))),
+    sm.WhereClause("u.age ?",
+        expr.IfElse(v != nil,
+            expr.Clause("> ?", 32),
+            expr.String("IS NULL"))),
 )
 ```
 
@@ -354,7 +354,7 @@ query := psql.Select(
 query := psql.Select(
     sm.Columns("id", "name", "age"),
     sm.From("users"),
-    sm.WhereE(
+    sm.WhereExpr(
         expr.Or(
             "(age > 10 AND city_id = 12)",
             "(age < 10 AND city_id = 15)",
@@ -387,8 +387,8 @@ argument maps to each value.
 query := psql.Select(
     sm.Columns("film_id", "title", "length"),
     sm.From("film"),
-    sm.WhereC("length > ?", sq.NamedArg("length")),
-    sm.LimitE(expr.ArgNamed("limit")),
+    sm.WhereClause("length > ?", sq.NamedArg("length")),
+    sm.LimitArgNamed("limit"),
 )
 
 queryStr, args, err := query.Build()
