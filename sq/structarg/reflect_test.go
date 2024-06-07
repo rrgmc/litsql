@@ -136,6 +136,98 @@ func TestReflectDeref(t *testing.T) {
 	}
 }
 
+func TestReflectMapperFunc(t *testing.T) {
+	type x struct {
+		H string
+		J int
+		L int `r:"LA"`
+		M int `r:"MM,omitempty,x=15"`
+		N int `r:"NN"`
+	}
+
+	value := &x{
+		H: "99",
+		J: 11,
+		L: 45,
+		M: 91,
+		N: 40,
+	}
+
+	a := New(value, WithTagName("r"), WithMapperFunc(func(s string) string {
+		switch s {
+		case "H":
+			return "hmapped"
+		case "L":
+			return "lmapped"
+		case "NN":
+			return "nmapped"
+		default:
+			return s
+		}
+	}))
+
+	for _, test := range []struct {
+		name             string
+		expected         any
+		expectedNotFound bool
+	}{
+		{
+			name:             "H",
+			expectedNotFound: true,
+		},
+		{
+			name:     "hmapped",
+			expected: "99",
+		},
+		{
+			name:     "J",
+			expected: 11,
+		},
+		{
+			name:             "L",
+			expectedNotFound: true,
+		},
+		{
+			name:     "LA",
+			expected: 45,
+		},
+		{
+			name:             "lmapped",
+			expectedNotFound: true,
+		},
+		{
+			name:             "M",
+			expectedNotFound: true,
+		},
+		{
+			name:     "MM",
+			expected: 91,
+		},
+		{
+			name:             "N",
+			expectedNotFound: true,
+		},
+		{
+			name:             "NN",
+			expectedNotFound: true,
+		},
+		{
+			name:     "nmapped",
+			expected: 40,
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			v, ok := a.Get(test.name)
+			if test.expectedNotFound {
+				assert.Assert(t, !ok)
+			} else {
+				assert.Assert(t, ok)
+				assert.DeepEqual(t, test.expected, v)
+			}
+		})
+	}
+}
+
 func TestReflectEmbed(t *testing.T) {
 	type Xembed struct {
 		A string
