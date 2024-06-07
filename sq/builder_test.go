@@ -124,7 +124,7 @@ func TestBuilderMergeNoMultiple(t *testing.T) {
 	assert.ErrorIs(t, err, litsql.ErrClause)
 }
 
-func builderTest(t *testing.T, d litsql.Dialect, qb *Builder, querystr string, args ...any) {
+func builderTest(t *testing.T, d litsql.Dialect, qb *QueryBuilder, querystr string, args ...any) {
 	t.Helper()
 
 	var buf bytes.Buffer

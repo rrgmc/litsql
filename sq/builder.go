@@ -10,30 +10,30 @@ import (
 	"github.com/rrgmc/litsql/internal"
 )
 
-// Builder implements [litsql.QueryBuilder].
-type Builder struct {
+// QueryBuilder implements [litsql.QueryBuilder].
+type QueryBuilder struct {
 	d      litsql.Dialect
 	mlist  map[string][]litsql.QueryClause
 	addErr error
 }
 
-func NewQueryBuilder(d litsql.Dialect) *Builder {
-	return &Builder{
+func NewQueryBuilder(d litsql.Dialect) *QueryBuilder {
+	return &QueryBuilder{
 		d:     d,
 		mlist: make(map[string][]litsql.QueryClause),
 	}
 }
 
-func (s *Builder) Dialect() litsql.Dialect {
+func (s *QueryBuilder) Dialect() litsql.Dialect {
 	return s.d
 }
 
-func (s *Builder) AddQueryClause(q litsql.QueryClause) {
+func (s *QueryBuilder) AddQueryClause(q litsql.QueryClause) {
 	cid := q.ClauseID()
 	s.mlist[cid] = append(s.mlist[cid], q)
 }
 
-func (s *Builder) QueryClauseList() ([]litsql.QueryClause, error) {
+func (s *QueryBuilder) QueryClauseList() ([]litsql.QueryClause, error) {
 	if s.addErr != nil {
 		return nil, s.addErr
 	}

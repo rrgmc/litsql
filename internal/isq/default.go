@@ -7,7 +7,7 @@ import (
 )
 
 type DefaultQuery[T any] struct {
-	builder    *sq.Builder
+	builder    *sq.QueryBuilder
 	startOrder int
 	startStr   string
 }
