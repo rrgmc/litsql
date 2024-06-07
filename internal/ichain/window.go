@@ -30,7 +30,7 @@ func (f *WindowChain[T]) PartitionBy(condition ...string) chain.Window[T] {
 	return f
 }
 
-func (f *WindowChain[T]) PartitionByE(condition ...litsql.Expression) chain.Window[T] {
+func (f *WindowChain[T]) PartitionByExpr(condition ...litsql.Expression) chain.Window[T] {
 	f.NamedWindow.Definition.AddPartitionBy(condition...)
 	return f
 }
@@ -40,7 +40,7 @@ func (f *WindowChain[T]) OrderBy(order ...string) chain.Window[T] {
 	return f
 }
 
-func (f *WindowChain[T]) OrderByE(order ...litsql.Expression) chain.Window[T] {
+func (f *WindowChain[T]) OrderByExpr(order ...litsql.Expression) chain.Window[T] {
 	f.NamedWindow.Definition.AddOrderBy(order...)
 	return f
 }

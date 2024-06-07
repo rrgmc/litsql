@@ -55,12 +55,12 @@ func (c *JoinChain[T]) On(on string) chain.Join[T] {
 	return c
 }
 
-func (c *JoinChain[T]) OnE(on litsql.Expression) chain.Join[T] {
+func (c *JoinChain[T]) OnExpr(on litsql.Expression) chain.Join[T] {
 	c.SetOnE(on)
 	return c
 }
 
-func (c *JoinChain[T]) OnC(query string, args ...any) chain.Join[T] {
+func (c *JoinChain[T]) OnClause(query string, args ...any) chain.Join[T] {
 	c.SetOnC(query, args...)
 	return c
 }

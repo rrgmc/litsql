@@ -24,12 +24,12 @@ func (f *InsertConflictChain[T]) Where(condition string) chain.InsertConflict[T,
 	return f
 }
 
-func (f *InsertConflictChain[T]) WhereE(condition litsql.Expression) chain.InsertConflict[T, imod.InsertConflictUpdateModUM] {
+func (f *InsertConflictChain[T]) WhereExpr(condition litsql.Expression) chain.InsertConflict[T, imod.InsertConflictUpdateModUM] {
 	f.SetWhere(condition)
 	return f
 }
 
-func (f *InsertConflictChain[T]) WhereC(query string, args ...any) chain.InsertConflict[T, imod.InsertConflictUpdateModUM] {
+func (f *InsertConflictChain[T]) WhereClause(query string, args ...any) chain.InsertConflict[T, imod.InsertConflictUpdateModUM] {
 	f.SetWhere(expr.Clause(query, args...))
 	return f
 }

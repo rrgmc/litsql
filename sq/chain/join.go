@@ -13,7 +13,7 @@ type Join[T any] interface {
 	WithOrdinality() Join[T]
 	Natural() sq.QueryMod[T]
 	On(on string) Join[T]
-	OnE(on litsql.Expression) Join[T]
-	OnC(query string, args ...any) Join[T]
+	OnExpr(on litsql.Expression) Join[T]
+	OnClause(query string, args ...any) Join[T]
 	Using(using ...string) Join[T]
 }
