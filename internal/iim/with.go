@@ -9,10 +9,10 @@ import (
 )
 
 func With[T any](name string, columns ...string) chain.With[T] {
-	return WithE[T](name, expr.StringList(columns)...)
+	return WithExpr[T](name, expr.StringList(columns)...)
 }
 
-func WithE[T any](name string, columns ...litsql.Expression) chain.With[T] {
+func WithExpr[T any](name string, columns ...litsql.Expression) chain.With[T] {
 	cte := &iclause.CTE{
 		Name:    name,
 		Columns: columns,

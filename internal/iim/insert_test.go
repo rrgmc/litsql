@@ -29,7 +29,7 @@ func TestInsertBasic(t *testing.T) {
 		Values[testutils.TestTag](15, "John"),
 		Values[testutils.TestTag](16, "Mary"),
 		OnConflict[testutils.TestTag]("id").DoUpdate(
-			ConflictSetS[testutils.TestTag]("name", "EXCLUDED.name"),
+			ConflictSetString[testutils.TestTag]("name", "EXCLUDED.name"),
 		),
 		Returning[testutils.TestTag]("id"),
 	)

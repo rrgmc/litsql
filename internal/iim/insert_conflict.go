@@ -38,45 +38,45 @@ func OnConflictOnConstraint[T any](constraint string) chain.InsertConflict[T, im
 }
 
 func ConflictSet[T any](column string, arg any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return ConflictSetEC[T](expr.JoinSep(" = ", expr.String(column), expr.Arg(arg)))
+	return ConflictSetExprClause[T](expr.JoinSep(" = ", expr.String(column), expr.Arg(arg)))
 }
 
-func ConflictSetAN[T any](column string, argumentName string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return ConflictSetEC[T](expr.JoinSep(" = ", expr.String(column), expr.ArgNamed(argumentName)))
+func ConflictSetArgNamed[T any](column string, argumentName string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
+	return ConflictSetExprClause[T](expr.JoinSep(" = ", expr.String(column), expr.ArgNamed(argumentName)))
 }
 
-func ConflictSetE[T any](column string, value litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return ConflictSetEC[T](expr.JoinSep(" = ", expr.String(column), value))
+func ConflictSetExpr[T any](column string, value litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
+	return ConflictSetExprClause[T](expr.JoinSep(" = ", expr.String(column), value))
 }
 
-func ConflictSetQ[T, A any](column string, q isq.Query[A]) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return ConflictSetE[T](column, q)
+func ConflictSetQuery[T, A any](column string, q isq.Query[A]) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
+	return ConflictSetExpr[T](column, q)
 }
 
-func ConflictSetS[T any](column string, right string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return ConflictSetE[T](column, expr.String(right))
+func ConflictSetString[T any](column string, right string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
+	return ConflictSetExpr[T](column, expr.String(right))
 }
 
-func ConflictSetC[T any](query string, args ...any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return ConflictSetEC[T](expr.Clause(query, args...))
+func ConflictSetClause[T any](query string, args ...any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
+	return ConflictSetExprClause[T](expr.Clause(query, args...))
 }
 
-func ConflictSetEC[T any](assignment litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
+func ConflictSetExprClause[T any](assignment litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
 	return mod.InsertConflictUpdateModFunc[T, imod.InsertConflictUpdateModUM](func(a *iclause.InsertConflict) {
 		a.Set.Set = append(a.Set.Set, assignment)
 	})
 }
 
 func Where[T any](condition string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return WhereE[T](expr.String(condition))
+	return WhereExpr[T](expr.String(condition))
 }
 
-func WhereE[T any](condition litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
+func WhereExpr[T any](condition litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
 	return mod.InsertConflictUpdateModFunc[T, imod.InsertConflictUpdateModUM](func(a *iclause.InsertConflict) {
 		a.Where.Conditions = append(a.Where.Conditions, condition)
 	})
 }
 
-func WhereC[T any](query string, args ...any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return WhereE[T](expr.Clause(query, args...))
+func WhereClause[T any](query string, args ...any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
+	return WhereExpr[T](expr.Clause(query, args...))
 }

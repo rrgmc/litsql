@@ -9,14 +9,14 @@ import (
 )
 
 func Values[T any](values ...any) sq.QueryMod[T] {
-	return ValuesE[T](expr.Args(values)...)
+	return ValuesExpr[T](expr.Args(values)...)
 }
 
-func ValuesAN[T any](argumentNames ...string) sq.QueryMod[T] {
-	return ValuesE[T](expr.ArgsNamed(argumentNames...)...)
+func ValuesArgNamed[T any](argumentNames ...string) sq.QueryMod[T] {
+	return ValuesExpr[T](expr.ArgsNamed(argumentNames...)...)
 }
 
-func ValuesE[T any](clauses ...litsql.Expression) sq.QueryMod[T] {
+func ValuesExpr[T any](clauses ...litsql.Expression) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
 		var vals []iclause.Value
 		if len(clauses) > 0 {
@@ -28,8 +28,8 @@ func ValuesE[T any](clauses ...litsql.Expression) sq.QueryMod[T] {
 	})
 }
 
-func ValuesS[T any](clauses ...string) sq.QueryMod[T] {
-	return ValuesE[T](expr.StringList(clauses)...)
+func ValuesString[T any](clauses ...string) sq.QueryMod[T] {
+	return ValuesExpr[T](expr.StringList(clauses)...)
 }
 
 // Insert from a query
