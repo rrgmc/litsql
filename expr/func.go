@@ -2,8 +2,8 @@ package expr
 
 import "github.com/rrgmc/litsql"
 
-// F calls the function to return the expression to output.
-func F(f func() (litsql.Expression, error)) litsql.Expression {
+// Func calls the function to return the expression to output.
+func Func(f func() (litsql.Expression, error)) litsql.Expression {
 	return exprFunc(f)
 }
 

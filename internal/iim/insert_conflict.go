@@ -38,15 +38,15 @@ func OnConflictOnConstraint[T any](constraint string) chain.InsertConflict[T, im
 }
 
 func ConflictSet[T any](column string, arg any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return ConflictSetEC[T](expr.JS(" = ", expr.S(column), expr.Arg(arg)))
+	return ConflictSetEC[T](expr.JoinSep(" = ", expr.String(column), expr.Arg(arg)))
 }
 
 func ConflictSetAN[T any](column string, argumentName string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return ConflictSetEC[T](expr.JS(" = ", expr.S(column), expr.ArgNamed(argumentName)))
+	return ConflictSetEC[T](expr.JoinSep(" = ", expr.String(column), expr.ArgNamed(argumentName)))
 }
 
 func ConflictSetE[T any](column string, value litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return ConflictSetEC[T](expr.JS(" = ", expr.S(column), value))
+	return ConflictSetEC[T](expr.JoinSep(" = ", expr.String(column), value))
 }
 
 func ConflictSetQ[T, A any](column string, q isq.Query[A]) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
@@ -54,11 +54,11 @@ func ConflictSetQ[T, A any](column string, q isq.Query[A]) mod.InsertConflictUpd
 }
 
 func ConflictSetS[T any](column string, right string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return ConflictSetE[T](column, expr.S(right))
+	return ConflictSetE[T](column, expr.String(right))
 }
 
 func ConflictSetC[T any](query string, args ...any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return ConflictSetEC[T](expr.C(query, args...))
+	return ConflictSetEC[T](expr.Clause(query, args...))
 }
 
 func ConflictSetEC[T any](assignment litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
@@ -68,7 +68,7 @@ func ConflictSetEC[T any](assignment litsql.Expression) mod.InsertConflictUpdate
 }
 
 func Where[T any](condition string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return WhereE[T](expr.S(condition))
+	return WhereE[T](expr.String(condition))
 }
 
 func WhereE[T any](condition litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
@@ -78,5 +78,5 @@ func WhereE[T any](condition litsql.Expression) mod.InsertConflictUpdateMod[T, i
 }
 
 func WhereC[T any](query string, args ...any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM] {
-	return WhereE[T](expr.C(query, args...))
+	return WhereE[T](expr.Clause(query, args...))
 }

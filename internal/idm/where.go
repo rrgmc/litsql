@@ -8,7 +8,7 @@ import (
 )
 
 func Where[T any](condition string) sq.QueryMod[T] {
-	return WhereE[T](expr.S(condition))
+	return WhereE[T](expr.String(condition))
 }
 
 func WhereE[T any](condition litsql.Expression) sq.QueryMod[T] {
@@ -18,5 +18,5 @@ func WhereE[T any](condition litsql.Expression) sq.QueryMod[T] {
 }
 
 func WhereC[T any](query string, args ...any) sq.QueryMod[T] {
-	return WhereE[T](expr.C(query, args...))
+	return WhereE[T](expr.Clause(query, args...))
 }

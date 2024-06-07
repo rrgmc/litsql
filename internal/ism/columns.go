@@ -8,7 +8,7 @@ import (
 )
 
 func Columns[T any](names ...string) sq.QueryMod[T] {
-	return ColumnsE[T](expr.SL(names)...)
+	return ColumnsE[T](expr.StringList(names)...)
 }
 
 func ColumnsE[T any](names ...litsql.Expression) sq.QueryMod[T] {
@@ -18,5 +18,5 @@ func ColumnsE[T any](names ...litsql.Expression) sq.QueryMod[T] {
 }
 
 func ColumnsC[T any](query string, args ...any) sq.QueryMod[T] {
-	return ColumnsE[T](expr.C(query, args...))
+	return ColumnsE[T](expr.Clause(query, args...))
 }

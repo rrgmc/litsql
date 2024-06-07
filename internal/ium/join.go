@@ -9,7 +9,7 @@ import (
 )
 
 func InnerJoin[T any](table string) chain.Join[T] {
-	return InnerJoinE[T](expr.S(table))
+	return InnerJoinE[T](expr.String(table))
 }
 
 func InnerJoinE[T any](table litsql.Expression) chain.Join[T] {
@@ -17,7 +17,7 @@ func InnerJoinE[T any](table litsql.Expression) chain.Join[T] {
 }
 
 func LeftJoin[T any](table string) chain.Join[T] {
-	return LeftJoinE[T](expr.S(table))
+	return LeftJoinE[T](expr.String(table))
 }
 
 func LeftJoinE[T any](table litsql.Expression) chain.Join[T] {
@@ -25,7 +25,7 @@ func LeftJoinE[T any](table litsql.Expression) chain.Join[T] {
 }
 
 func RightJoin[T any](table string) chain.Join[T] {
-	return RightJoinE[T](expr.S(table))
+	return RightJoinE[T](expr.String(table))
 }
 
 func RightJoinE[T any](table litsql.Expression) chain.Join[T] {
@@ -33,7 +33,7 @@ func RightJoinE[T any](table litsql.Expression) chain.Join[T] {
 }
 
 func FullJoin[T any](table string) chain.Join[T] {
-	return FullJoinE[T](expr.S(table))
+	return FullJoinE[T](expr.String(table))
 }
 
 func FullJoinE[T any](table litsql.Expression) chain.Join[T] {
@@ -41,7 +41,7 @@ func FullJoinE[T any](table litsql.Expression) chain.Join[T] {
 }
 
 func CrossJoin[T any](table string) chain.Join[T] {
-	return CrossJoinE[T](expr.S(table))
+	return CrossJoinE[T](expr.String(table))
 }
 
 func CrossJoinE[T any](table litsql.Expression) chain.Join[T] {
@@ -49,7 +49,7 @@ func CrossJoinE[T any](table litsql.Expression) chain.Join[T] {
 }
 
 func StraightJoin[T any](table string) chain.Join[T] {
-	return StraightJoinE[T](expr.S(table))
+	return StraightJoinE[T](expr.String(table))
 }
 
 func StraightJoinE[T any](table litsql.Expression) chain.Join[T] {

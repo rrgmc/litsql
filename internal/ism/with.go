@@ -9,7 +9,7 @@ import (
 )
 
 func With[T any](name string, columns ...string) chain.With[T] {
-	return WithE[T](name, expr.SL(columns)...)
+	return WithE[T](name, expr.StringList(columns)...)
 }
 
 func WithE[T any](name string, columns ...litsql.Expression) chain.With[T] {

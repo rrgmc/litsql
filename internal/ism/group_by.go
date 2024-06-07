@@ -9,7 +9,7 @@ import (
 )
 
 func GroupBy[T any](columns ...string) chain.GroupBy[T] {
-	return GroupByE[T](expr.SL(columns)...)
+	return GroupByE[T](expr.StringList(columns)...)
 }
 
 func GroupByE[T any](columns ...litsql.Expression) chain.GroupBy[T] {

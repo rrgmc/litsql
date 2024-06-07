@@ -6,7 +6,7 @@ import (
 
 // Paren returns an expression what outputs the list of expressions comma-separated with parenthesis around.
 func Paren(expr ...string) litsql.Expression {
-	return ParenE(SL(expr)...)
+	return ParenE(StringList(expr)...)
 }
 
 // ParenE returns an expression what outputs the list of expressions comma-separated with parenthesis around.

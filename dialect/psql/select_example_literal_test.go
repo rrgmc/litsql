@@ -86,9 +86,9 @@ func ExampleSelect_literalJoin() {
 		// WHERE u.age > $1
 		sm.WhereC("u.age ?",
 			// example to use either IS NULL or a comparison
-			expr.ExprIfElse(true, // some condition
-				expr.C("> ?", 32),
-				expr.S("IS NULL"))),
+			expr.IfElse(true, // some condition
+				expr.Clause("> ?", 32),
+				expr.String("IS NULL"))),
 		// AND u.deleted_at IS NOT NULL
 		sm.Where("u.deleted_at IS NOT NULL"),
 		// ORDER BY order.date DESC, u.name ASC

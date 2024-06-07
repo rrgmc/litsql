@@ -4,19 +4,19 @@ import (
 	"github.com/rrgmc/litsql"
 )
 
-// J combines a list of [litsql.Expression] in a single expression, without a separator.
-func J(exprs ...litsql.Expression) litsql.Expression {
+// Join combines a list of [litsql.Expression] in a single expression, without a separator.
+func Join(exprs ...litsql.Expression) litsql.Expression {
 	return join{expressions: exprs, sep: ""}
 }
 
-// JS combines a list of [litsql.Expression] in a single expression, using the passed separator.
-func JS(sep string, exprs ...litsql.Expression) litsql.Expression {
+// JoinSep combines a list of [litsql.Expression] in a single expression, using the passed separator.
+func JoinSep(sep string, exprs ...litsql.Expression) litsql.Expression {
 	return join{expressions: exprs, sep: sep}
 }
 
 // Or outputs the list of expressions separated by " OR ".
 func Or(expr ...string) litsql.Expression {
-	return OrE(SL(expr)...)
+	return OrE(StringList(expr)...)
 }
 
 // OrE outputs the list of expressions separated by " OR ".
@@ -26,7 +26,7 @@ func OrE(expr ...litsql.Expression) litsql.Expression {
 
 // And outputs the list of expressions separated by " AND ".
 func And(expr ...string) litsql.Expression {
-	return AndE(SL(expr)...)
+	return AndE(StringList(expr)...)
 }
 
 // AndE outputs the list of expressions separated by " AND ".

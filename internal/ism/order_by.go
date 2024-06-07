@@ -8,7 +8,7 @@ import (
 )
 
 func OrderBy[T any](names ...string) sq.QueryMod[T] {
-	return OrderByE[T](expr.SL(names)...)
+	return OrderByE[T](expr.StringList(names)...)
 }
 
 func OrderByE[T any](names ...litsql.Expression) sq.QueryMod[T] {

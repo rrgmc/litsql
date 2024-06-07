@@ -32,7 +32,7 @@ func TestBuilderArgs(t *testing.T) {
 	qb.AddQueryClause(&testQueryClause{
 		corder: 10,
 		cid:    "c10",
-		e:      expr.C("x?", 12),
+		e:      expr.Clause("x?", 12),
 	})
 	qb.AddQueryClause(&testQueryClause{
 		corder: 5,
@@ -49,7 +49,7 @@ func TestBuilderMergeMultiple(t *testing.T) {
 		xother, otherok := other.(*testQueryClauseMerge)
 		assert.Assert(t, thisok, "'this' query clause is not of the expected type")
 		assert.Assert(t, otherok, "'other' query clause is not of the expected type")
-		xthis.e = expr.J(xthis.e, xother.e)
+		xthis.e = expr.Join(xthis.e, xother.e)
 		return nil
 	}
 

@@ -12,7 +12,7 @@ import (
 func TestInsert(t *testing.T) {
 	query := mysql.Insert(
 		im.Into("device", "id", "name"),
-		im.Values(expr.S("d1")),
+		im.Values(expr.String("d1")),
 	)
 	queryStr, params, err := query.Build()
 

@@ -12,7 +12,7 @@ type InsertOverriding struct {
 
 func (c *InsertOverriding) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
 	return litsql.ExpressIf(w, d, start, expr.Raw(c.Overriding),
-		c.Overriding != "", expr.J(expr.WriterAddSeparator(true), expr.Raw("OVERRIDING ")), expr.Raw(" VALUE"))
+		c.Overriding != "", expr.Join(expr.WriterAddSeparator(true), expr.Raw("OVERRIDING ")), expr.Raw(" VALUE"))
 }
 
 var _ litsql.QueryClause = (*InsertOverriding)(nil)

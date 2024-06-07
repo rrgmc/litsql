@@ -26,7 +26,7 @@ func (f *WindowChain[T]) From(name string) chain.Window[T] {
 }
 
 func (f *WindowChain[T]) PartitionBy(condition ...string) chain.Window[T] {
-	f.NamedWindow.Definition.AddPartitionBy(expr.SL(condition)...)
+	f.NamedWindow.Definition.AddPartitionBy(expr.StringList(condition)...)
 	return f
 }
 
@@ -36,7 +36,7 @@ func (f *WindowChain[T]) PartitionByE(condition ...litsql.Expression) chain.Wind
 }
 
 func (f *WindowChain[T]) OrderBy(order ...string) chain.Window[T] {
-	f.NamedWindow.Definition.AddOrderBy(expr.SL(order)...)
+	f.NamedWindow.Definition.AddOrderBy(expr.StringList(order)...)
 	return f
 }
 

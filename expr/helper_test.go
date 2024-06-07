@@ -7,18 +7,18 @@ import (
 )
 
 func TestExprIf(t *testing.T) {
-	ex := ExprIf(true, Raw("test_me"))
+	ex := If(true, Raw("test_me"))
 	testutils.TestExpression(t, ex, "test_me")
 
-	ex = ExprIf(false, Raw("test_me"))
+	ex = If(false, Raw("test_me"))
 	testutils.TestExpression(t, ex, "")
 }
 
 func TestExprIfElse(t *testing.T) {
-	ex := ExprIfElse(true, Raw("test1"), Raw("test2"))
+	ex := IfElse(true, Raw("test1"), Raw("test2"))
 	testutils.TestExpression(t, ex, "test1")
 
-	ex = ExprIfElse(false, Raw("test1"), Raw("test2"))
+	ex = IfElse(false, Raw("test1"), Raw("test2"))
 	testutils.TestExpression(t, ex, "test2")
 }
 

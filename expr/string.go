@@ -4,32 +4,32 @@ import (
 	"github.com/rrgmc/litsql"
 )
 
-// S returns a raw string expression.
-func S(str string) litsql.Expression {
+// String returns a raw string expression.
+func String(str string) litsql.Expression {
 	return Raw(str)
 }
 
-// SQ returns a quoted string expression.
-func SQ(str string) litsql.Expression {
+// StringQuote returns a quoted string expression.
+func StringQuote(str string) litsql.Expression {
 	return Quote(str)
 }
 
-// SQC returns a checked quoted string expression (only quote if needed).
-func SQC(str string) litsql.Expression {
+// StringQuoteCheck returns a checked quoted string expression (only quote if needed).
+func StringQuoteCheck(str string) litsql.Expression {
 	return QuoteCheck(str)
 }
 
-// SL converts a slice of strings to a slice of raw string expressions.
-func SL(str []string) []litsql.Expression {
+// StringList converts a slice of strings to a slice of raw string expressions.
+func StringList(str []string) []litsql.Expression {
 	var ret []litsql.Expression
 	for _, s := range str {
-		ret = append(ret, S(s))
+		ret = append(ret, String(s))
 	}
 	return ret
 }
 
-// SLQ converts a slice of strings to a slice of quoted raw string expressions.
-func SLQ(str []string) []litsql.Expression {
+// StringListQuote converts a slice of strings to a slice of quoted raw string expressions.
+func StringListQuote(str []string) []litsql.Expression {
 	var ret []litsql.Expression
 	for _, s := range str {
 		ret = append(ret, Quote(s))
@@ -37,8 +37,8 @@ func SLQ(str []string) []litsql.Expression {
 	return ret
 }
 
-// SLQC converts a slice of strings to a slice of checked quoted raw string expressions.
-func SLQC(str []string) []litsql.Expression {
+// StringListQuoteCheck converts a slice of strings to a slice of checked quoted raw string expressions.
+func StringListQuoteCheck(str []string) []litsql.Expression {
 	var ret []litsql.Expression
 	for _, s := range str {
 		ret = append(ret, QuoteCheck(s))

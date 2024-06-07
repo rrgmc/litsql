@@ -10,7 +10,7 @@ import (
 )
 
 func From[T any](table string) chain.From[T] {
-	return FromE[T](expr.S(table))
+	return FromE[T](expr.String(table))
 }
 
 func FromE[T any](table litsql.Expression) chain.From[T] {

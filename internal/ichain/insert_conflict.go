@@ -20,7 +20,7 @@ func (f *InsertConflictChain[T]) Apply(a litsql.QueryBuilder) {
 }
 
 func (f *InsertConflictChain[T]) Where(condition string) chain.InsertConflict[T, imod.InsertConflictUpdateModUM] {
-	f.SetWhere(expr.S(condition))
+	f.SetWhere(expr.String(condition))
 	return f
 }
 
@@ -30,7 +30,7 @@ func (f *InsertConflictChain[T]) WhereE(condition litsql.Expression) chain.Inser
 }
 
 func (f *InsertConflictChain[T]) WhereC(query string, args ...any) chain.InsertConflict[T, imod.InsertConflictUpdateModUM] {
-	f.SetWhere(expr.C(query, args...))
+	f.SetWhere(expr.Clause(query, args...))
 	return f
 }
 

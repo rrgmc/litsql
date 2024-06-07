@@ -8,7 +8,7 @@ import (
 )
 
 func TestC(t *testing.T) {
-	ex := C("test_me = ?", 98)
+	ex := Clause("test_me = ?", 98)
 	testutils.TestExpression(t, ex, "test_me = $1", 98)
 }
 

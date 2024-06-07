@@ -8,7 +8,7 @@ import (
 )
 
 func Having[T any](condition string) sq.QueryMod[T] {
-	return HavingE[T](expr.S(condition))
+	return HavingE[T](expr.String(condition))
 }
 
 func HavingE[T any](condition litsql.Expression) sq.QueryMod[T] {
@@ -18,5 +18,5 @@ func HavingE[T any](condition litsql.Expression) sq.QueryMod[T] {
 }
 
 func HavingC[T any](query string, args ...any) sq.QueryMod[T] {
-	return HavingE[T](expr.C(query, args...))
+	return HavingE[T](expr.Clause(query, args...))
 }

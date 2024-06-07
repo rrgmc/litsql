@@ -8,7 +8,7 @@ import (
 )
 
 func Distinct[T any](on ...string) sq.QueryMod[T] {
-	return DistinctE[T](expr.SL(on)...)
+	return DistinctE[T](expr.StringList(on)...)
 }
 
 func DistinctE[T any](on ...litsql.Expression) sq.QueryMod[T] {

@@ -29,7 +29,7 @@ func ValuesE[T any](clauses ...litsql.Expression) sq.QueryMod[T] {
 }
 
 func ValuesS[T any](clauses ...string) sq.QueryMod[T] {
-	return ValuesE[T](expr.SL(clauses)...)
+	return ValuesE[T](expr.StringList(clauses)...)
 }
 
 // Insert from a query

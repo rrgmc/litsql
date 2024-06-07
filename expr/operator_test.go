@@ -7,12 +7,12 @@ import (
 )
 
 func TestJ(t *testing.T) {
-	ex := J(Raw("test_me"), Raw("test2"))
+	ex := Join(Raw("test_me"), Raw("test2"))
 	testutils.TestExpression(t, ex, "test_metest2")
 }
 
 func TestJS(t *testing.T) {
-	ex := JS("--", Raw("test_me"), Raw("test2"))
+	ex := JoinSep("--", Raw("test_me"), Raw("test2"))
 	testutils.TestExpression(t, ex, "test_me--test2")
 }
 

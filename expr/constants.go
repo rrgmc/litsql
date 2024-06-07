@@ -15,8 +15,8 @@ var (
 	OpenPar    = Raw(internal.OpenPar)
 	ClosePar   = Raw(internal.ClosePar)
 
-	CommaWriterNewLine   = J(Raw(internal.Comma), WriterNewLine)
-	CommaWriterSeparator = J(Raw(internal.Comma), WriterSeparator)
+	CommaWriterNewLine   = Join(Raw(internal.Comma), WriterNewLine)
+	CommaWriterSeparator = Join(Raw(internal.Comma), WriterSeparator)
 )
 
 //nolint:gochecknoglobals

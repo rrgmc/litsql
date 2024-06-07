@@ -75,7 +75,7 @@ func (c *CTESearch) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]an
 	// [ SEARCH { BREADTH | DEPTH } FIRST BY column_name [, ...] SET search_seq_col_name ]
 	w.Write(fmt.Sprintf("SEARCH %s FIRST BY ", c.Order))
 
-	args, err := litsql.ExpressSlice(w, d, start, expr.SL(c.Columns), nil, expr.CommaSpace, nil)
+	args, err := litsql.ExpressSlice(w, d, start, expr.StringList(c.Columns), nil, expr.CommaSpace, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +98,7 @@ func (c *CTECycle) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any
 
 	// [ CYCLE column_name [, ...] SET cycle_mark_col_name [ TO cycle_mark_value DEFAULT cycle_mark_default ] USING cycle_path_col_name ]
 	w.Write("CYCLE ")
-	b.ExpressSlice(expr.SL(c.Columns), nil, expr.CommaSpace, nil)
+	b.ExpressSlice(expr.StringList(c.Columns), nil, expr.CommaSpace, nil)
 
 	w.Write(fmt.Sprintf(" SET %s", c.Set))
 	b.ExpressIf(c.SetVal, c.SetVal != nil, expr.Raw(" TO "), nil)

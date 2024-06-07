@@ -68,7 +68,7 @@ func (c *Join) SetNatural() {
 }
 
 func (c *Join) SetOn(on string) {
-	c.On = append(c.On, expr.S(on))
+	c.On = append(c.On, expr.String(on))
 }
 
 func (c *Join) SetOnE(on litsql.Expression) {
@@ -76,7 +76,7 @@ func (c *Join) SetOnE(on litsql.Expression) {
 }
 
 func (c *Join) SetOnC(query string, args ...any) {
-	c.On = append(c.On, expr.C(query, args...))
+	c.On = append(c.On, expr.Clause(query, args...))
 }
 
 func (c *Join) SetUsing(using ...string) {

@@ -73,7 +73,7 @@ func (c *InsertConflictTarget) WriteSQL(w litsql.Writer, d litsql.Dialect, start
 		return b.Result()
 	}
 
-	b.ExpressSlice(expr.SL(c.Columns), expr.Raw(" ("), expr.CommaSpace, expr.ClosePar)
+	b.ExpressSlice(expr.StringList(c.Columns), expr.Raw(" ("), expr.CommaSpace, expr.ClosePar)
 	b.ExpressSlice(c.Where, expr.Raw(" WHERE "), expr.Raw(" AND "), nil)
 
 	return b.Result()
