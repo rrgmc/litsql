@@ -67,10 +67,10 @@ func runPkg(sdir string) error {
 	ispkg := "github.com/rrgmc/litsql/internal/i" + sdir
 	isqpkg := "github.com/rrgmc/litsql/internal/isq"
 	sqpkg := "github.com/rrgmc/litsql/sq"
-	sqchainpkg := "github.com/rrgmc/litsql/sq/chain"
-	sqmodpkg := "github.com/rrgmc/litsql/sq/mod"
+	sqchainpkg := sqpkg + "/chain"
+	sqmodpkg := sqpkg + "/mod"
 	sdialectpkg := fmt.Sprintf("github.com/rrgmc/litsql/dialect/%s", sdialect)
-	sdialecttagpkg := fmt.Sprintf("%s/tag", sdialectpkg)
+	sdialecttagpkg := sdialectpkg + "/tag"
 
 	lpkg, err := genutil.PkgInfoFromPath(
 		ismDir, packages.NeedName|packages.NeedSyntax|packages.NeedTypes,
@@ -85,14 +85,19 @@ func runPkg(sdir string) error {
 	if lpkg.Types != nil {
 		customNamedType := func(st jen.Statement, tt *types.Named) *jen.Statement {
 			if tt.Obj().Name() == "QueryMod" && tt.Obj().Pkg().Path() == sqpkg {
+				// sq.QueryMod => psql.SelectMod
 				return st.Add(jen.Qual(sdialectpkg, sname+"Mod"))
 			} else if tt.Obj().Name() == "QueryModApply" && tt.Obj().Pkg().Path() == sqpkg {
+				// sq.QueryModApply => psql.SelectModApply
 				return st.Add(jen.Qual(sdialectpkg, sname+"ModApply"))
 			} else if tt.Obj().Name() == "Query" && tt.Obj().Pkg().Path() == isqpkg {
+				// isq.Query => psql.SelectQuery
 				return st.Add(jen.Qual(sdialectpkg, sname+"Query"))
 			} else if tt.Obj().Pkg().Name() == "chain" && tt.Obj().Pkg().Path() == sqchainpkg {
+				// sq/chain.From => FromChain
 				return st.Add(jen.Id(fmt.Sprintf("%sChain", tt.Obj().Name())))
 			} else if tt.Obj().Pkg().Path() == sqmodpkg {
+				// sq/mod/InsertConflictUpdateMod => InsertConflictUpdateMod
 				return st.Add(jen.Id(tt.Obj().Name()))
 			}
 			return nil
