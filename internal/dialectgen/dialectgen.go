@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"go/types"
 	"os"
@@ -12,25 +13,50 @@ import (
 	"golang.org/x/tools/go/packages"
 )
 
+var (
+	dialect = flag.String("dialect", "", "dialect folder name (ex: psql, mysql, sqlite")
+	dryRun  = flag.Bool("dry-run", false, "dry run")
+)
+
 func main() {
-	err := runPkg()
+	flag.Parse()
+	if len(*dialect) == 0 {
+		fmt.Println("dialect is required")
+		os.Exit(2)
+	}
+
+	err := runDialect()
 	if err != nil {
 		panic(err)
 	}
 }
 
-func getCurrentDir() string {
-	_, filename, _, ok := runtime.Caller(1)
-	if !ok {
-		panic("could not determine current directory")
+func runDialect() error {
+	for _, sdir := range []string{"sm", "im", "um", "dm"} {
+		err := runPkg(sdir)
+		if err != nil {
+			return err
+		}
 	}
-	return filepath.Dir(filename)
+	return nil
 }
 
-func runPkg() error {
-	sdir := "sm"
-	sname := "Select"
-	sdialect := "psql"
+func runPkg(sdir string) error {
+	var sname string
+	switch sdir {
+	case "sm":
+		sname = "Select"
+	case "im":
+		sname = "Insert"
+	case "um":
+		sname = "Update"
+	case "dm":
+		sname = "Delete"
+	default:
+		return fmt.Errorf("unknown sdir: %s", sdir)
+	}
+
+	sdialect := *dialect
 
 	currentDir := getCurrentDir()
 	ismDir := filepath.Clean(filepath.Join(currentDir, "..", "i"+sdir))
@@ -125,18 +151,29 @@ func runPkg() error {
 		}
 	}
 
-	fnfile := filepath.Join(smDir, "fn.go")
-	// fmt.Println(fnfile)
-	fnFile, err := os.Create(fnfile)
-	if err != nil {
-		return err
+	if !*dryRun {
+		fnfile := filepath.Join(smDir, "fn.go")
+		// fmt.Println(fnfile)
+		fnFile, err := os.Create(fnfile)
+		if err != nil {
+			return err
+		}
+		defer fnFile.Close()
+		err = f.Render(fnFile)
+	} else {
+		err = f.Render(os.Stdout)
 	}
-	defer fnFile.Close()
-	err = f.Render(fnFile)
-	// err = f.Render(os.Stdout)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func getCurrentDir() string {
+	_, filename, _, ok := runtime.Caller(1)
+	if !ok {
+		panic("could not determine current directory")
+	}
+	return filepath.Dir(filename)
 }
