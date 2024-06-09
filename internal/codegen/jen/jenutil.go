@@ -8,29 +8,31 @@ import (
 	"github.com/dave/jennifer/jen"
 )
 
-func GetQualCode(typ types.Type) *jen.Statement {
+type CNT func(st jen.Statement, tt *types.Named) *jen.Statement
+
+func GetQualCode(typ types.Type, customNamedType CNT) *jen.Statement {
 	var st jen.Statement
 	for {
 		switch tt := typ.(type) {
 		case *types.Basic:
 			return st.Add(jen.Id(tt.Name()))
 		case *types.Array:
-			return st.Add(jen.Index(jen.Lit(tt.Len())).Add(GetQualCode(tt.Elem())))
+			return st.Add(jen.Index(jen.Lit(tt.Len())).Add(GetQualCode(tt.Elem(), customNamedType)))
 		case *types.Slice:
-			return st.Add(jen.Index().Add(GetQualCode(tt.Elem())))
+			return st.Add(jen.Index().Add(GetQualCode(tt.Elem(), customNamedType)))
 		case *types.Pointer:
 			st.Add(jen.Op("*"))
 			typ = tt.Elem()
 		case *types.Tuple:
 			var items jen.Statement
 			for i := 0; i < tt.Len(); i++ {
-				items.Add(jen.Id(tt.At(i).Name()).Add(GetQualCode(tt.At(i).Type())))
+				items.Add(jen.Id(tt.At(i).Name()).Add(GetQualCode(tt.At(i).Type(), customNamedType)))
 			}
 			return st.Add(jen.Params(items...))
 		case *types.Interface:
 			return st.Add(jen.Id(tt.String()))
 		case *types.Map:
-			return st.Add(jen.Map(GetQualCode(tt.Key())).Add(GetQualCode(tt.Elem())))
+			return st.Add(jen.Map(GetQualCode(tt.Key(), customNamedType)).Add(GetQualCode(tt.Elem(), customNamedType)))
 		case *types.Chan:
 			var chanDesc *jen.Statement
 			switch tt.Dir() {
@@ -43,14 +45,34 @@ func GetQualCode(typ types.Type) *jen.Statement {
 			default:
 				panic("unknown channel direction")
 			}
-			return st.Add(chanDesc.Add(GetQualCode(tt.Elem())))
+			return st.Add(chanDesc.Add(GetQualCode(tt.Elem(), customNamedType)))
 		case *types.Named:
 			if tt.Obj().Pkg() != nil {
-				return st.Add(jen.Qual(tt.Obj().Pkg().Path(), tt.Obj().Name()).TypesFunc(AddTypeList(tt.TypeArgs())))
+				if customNamedType != nil {
+					customRet := customNamedType(st, tt)
+					if customRet != nil {
+						return customRet
+					}
+				}
+				return st.Add(jen.Qual(tt.Obj().Pkg().Path(), tt.Obj().Name()).TypesFunc(AddTypeList(tt.TypeArgs(), customNamedType)))
 			}
-			return st.Add(jen.Id(tt.Obj().Name()).TypesFunc(AddTypeList(tt.TypeArgs())))
+			return st.Add(jen.Id(tt.Obj().Name()).TypesFunc(AddTypeList(tt.TypeArgs(), customNamedType)))
 		case *types.TypeParam:
 			return st.Add(jen.Id(tt.Obj().Name()))
+		case *types.Signature:
+			return st.Add(jen.Func().
+				ParamsFunc(func(pgroup *jen.Group) {
+					for k := 0; k < tt.Params().Len(); k++ {
+						sigParam := tt.Params().At(k)
+						pgroup.Id(ParamName(k, sigParam)).Add(GetQualCode(sigParam.Type(), customNamedType))
+					}
+				}).
+				ParamsFunc(func(rgroup *jen.Group) {
+					for k := 0; k < tt.Results().Len(); k++ {
+						sigParam := tt.Results().At(k)
+						rgroup.Id(sigParam.Name()).Add(GetQualCode(sigParam.Type(), customNamedType))
+					}
+				}))
 		default:
 			panic(fmt.Errorf("unknown type %T", typ))
 		}
@@ -75,12 +97,12 @@ func TypeNameCode(typeName string) (*jen.Statement, error) {
 	return nil, fmt.Errorf("invalid type name format (must have a dot to determine the type): %s", typeName)
 }
 
-func AddTypeParamsList(typeList *types.TypeParamList, withType bool) func(*jen.Group) {
+func AddTypeParamsList(typeList *types.TypeParamList, withType bool, customNamedType CNT) func(*jen.Group) {
 	return func(tgroup *jen.Group) {
 		for t := 0; t < typeList.Len(); t++ {
 			tparam := typeList.At(t)
 			if withType {
-				tgroup.Id(tparam.Obj().Name()).Add(GetQualCode(tparam.Constraint()))
+				tgroup.Id(tparam.Obj().Name()).Add(GetQualCode(tparam.Constraint(), customNamedType))
 			} else {
 				tgroup.Id(tparam.Obj().Name())
 			}
@@ -88,11 +110,11 @@ func AddTypeParamsList(typeList *types.TypeParamList, withType bool) func(*jen.G
 	}
 }
 
-func AddTypeList(typeList *types.TypeList) func(*jen.Group) {
+func AddTypeList(typeList *types.TypeList, customNamedType CNT) func(*jen.Group) {
 	return func(tgroup *jen.Group) {
 		for t := 0; t < typeList.Len(); t++ {
 			tparam := typeList.At(t)
-			tgroup.Add(GetQualCode(tparam))
+			tgroup.Add(GetQualCode(tparam, customNamedType))
 		}
 	}
 }
