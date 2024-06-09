@@ -51,17 +51,5 @@ func runPkg() error {
 		}
 	}
 
-	// for _, objName := range srcPkg.Types.Scope().Names() {
-	// 	fmt.Printf("%s\n", objName)
-	// 	obj := srcPkg.Types.Scope().Lookup(objName)
-	// 	if obj == nil {
-	// 		fmt.Printf("%s object not found\n", objName)
-	// 		continue
-	// 	}
-	// 	if ofunc, ok := obj.Type().(*types.Func); ok {
-	//
-	// 	}
-	// }
-
 	return nil
 }
