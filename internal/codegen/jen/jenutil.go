@@ -61,7 +61,7 @@ func GetQualCode(typ types.Type, customNamedType CNT) *jen.Statement {
 			return st.Add(jen.Id(tt.Obj().Name()))
 		case *types.Signature:
 			return st.Add(jen.Func().
-				ParamsFunc(AddParams(tt, customNamedType)).
+				ParamsFunc(AddParams(tt.Params(), tt.Variadic(), customNamedType)).
 				// ParamsFunc(func(pgroup *jen.Group) {
 				// 	for k := 0; k < tt.Params().Len(); k++ {
 				// 		sigParam := tt.Params().At(k)
@@ -74,12 +74,13 @@ func GetQualCode(typ types.Type, customNamedType CNT) *jen.Statement {
 				// 		pgroup.Add(c)
 				// 	}
 				// }).
-				ParamsFunc(func(rgroup *jen.Group) {
-					for k := 0; k < tt.Results().Len(); k++ {
-						sigParam := tt.Results().At(k)
-						rgroup.Id(sigParam.Name()).Add(GetQualCode(sigParam.Type(), customNamedType))
-					}
-				}))
+				ParamsFunc(AddParams(tt.Results(), false, customNamedType)))
+			// ParamsFunc(func(rgroup *jen.Group) {
+			// 	for k := 0; k < tt.Results().Len(); k++ {
+			// 		sigParam := tt.Results().At(k)
+			// 		rgroup.Id(sigParam.Name()).Add(GetQualCode(sigParam.Type(), customNamedType))
+			// 	}
+			// }))
 		default:
 			panic(fmt.Errorf("unknown type %T", typ))
 		}
@@ -126,13 +127,16 @@ func AddTypeList(typeList *types.TypeList, customNamedType CNT) func(*jen.Group)
 	}
 }
 
-func AddParams(sig *types.Signature, customNamedType CNT) func(*jen.Group) {
+func AddParams(params *types.Tuple, isVariadic bool, customNamedType CNT) func(*jen.Group) {
 	return func(group *jen.Group) {
-		for k := 0; k < sig.Params().Len(); k++ {
-			sigParam := sig.Params().At(k)
-			c := jen.Id(ParamName(k, sigParam))
-			if sig.Variadic() && k == sig.Params().Len()-1 {
-				c.Add(GetQualCode(sigParam.Type().(*types.Slice).Elem(), customNamedType)).Op("...")
+		for k := 0; k < params.Len(); k++ {
+			sigParam := params.At(k)
+			c := &jen.Statement{}
+			if sigParam.Name() != "" {
+				c.Add(jen.Id(ParamName(k, sigParam)))
+			}
+			if isVariadic && k == params.Len()-1 {
+				c.Add(jen.Op("...").Add(GetQualCode(sigParam.Type().(*types.Slice).Elem(), customNamedType)))
 			} else {
 				c.Add(GetQualCode(sigParam.Type(), customNamedType))
 			}

@@ -72,11 +72,12 @@ func runPkg() error {
 
 			f.Comment(types.ObjectString(funcTyp, qual))
 			f.Func().Id(funcTyp.Name()).
-				ParamsFunc(jen.AddParams(sig, customNamedType)).
-				ParamsFunc(func(rgroup *jen2.Group) {
-					sigParam := sig.Results().At(0)
-					rgroup.Id(sigParam.Name()).Add(jen.GetQualCode(sigParam.Type(), customNamedType))
-				}).
+				ParamsFunc(jen.AddParams(sig.Params(), sig.Variadic(), customNamedType)).
+				ParamsFunc(jen.AddParams(sig.Results(), false, customNamedType)).
+				// ParamsFunc(func(rgroup *jen2.Group) {
+				// 	sigParam := sig.Results().At(0)
+				// 	rgroup.Id(sigParam.Name()).Add(jen.GetQualCode(sigParam.Type(), customNamedType))
+				// }).
 				Block(
 					jen2.Return(
 						jen2.Qual(ispkg, funcTyp.Name()).
