@@ -1,4 +1,4 @@
-module github.com/rrgmc/litsql/internal/codegen
+module github.com/rrgmc/litsql/internal/dialectgen
 
 go 1.22.0
 

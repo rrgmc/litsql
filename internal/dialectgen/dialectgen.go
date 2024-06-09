@@ -8,7 +8,7 @@ import (
 	"runtime"
 
 	"github.com/dave/jennifer/jen"
-	"github.com/rrgmc/litsql/internal/codegen/genutil"
+	"github.com/rrgmc/litsql/internal/dialectgen/genutil"
 	"golang.org/x/tools/go/packages"
 )
 
