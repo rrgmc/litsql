@@ -1,4 +1,4 @@
-package jen
+package genutil
 
 import (
 	"fmt"
