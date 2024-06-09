@@ -61,12 +61,19 @@ func GetQualCode(typ types.Type, customNamedType CNT) *jen.Statement {
 			return st.Add(jen.Id(tt.Obj().Name()))
 		case *types.Signature:
 			return st.Add(jen.Func().
-				ParamsFunc(func(pgroup *jen.Group) {
-					for k := 0; k < tt.Params().Len(); k++ {
-						sigParam := tt.Params().At(k)
-						pgroup.Id(ParamName(k, sigParam)).Add(GetQualCode(sigParam.Type(), customNamedType))
-					}
-				}).
+				ParamsFunc(AddParams(tt, customNamedType)).
+				// ParamsFunc(func(pgroup *jen.Group) {
+				// 	for k := 0; k < tt.Params().Len(); k++ {
+				// 		sigParam := tt.Params().At(k)
+				// 		c := jen.Id(ParamName(k, sigParam))
+				// 		if tt.Variadic() && k == tt.Params().Len()-1 {
+				// 			c.Add(GetQualCode(sigParam.Type().(*types.Slice).Elem(), customNamedType)).Op("...")
+				// 		} else {
+				// 			c.Add(GetQualCode(sigParam.Type(), customNamedType))
+				// 		}
+				// 		pgroup.Add(c)
+				// 	}
+				// }).
 				ParamsFunc(func(rgroup *jen.Group) {
 					for k := 0; k < tt.Results().Len(); k++ {
 						sigParam := tt.Results().At(k)
@@ -115,6 +122,21 @@ func AddTypeList(typeList *types.TypeList, customNamedType CNT) func(*jen.Group)
 		for t := 0; t < typeList.Len(); t++ {
 			tparam := typeList.At(t)
 			tgroup.Add(GetQualCode(tparam, customNamedType))
+		}
+	}
+}
+
+func AddParams(sig *types.Signature, customNamedType CNT) func(*jen.Group) {
+	return func(group *jen.Group) {
+		for k := 0; k < sig.Params().Len(); k++ {
+			sigParam := sig.Params().At(k)
+			c := jen.Id(ParamName(k, sigParam))
+			if sig.Variadic() && k == sig.Params().Len()-1 {
+				c.Add(GetQualCode(sigParam.Type().(*types.Slice).Elem(), customNamedType)).Op("...")
+			} else {
+				c.Add(GetQualCode(sigParam.Type(), customNamedType))
+			}
+			group.Add(c)
 		}
 	}
 }

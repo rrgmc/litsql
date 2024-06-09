@@ -21,10 +21,12 @@ func runPkg() error {
 	// dialectDir := filepath.Clean(filepath.Join(currentDir, "..", "..", "dialect"))
 	// psqSmlDir := filepath.Join(dialectDir, "psql")
 
+	ispkg := "github.com/rrgmc/litsql/internal/i" + sdir
 	isqpkg := "github.com/rrgmc/litsql/internal/isq"
 	sqpkg := "github.com/rrgmc/litsql/sq"
 	sqchainpkg := "github.com/rrgmc/litsql/sq/chain"
 	sdialectpkg := fmt.Sprintf("github.com/rrgmc/litsql/dialect/%s", sdialect)
+	sdialecttagpkg := fmt.Sprintf("%s/tag", sdialectpkg)
 
 	lpkg, err := jen.PkgInfoFromPath(
 		ismDir, packages.NeedName|packages.NeedSyntax|packages.NeedTypes,
@@ -70,27 +72,27 @@ func runPkg() error {
 
 			f.Comment(types.ObjectString(funcTyp, qual))
 			f.Func().Id(funcTyp.Name()).
-				ParamsFunc(func(pgroup *jen2.Group) {
-					for k := 0; k < sig.Params().Len(); k++ {
-						sigParam := sig.Params().At(k)
-						pgroup.Id(jen.ParamName(k, sigParam)).Add(jen.GetQualCode(sigParam.Type(), customNamedType))
-					}
-				}).
+				ParamsFunc(jen.AddParams(sig, customNamedType)).
 				ParamsFunc(func(rgroup *jen2.Group) {
 					sigParam := sig.Results().At(0)
 					rgroup.Id(sigParam.Name()).Add(jen.GetQualCode(sigParam.Type(), customNamedType))
-
-					// typNamedType, isNamedType := sigParam.Type().(*types.Named)
-					//
-					// if isNamedType && typNamedType.Obj().Name() == "QueryMod" {
-					// 	rgroup.Add(jen2.Qual(sdialectpkg, sname+"Mod"))
-					// } else if isNamedType && typNamedType.Obj().Pkg().Name() == "chain" {
-					// 	rgroup.Add(jen2.Id(fmt.Sprintf("%sChain", typNamedType.Obj().Name())))
-					// } else {
-					// 	rgroup.Id(sigParam.Name()).Add(jen.GetQualCode(sigParam.Type(), customNamedType))
-					// }
 				}).
-				Block()
+				Block(
+					jen2.Return(
+						jen2.Qual(ispkg, funcTyp.Name()).
+							Types(jen2.Qual(sdialecttagpkg, sname+"Tag")).
+							CallFunc(func(pgroup *jen2.Group) {
+								for k := 0; k < sig.Params().Len(); k++ {
+									sigParam := sig.Params().At(k)
+									c := jen2.Id(jen.ParamName(k, sigParam))
+									if sig.Variadic() && k == sig.Params().Len()-1 {
+										c.Op("...")
+									}
+									pgroup.Add(c)
+								}
+							}),
+					),
+				)
 
 			f.Line()
 		}
