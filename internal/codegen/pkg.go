@@ -18,8 +18,9 @@ func runPkg() error {
 
 	currentDir := getCurrentDir()
 	ismDir := filepath.Clean(filepath.Join(currentDir, "..", "i"+sdir))
-	// dialectDir := filepath.Clean(filepath.Join(currentDir, "..", "..", "dialect"))
-	// psqSmlDir := filepath.Join(dialectDir, "psql")
+	dialectDir := filepath.Clean(filepath.Join(currentDir, "..", "..", "dialect"))
+	curDialectDir := filepath.Join(dialectDir, sdialect)
+	smDir := filepath.Join(curDialectDir, sdir)
 
 	ispkg := "github.com/rrgmc/litsql/internal/i" + sdir
 	isqpkg := "github.com/rrgmc/litsql/internal/isq"
@@ -52,7 +53,7 @@ func runPkg() error {
 			return nil
 		}
 
-		qual := types.RelativeTo(lpkg.Types)
+		// qual := types.RelativeTo(lpkg.Types)
 		scope := lpkg.Types.Scope()
 		for _, name := range scope.Names() {
 			obj := scope.Lookup(name)
@@ -70,18 +71,27 @@ func runPkg() error {
 				return fmt.Errorf("function '%s' must have only 1 return value", name)
 			}
 
-			f.Comment(types.ObjectString(funcTyp, qual))
+			// don't generate root Query call
+			sigResult := sig.Results().At(0)
+			if sigResultType, stNamed := sigResult.Type().(*types.Named); stNamed {
+				// fmt.Println(sigResultType.Obj().Name(), sigResultType.Obj().Pkg().Path())
+				if sigResultType.Obj().Name() == "Query" && sigResultType.Obj().Pkg().Path() == sqpkg {
+					continue
+				}
+			}
+
+			// f.Comment(types.ObjectString(funcTyp, qual))
 			f.Func().Id(funcTyp.Name()).
 				ParamsFunc(jen.AddParams(sig.Params(), sig.Variadic(), customNamedType)).
 				ParamsFunc(jen.AddParams(sig.Results(), false, customNamedType)).
-				// ParamsFunc(func(rgroup *jen2.Group) {
-				// 	sigParam := sig.Results().At(0)
-				// 	rgroup.Id(sigParam.Name()).Add(jen.GetQualCode(sigParam.Type(), customNamedType))
-				// }).
 				Block(
 					jen2.Return(
 						jen2.Qual(ispkg, funcTyp.Name()).
-							Types(jen2.Qual(sdialecttagpkg, sname+"Tag")).
+							TypesFunc(func(tgroup *jen2.Group) {
+								for k := 0; k < sig.TypeParams().Len(); k++ {
+									tgroup.Add(jen2.Qual(sdialecttagpkg, sname+"Tag"))
+								}
+							}).
 							CallFunc(func(pgroup *jen2.Group) {
 								for k := 0; k < sig.Params().Len(); k++ {
 									sigParam := sig.Params().At(k)
@@ -99,7 +109,15 @@ func runPkg() error {
 		}
 	}
 
-	err = f.Render(os.Stdout)
+	fnfile := filepath.Join(smDir, "fn.go")
+	// fmt.Println(fnfile)
+	fnFile, err := os.Create(fnfile)
+	if err != nil {
+		return err
+	}
+	defer fnFile.Close()
+	err = f.Render(fnFile)
+	// err = f.Render(os.Stdout)
 	if err != nil {
 		return err
 	}
