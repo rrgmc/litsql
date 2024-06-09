@@ -68,6 +68,7 @@ func runPkg(sdir string) error {
 	isqpkg := "github.com/rrgmc/litsql/internal/isq"
 	sqpkg := "github.com/rrgmc/litsql/sq"
 	sqchainpkg := "github.com/rrgmc/litsql/sq/chain"
+	sqmodpkg := "github.com/rrgmc/litsql/sq/mod"
 	sdialectpkg := fmt.Sprintf("github.com/rrgmc/litsql/dialect/%s", sdialect)
 	sdialecttagpkg := fmt.Sprintf("%s/tag", sdialectpkg)
 
@@ -91,6 +92,8 @@ func runPkg(sdir string) error {
 				return st.Add(jen.Qual(sdialectpkg, sname+"Query"))
 			} else if tt.Obj().Pkg().Name() == "chain" && tt.Obj().Pkg().Path() == sqchainpkg {
 				return st.Add(jen.Id(fmt.Sprintf("%sChain", tt.Obj().Name())))
+			} else if tt.Obj().Pkg().Path() == sqmodpkg {
+				return st.Add(jen.Id(tt.Obj().Name()))
 			}
 			return nil
 		}
