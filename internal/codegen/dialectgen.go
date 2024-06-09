@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	err := runAst()
+	err := runPkg()
 	if err != nil {
 		panic(err)
 	}
