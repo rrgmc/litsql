@@ -168,8 +168,10 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 			}
 
 			// don't generate root Query call
+			isChainRet := false
 			sigResult := sig.Results().At(0)
-			if sigResultType, stNamed := sigResult.Type().(*types.Named); stNamed {
+			sigResultType, stNamed := sigResult.Type().(*types.Named)
+			if stNamed {
 				// fmt.Println(sigResultType.Obj().Name(), sigResultType.Obj().Pkg().Path())
 				if sigResultType.Obj().Name() == "Query" && sigResultType.Obj().Pkg().Path() == sqpkg {
 					continue
@@ -177,6 +179,7 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 
 				// detect chain return
 				if sigResultType.Obj().Pkg().Name() == "chain" && sigResultType.Obj().Pkg().Path() == sqchainpkg {
+					isChainRet = true
 					chains[sigResultType.Obj().Name()] = sigResultType.TypeParams().Len()
 				}
 			}
@@ -191,8 +194,8 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 				ParamsFunc(genutil.AddParams(sig.Params(), sig.Variadic(), customNamedType)).
 				ParamsFunc(genutil.AddParams(sig.Results(), false, customNamedType)).
 				Block(
-					jen.Return(
-						jen.Qual(ispkg, funcTyp.Name()).
+					jen.ReturnFunc(func(rgroup *jen.Group) {
+						rblock := jen.Qual(ispkg, funcTyp.Name()).
 							TypesFunc(func(tgroup *jen.Group) {
 								for k := 0; k < sig.TypeParams().Len(); k++ {
 									tgroup.Add(sdialectTag)
@@ -207,8 +210,17 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 									}
 									pgroup.Add(c)
 								}
-							}),
-					),
+							})
+
+						if isChainRet {
+							if dchain := config.FindDialectChain(*dialect, sigResultType.Obj().Name()); dchain != nil {
+								rgroup.Op("&").Id(genutil.InitialToLower(sigResultType.Obj().Name()) + "ChainAdapter").
+									Block(jen.Id("chain").Op(":").Add(rblock).Op(","))
+								return
+							}
+						}
+						rgroup.Add(rblock)
+					}),
 				)
 
 			f.Line()
@@ -263,7 +275,7 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 				fchain.Type().
 					Id(chain + "Chain").
 					InterfaceFunc(func(igroup *jen.Group) {
-						igroup.Add(jen.Qual(sqpkg, sname+"QueryMod").Types(sdialectTag))
+						igroup.Add(jen.Qual(sqpkg, "QueryMod").Types(sdialectTag))
 						for cm := range chainTyp.NumMethods() {
 							cmethod := chainTyp.Method(cm)
 							if !slices.Contains(dchain.Methods, cmethod.Name()) {
