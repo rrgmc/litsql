@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"go/ast"
 	"go/types"
 	"os"
 	"path/filepath"
@@ -114,6 +115,28 @@ func runPkg(sdir string) error {
 			if !ok {
 				continue
 			}
+
+			found := false
+			var doc *ast.CommentGroup
+
+			for _, fileAst := range lpkg.Syntax {
+				ast.Inspect(fileAst, func(n ast.Node) bool {
+					if found {
+						return false
+					}
+					if aFunc, ok := n.(*ast.FuncDecl); ok {
+						if aFunc.Name.Name == funcTyp.Name() {
+							found = true
+							doc = aFunc.Doc
+						}
+					}
+					return !found
+				})
+				if found {
+					break
+				}
+			}
+
 			sig := funcTyp.Type().(*types.Signature)
 			// fmt.Printf("%s\n", types.ObjectString(funcTyp, qual))
 
@@ -131,6 +154,11 @@ func runPkg(sdir string) error {
 			}
 
 			// f.Comment(types.ObjectString(funcTyp, qual))
+			if doc != nil {
+				for _, docLine := range doc.List {
+					f.Comment(docLine.Text)
+				}
+			}
 			f.Func().Id(funcTyp.Name()).
 				ParamsFunc(genutil.AddParams(sig.Params(), sig.Variadic(), customNamedType)).
 				ParamsFunc(genutil.AddParams(sig.Results(), false, customNamedType)).
