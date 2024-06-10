@@ -3,10 +3,15 @@ package sm
 
 import (
 	tag "github.com/rrgmc/litsql/dialect/mysql/tag"
+	sq "github.com/rrgmc/litsql/sq"
 	chain "github.com/rrgmc/litsql/sq/chain"
 )
 
-type FromChain = chain.From[tag.SelectTag]
+type FromChain interface {
+	sq.QueryMod[tag.SelectTag]
+	As(alias string, columns ...string) FromChain
+	Lateral() FromChain
+}
 
 type GroupByChain = chain.GroupBy[tag.SelectTag]
 

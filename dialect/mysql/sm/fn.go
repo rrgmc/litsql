@@ -52,15 +52,21 @@ func ExceptAll(q mysql.SelectQuery) mysql.SelectMod {
 }
 
 func From(table string) FromChain {
-	return ism.From[tag.SelectTag](table)
+	return &fromChainAdapter{
+		chain: ism.From[tag.SelectTag](table),
+	}
 }
 
 func FromExpr(table litsql.Expression) FromChain {
-	return ism.FromExpr[tag.SelectTag](table)
+	return &fromChainAdapter{
+		chain: ism.FromExpr[tag.SelectTag](table),
+	}
 }
 
 func FromQuery(q mysql.SelectQuery) FromChain {
-	return ism.FromQuery[tag.SelectTag, tag.SelectTag](q)
+	return &fromChainAdapter{
+		chain: ism.FromQuery[tag.SelectTag, tag.SelectTag](q),
+	}
 }
 
 func FullJoin(table string) JoinChain {

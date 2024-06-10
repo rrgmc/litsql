@@ -4,15 +4,14 @@ dialects:
       sm:
         chains:
           From:
-            methods:
-              - As
+            methods: ['As']
       im:
-        skip:
-          - OverridingSystem
-          - OverridingUser
+        skip: ['OverridingSystem', 'OverridingUser']
   mysql:
     mods:
+      sm:
+        chains:
+          From:
+            methods: ['As', 'Lateral']
       im:
-        skip:
-          - OverridingSystem
-          - OverridingUser
+        skip: ['OverridingSystem', 'OverridingUser']
