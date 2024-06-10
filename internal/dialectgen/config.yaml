@@ -6,3 +6,12 @@ dialects:
           From:
             methods:
               - As
+      im:
+        skip:
+          - OverridingSystem
+          - OverridingUser
+  mysql:
+      im:
+        skip:
+          - OverridingSystem
+          - OverridingUser

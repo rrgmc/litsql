@@ -151,9 +151,9 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 			}
 
 			// skip functions
-			if slices.ContainsFunc([]string{
+			if slices.ContainsFunc(config.FindDialectSkip(*dialect, sdir, []string{
 				"RawQuery",
-			}, func(s string) bool {
+			}), func(s string) bool {
 				return strings.HasPrefix(funcTyp.Name(), s)
 			}) {
 				continue

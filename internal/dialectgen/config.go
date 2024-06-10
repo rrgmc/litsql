@@ -17,6 +17,7 @@ type ConfigDialect struct {
 }
 
 type ConfigDialectMod struct {
+	Skip   []string                         `yaml:"skip"`
 	Funcs  []ConfigDialectModFunc           `yaml:"funcs"`
 	Chains map[string]ConfigDialectModChain `yaml:"chains"`
 }
@@ -46,6 +47,15 @@ func LoadConfig() (Config, error) {
 		return Config{}, err
 	}
 	return c, nil
+}
+
+func (c Config) FindDialectSkip(dialect string, mod string, def []string) []string {
+	if d, ok := c.Dialects[dialect]; ok {
+		if m, ok := d.Mods[mod]; ok {
+			return append(def, m.Skip...)
+		}
+	}
+	return def
 }
 
 func (c Config) FindDialectFunc(dialect string, mod string, fn string) *ConfigDialectModFunc {
