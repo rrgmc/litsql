@@ -71,14 +71,6 @@ func RightJoinExpr(table litsql.Expression) JoinChain {
 	return ium.RightJoinExpr[tag.UpdateTag](table)
 }
 
-func StraightJoin(table string) JoinChain {
-	return ium.StraightJoin[tag.UpdateTag](table)
-}
-
-func StraightJoinExpr(table litsql.Expression) JoinChain {
-	return ium.StraightJoinExpr[tag.UpdateTag](table)
-}
-
 func Set(column string, arg any) sqlite.UpdateMod {
 	return ium.Set[tag.UpdateTag](column, arg)
 }
@@ -105,6 +97,14 @@ func SetQuery(column string, q sqlite.SelectQuery) sqlite.UpdateMod {
 
 func SetString(column string, right string) sqlite.UpdateMod {
 	return ium.SetString[tag.UpdateTag](column, right)
+}
+
+func StraightJoin(table string) JoinChain {
+	return ium.StraightJoin[tag.UpdateTag](table)
+}
+
+func StraightJoinExpr(table litsql.Expression) JoinChain {
+	return ium.StraightJoinExpr[tag.UpdateTag](table)
 }
 
 func Table(name string) sqlite.UpdateMod {
