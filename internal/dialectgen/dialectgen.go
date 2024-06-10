@@ -356,7 +356,7 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 		}
 
 		if hasAdapters {
-			adaptersfile := filepath.Join(smDir, "adapters.go")
+			adaptersfile := filepath.Join(smDir, "adapter.go")
 			if !*dryRun {
 				// fmt.Println(fnfile)
 				adaptersFile, err := os.Create(adaptersfile)
