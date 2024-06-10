@@ -7,14 +7,14 @@ import (
 	"github.com/rrgmc/litsql/sq/clause"
 )
 
-type InsertConflict struct {
+type InsertConflictUpdate struct {
 	Do     string // DO NOTHING | DO UPDATE
 	Target InsertConflictTarget
 	Set    Set
 	Where  Where
 }
 
-func (c *InsertConflict) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
+func (c *InsertConflictUpdate) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
 	if c.Do == "" {
 		return nil, internal.NewClauseError("'ON CONFLICT DO' cannot be empty")
 	}
@@ -36,25 +36,25 @@ func (c *InsertConflict) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) 
 	return b.Result()
 }
 
-var _ litsql.QueryClause = (*InsertConflict)(nil)
+var _ litsql.QueryClause = (*InsertConflictUpdate)(nil)
 
-func (c *InsertConflict) ClauseID() string {
+func (c *InsertConflictUpdate) ClauseID() string {
 	return "4ba79d92-d9f8-4806-b62d-7ba1c3974d1f"
 }
 
-func (c *InsertConflict) ClauseOrder() int {
+func (c *InsertConflictUpdate) ClauseOrder() int {
 	return clause.OrderInsertConflict
 }
 
-func (c *InsertConflict) SetWhere(condition litsql.Expression) {
+func (c *InsertConflictUpdate) SetWhere(condition litsql.Expression) {
 	c.Target.Where = append(c.Target.Where, condition)
 }
 
-func (c *InsertConflict) SetDoNothing() {
+func (c *InsertConflictUpdate) SetDoNothing() {
 	c.Do = "NOTHING"
 }
 
-func (c *InsertConflict) SetDoUpdate() {
+func (c *InsertConflictUpdate) SetDoUpdate() {
 	c.Do = "UPDATE"
 }
 

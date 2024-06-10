@@ -6,11 +6,11 @@ import (
 	"github.com/rrgmc/litsql/sq/mod"
 )
 
-type InsertConflict[T, UM any] interface {
+type InsertConflictUpdate[T, UM any] interface {
 	sq.QueryMod[T]
-	Where(condition string) InsertConflict[T, UM]
-	WhereExpr(condition litsql.Expression) InsertConflict[T, UM]
-	WhereClause(query string, args ...any) InsertConflict[T, UM]
-	DoNothing() InsertConflict[T, UM]
-	DoUpdate(mods ...mod.InsertConflictUpdateMod[T, UM]) InsertConflict[T, UM]
+	Where(condition string) InsertConflictUpdate[T, UM]
+	WhereExpr(condition litsql.Expression) InsertConflictUpdate[T, UM]
+	WhereClause(query string, args ...any) InsertConflictUpdate[T, UM]
+	DoNothing() InsertConflictUpdate[T, UM]
+	DoUpdate(mods ...mod.InsertConflictUpdateMod[T, UM]) InsertConflictUpdate[T, UM]
 }

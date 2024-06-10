@@ -9,7 +9,7 @@ import (
 )
 
 func TestInsertConflict(t *testing.T) {
-	clause := &InsertConflict{
+	clause := &InsertConflictUpdate{
 		Do: "UPDATE",
 		Set: Set{
 			Set: []litsql.Expression{
@@ -45,12 +45,12 @@ func TestInsertConflict(t *testing.T) {
 }
 
 func TestInsertConflictEmpty(t *testing.T) {
-	clause := &InsertConflict{}
+	clause := &InsertConflictUpdate{}
 	testutils.TestWriterExpressionErrorIs(t, clause, litsql.ErrClause)
 }
 
 func TestInsertConflictTarget(t *testing.T) {
-	clause := &InsertConflict{
+	clause := &InsertConflictUpdate{
 		Do: "UPDATE",
 		Target: InsertConflictTarget{
 			Where: []litsql.Expression{

@@ -12,37 +12,37 @@ import (
 
 type InsertConflictChain[T any] struct {
 	sq.ModTagImpl[T]
-	*iclause.InsertConflict
+	*iclause.InsertConflictUpdate
 }
 
 func (f *InsertConflictChain[T]) Apply(a litsql.QueryBuilder) {
-	a.AddQueryClause(f.InsertConflict)
+	a.AddQueryClause(f.InsertConflictUpdate)
 }
 
-func (f *InsertConflictChain[T]) Where(condition string) chain.InsertConflict[T, imod.InsertConflictUpdateModUM] {
+func (f *InsertConflictChain[T]) Where(condition string) chain.InsertConflictUpdate[T, imod.InsertConflictUpdateModUM] {
 	f.SetWhere(expr.String(condition))
 	return f
 }
 
-func (f *InsertConflictChain[T]) WhereExpr(condition litsql.Expression) chain.InsertConflict[T, imod.InsertConflictUpdateModUM] {
+func (f *InsertConflictChain[T]) WhereExpr(condition litsql.Expression) chain.InsertConflictUpdate[T, imod.InsertConflictUpdateModUM] {
 	f.SetWhere(condition)
 	return f
 }
 
-func (f *InsertConflictChain[T]) WhereClause(query string, args ...any) chain.InsertConflict[T, imod.InsertConflictUpdateModUM] {
+func (f *InsertConflictChain[T]) WhereClause(query string, args ...any) chain.InsertConflictUpdate[T, imod.InsertConflictUpdateModUM] {
 	f.SetWhere(expr.Clause(query, args...))
 	return f
 }
 
-func (f *InsertConflictChain[T]) DoNothing() chain.InsertConflict[T, imod.InsertConflictUpdateModUM] {
+func (f *InsertConflictChain[T]) DoNothing() chain.InsertConflictUpdate[T, imod.InsertConflictUpdateModUM] {
 	f.SetDoNothing()
 	return f
 }
 
-func (f *InsertConflictChain[T]) DoUpdate(mods ...mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM]) chain.InsertConflict[T, imod.InsertConflictUpdateModUM] {
+func (f *InsertConflictChain[T]) DoUpdate(mods ...mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModUM]) chain.InsertConflictUpdate[T, imod.InsertConflictUpdateModUM] {
 	f.SetDoUpdate()
 	for _, m := range mods {
-		m.Apply(f.InsertConflict)
+		m.Apply(f.InsertConflictUpdate)
 	}
 	return f
 }

@@ -48,11 +48,11 @@ func ValuesString(clauses ...string) psql.InsertMod {
 	return iim.ValuesString[tag.InsertTag](clauses...)
 }
 
-func OnConflict(columns ...string) InsertConflictChain {
+func OnConflict(columns ...string) InsertConflictUpdateChain {
 	return iim.OnConflict[tag.InsertTag](columns...)
 }
 
-func OnConflictOnConstraint(constraint string) InsertConflictChain {
+func OnConflictOnConstraint(constraint string) InsertConflictUpdateChain {
 	return iim.OnConflictOnConstraint[tag.InsertTag](constraint)
 }
 
