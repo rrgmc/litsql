@@ -11,6 +11,7 @@ dialects:
           - OverridingSystem
           - OverridingUser
   mysql:
+    mods:
       im:
         skip:
           - OverridingSystem
