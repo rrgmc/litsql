@@ -1,10 +1,10 @@
 package sm
 
 import (
-	"github.com/rrgmc/litsql"
-	"github.com/rrgmc/litsql/dialect/sqlite/tag"
-	"github.com/rrgmc/litsql/sq"
-	"github.com/rrgmc/litsql/sq/chain"
+	litsql "github.com/rrgmc/litsql"
+	tag "github.com/rrgmc/litsql/dialect/sqlite/tag"
+	sq "github.com/rrgmc/litsql/sq"
+	chain "github.com/rrgmc/litsql/sq/chain"
 )
 
 type fromChainAdapter struct {
@@ -12,11 +12,11 @@ type fromChainAdapter struct {
 	chain chain.From[tag.SelectTag]
 }
 
-func (f *fromChainAdapter) Apply(apply litsql.QueryBuilder) {
-	f.chain.Apply(apply)
+func (a *fromChainAdapter) Apply(apply litsql.QueryBuilder) {
+	a.chain.Apply(apply)
 }
 
-func (f *fromChainAdapter) As(alias string, columns ...string) FromChain {
-	_ = f.chain.As(alias, columns...)
-	return f
+func (a *fromChainAdapter) As(alias string, columns ...string) FromChain {
+	_ = a.chain.As(alias, columns...)
+	return a
 }
