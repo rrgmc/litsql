@@ -1,0 +1,7 @@
+dialects:
+  sqlite:
+    chains:
+      From:
+        methods:
+          - As
+          - Only
