@@ -92,6 +92,7 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 	sdialecttagpkg := sdialectpkg + "/tag"
 
 	sdialectTag := jen.Qual(sdialecttagpkg, sname+"Tag")
+	ssecondaryTag := jen.Qual(sdialecttagpkg, "SelectTag")
 
 	lpkg, err := genutil.PkgInfoFromPath(
 		ismDir, packages.NeedName|packages.NeedSyntax|packages.NeedTypes,
@@ -109,7 +110,8 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 			return st.Add(jen.Qual(sdialectpkg, sname+"ModApply"))
 		} else if tt.Obj().Name() == "Query" && tt.Obj().Pkg().Path() == isqpkg {
 			// isq.Query => psql.SelectQuery
-			return st.Add(jen.Qual(sdialectpkg, sname+"Query"))
+			// return st.Add(jen.Qual(sdialectpkg, sname+"Query"))
+			return st.Add(jen.Qual(sdialectpkg, "SelectQuery"))
 		} else if tt.Obj().Pkg().Name() == "chain" && tt.Obj().Pkg().Path() == sqchainpkg {
 			// sq/chain.From => FromChain
 			return st.Add(jen.Id(fmt.Sprintf("%sChain", tt.Obj().Name())))
@@ -211,12 +213,12 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 						rblock := jen.Qual(ispkg, funcTyp.Name()).
 							TypesFunc(func(tgroup *jen.Group) {
 								for k := 0; k < sig.TypeParams().Len(); k++ {
-									if funcConfig != nil {
-										fmt.Println("ok")
-									}
-
-									if k > 0 && funcConfig != nil && funcConfig.SecondTypeParam != "" {
-										tgroup.Add(jen.Qual(sdialecttagpkg, funcConfig.SecondTypeParam))
+									if k > 0 {
+										if funcConfig != nil && funcConfig.SecondTypeParam != "" {
+											tgroup.Add(jen.Qual(sdialecttagpkg, funcConfig.SecondTypeParam))
+										} else {
+											tgroup.Add(ssecondaryTag)
+										}
 									} else {
 										tgroup.Add(sdialectTag)
 									}
@@ -330,7 +332,9 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 
 				for cm := range chainTyp.NumMethods() {
 					cmethod := chainTyp.Method(cm)
-					if !slices.Contains(dchain.Methods, cmethod.Name()) {
+					if !slices.ContainsFunc(dchain.Methods, func(s string) bool {
+						return strings.HasPrefix(s, cmethod.Name())
+					}) {
 						continue
 					}
 					csig := cmethod.Type().(*types.Signature)
