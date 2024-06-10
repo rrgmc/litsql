@@ -4,4 +4,4 @@ import (
 	"github.com/rrgmc/litsql/internal/iclause"
 )
 
-type InsertConflictUpdateModUM = *iclause.InsertConflictUpdate
+type InsertConflictUpdateModTag = *iclause.InsertConflictUpdate

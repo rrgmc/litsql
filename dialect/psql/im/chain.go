@@ -8,4 +8,4 @@ import (
 
 type WithChain = chain.With[tag.InsertTag]
 
-type InsertConflictUpdateChain = chain.InsertConflictUpdate[tag.InsertTag, imod.InsertConflictUpdateModUM]
+type InsertConflictUpdateChain = chain.InsertConflictUpdate[tag.InsertTag, imod.InsertConflictUpdateModTag]

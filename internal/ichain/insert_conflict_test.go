@@ -19,7 +19,7 @@ func TestInsertConflictChain(t *testing.T) {
 	chain.
 		Where("a = 1").
 		DoUpdate(
-			mod.InsertConflictUpdateModFunc[testutils.TestTag, imod.InsertConflictUpdateModUM](func(a *iclause.InsertConflictUpdate) {
+			mod.InsertConflictUpdateModFunc[testutils.TestTag, imod.InsertConflictUpdateModTag](func(a *iclause.InsertConflictUpdate) {
 				a.Set.Set = append(a.Set.Set, expr.Raw("a = 1"))
 			}),
 		)
