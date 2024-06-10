@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -11,20 +12,21 @@ type Config struct {
 	Dialects map[string]ConfigDialect `yaml:"dialects"`
 }
 
-func (c Config) FindDialectChain(dialect string, chain string) *ConfigDialectChain {
-	if d, ok := c.Dialects[dialect]; ok {
-		if c, ok := d.Chains[chain]; ok {
-			return &c
-		}
-	}
-	return nil
-}
-
 type ConfigDialect struct {
-	Chains map[string]ConfigDialectChain `yaml:"chains"`
+	Mods map[string]ConfigDialectMod `yaml:"mods"`
 }
 
-type ConfigDialectChain struct {
+type ConfigDialectMod struct {
+	Funcs  []ConfigDialectModFunc           `yaml:"funcs"`
+	Chains map[string]ConfigDialectModChain `yaml:"chains"`
+}
+
+type ConfigDialectModFunc struct {
+	Prefix        string `yaml:"prefix"`
+	ReplacePrefix string `yaml:"replacePrefix"`
+}
+
+type ConfigDialectModChain struct {
 	Methods []string `yaml:"methods"`
 }
 
@@ -43,4 +45,28 @@ func LoadConfig() (Config, error) {
 		return Config{}, err
 	}
 	return c, nil
+}
+
+func (c Config) FindDialectFunc(dialect string, mod string, fn string) *ConfigDialectModFunc {
+	if d, ok := c.Dialects[dialect]; ok {
+		if m, ok := d.Mods[mod]; ok {
+			for _, f := range m.Funcs {
+				if strings.HasPrefix(fn, f.Prefix) {
+					return &f
+				}
+			}
+		}
+	}
+	return nil
+}
+
+func (c Config) FindDialectChain(dialect string, mod string, chain string) *ConfigDialectModChain {
+	if d, ok := c.Dialects[dialect]; ok {
+		if m, ok := d.Mods[mod]; ok {
+			if c, ok := m.Chains[chain]; ok {
+				return &c
+			}
+		}
+	}
+	return nil
 }

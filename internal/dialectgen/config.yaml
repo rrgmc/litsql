@@ -1,7 +1,12 @@
 dialects:
   sqlite:
-    chains:
-      From:
-        methods:
-          - As
-          - Only
+    mods:
+      sm:
+        chains:
+          From:
+            methods:
+              - As
+      im:
+        funcs:
+          - prefix: Where
+            replacePrefix: ConflictWhere

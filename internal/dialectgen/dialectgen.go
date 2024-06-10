@@ -49,8 +49,7 @@ func runDialect() error {
 		return fmt.Errorf("couldn't load chain package: %s", err)
 	}
 
-	// for _, sdir := range []string{"sm", "im", "um", "dm"} {
-	for _, sdir := range []string{"sm"} {
+	for _, sdir := range []string{"sm", "im", "um", "dm"} {
 		err := runPkg(config, sdir, chainPkg)
 		if err != nil {
 			return err
@@ -121,6 +120,16 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 		return nil
 	}
 
+	applyFuncConfig := func(name string, fconfig *ConfigDialectModFunc) string {
+		if fconfig != nil {
+			if fconfig.ReplacePrefix != "" {
+				n, _ := strings.CutPrefix(name, fconfig.Prefix)
+				name = fconfig.ReplacePrefix + n
+			}
+		}
+		return name
+	}
+
 	chains := map[string]int{}
 
 	f := jen.NewFile(sdir)
@@ -184,13 +193,15 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 				}
 			}
 
+			funcName := applyFuncConfig(funcTyp.Name(), config.FindDialectFunc(*dialect, sdir, funcTyp.Name()))
+
 			// f.Comment(types.ObjectString(funcTyp, qual))
 			if doc != nil {
 				for _, docLine := range doc.List {
 					f.Comment(docLine.Text)
 				}
 			}
-			f.Func().Id(funcTyp.Name()).
+			f.Func().Id(funcName).
 				ParamsFunc(genutil.AddParams(sig.Params(), sig.Variadic(), customNamedType)).
 				ParamsFunc(genutil.AddParams(sig.Results(), false, customNamedType)).
 				Block(
@@ -213,7 +224,7 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 							})
 
 						if isChainRet {
-							if dchain := config.FindDialectChain(*dialect, sigResultType.Obj().Name()); dchain != nil {
+							if dchain := config.FindDialectChain(*dialect, sdir, sigResultType.Obj().Name()); dchain != nil {
 								rgroup.Op("&").Id(genutil.InitialToLower(sigResultType.Obj().Name()) + "ChainAdapter").
 									Block(jen.Id("chain").Op(":").Add(rblock).Op(","))
 								return
@@ -256,7 +267,7 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 
 		for _, chain := range chainNames {
 			// check for custom chain
-			if dchain := config.FindDialectChain(*dialect, chain); dchain != nil {
+			if dchain := config.FindDialectChain(*dialect, sdir, chain); dchain != nil {
 				chainObj := chainPkg.Types.Scope().Lookup(chain)
 				if chainObj == nil {
 					return fmt.Errorf("chain '%s' not found", chain)
