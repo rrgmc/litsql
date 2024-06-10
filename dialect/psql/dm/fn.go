@@ -11,8 +11,24 @@ func Apply(f func(a psql.DeleteModApply)) psql.DeleteMod {
 	return idm.Apply(f)
 }
 
+func CrossJoin(table string) JoinChain {
+	return idm.CrossJoin[tag.DeleteTag](table)
+}
+
+func CrossJoinExpr(table litsql.Expression) JoinChain {
+	return idm.CrossJoinExpr[tag.DeleteTag](table)
+}
+
 func From(table string) psql.DeleteMod {
 	return idm.From[tag.DeleteTag](table)
+}
+
+func FullJoin(table string) JoinChain {
+	return idm.FullJoin[tag.DeleteTag](table)
+}
+
+func FullJoinExpr(table litsql.Expression) JoinChain {
+	return idm.FullJoinExpr[tag.DeleteTag](table)
 }
 
 func InnerJoin(table string) JoinChain {
@@ -31,6 +47,14 @@ func LeftJoinExpr(table litsql.Expression) JoinChain {
 	return idm.LeftJoinExpr[tag.DeleteTag](table)
 }
 
+func Only() psql.DeleteMod {
+	return idm.Only[tag.DeleteTag](true)
+}
+
+func Returning(clauses ...string) psql.DeleteMod {
+	return idm.Returning[tag.DeleteTag](clauses...)
+}
+
 func RightJoin(table string) JoinChain {
 	return idm.RightJoin[tag.DeleteTag](table)
 }
@@ -39,36 +63,12 @@ func RightJoinExpr(table litsql.Expression) JoinChain {
 	return idm.RightJoinExpr[tag.DeleteTag](table)
 }
 
-func FullJoin(table string) JoinChain {
-	return idm.FullJoin[tag.DeleteTag](table)
-}
-
-func FullJoinExpr(table litsql.Expression) JoinChain {
-	return idm.FullJoinExpr[tag.DeleteTag](table)
-}
-
-func CrossJoin(table string) JoinChain {
-	return idm.CrossJoin[tag.DeleteTag](table)
-}
-
-func CrossJoinExpr(table litsql.Expression) JoinChain {
-	return idm.CrossJoinExpr[tag.DeleteTag](table)
-}
-
 func StraightJoin(table string) JoinChain {
 	return idm.StraightJoin[tag.DeleteTag](table)
 }
 
 func StraightJoinExpr(table litsql.Expression) JoinChain {
 	return idm.StraightJoinExpr[tag.DeleteTag](table)
-}
-
-func Only() psql.DeleteMod {
-	return idm.Only[tag.DeleteTag](true)
-}
-
-func Returning(clauses ...string) psql.DeleteMod {
-	return idm.Returning[tag.DeleteTag](clauses...)
 }
 
 func Using(table string) FromChain {

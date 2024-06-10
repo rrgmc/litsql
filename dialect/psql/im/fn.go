@@ -11,51 +11,6 @@ func Apply(f func(a psql.InsertModApply)) psql.InsertMod {
 	return iim.Apply(f)
 }
 
-func Into(name string, columns ...string) psql.InsertMod {
-	return iim.Into[tag.InsertTag](name, columns...)
-}
-
-func OverridingSystem() psql.InsertMod {
-	return iim.OverridingSystem[tag.InsertTag]()
-}
-
-func OverridingUser() psql.InsertMod {
-	return iim.OverridingUser[tag.InsertTag]()
-}
-
-// Insert from a query
-func Query(q psql.SelectQuery) psql.InsertMod {
-	return iim.Query[tag.InsertTag, tag.SelectTag](q)
-}
-
-func Returning(clauses ...string) psql.InsertMod {
-	return iim.Returning[tag.InsertTag](clauses...)
-}
-
-func Values(values ...any) psql.InsertMod {
-	return iim.Values[tag.InsertTag](values...)
-}
-
-func ValuesArgNamed(argumentNames ...string) psql.InsertMod {
-	return iim.ValuesArgNamed[tag.InsertTag](argumentNames...)
-}
-
-func ValuesExpr(clauses ...litsql.Expression) psql.InsertMod {
-	return iim.ValuesExpr[tag.InsertTag](clauses...)
-}
-
-func ValuesString(clauses ...string) psql.InsertMod {
-	return iim.ValuesString[tag.InsertTag](clauses...)
-}
-
-func OnConflict(columns ...string) InsertConflictUpdateChain {
-	return iim.OnConflict[tag.InsertTag](columns...)
-}
-
-func OnConflictOnConstraint(constraint string) InsertConflictUpdateChain {
-	return iim.OnConflictOnConstraint[tag.InsertTag](constraint)
-}
-
 func ConflictSet(column string, arg any) InsertConflictUpdateMod {
 	return iim.ConflictSet[tag.InsertTag](column, arg)
 }
@@ -94,6 +49,50 @@ func ConflictWhereExpr(condition litsql.Expression) InsertConflictUpdateMod {
 
 func ConflictWhereClause(query string, args ...any) InsertConflictUpdateMod {
 	return iim.ConflictWhereClause[tag.InsertTag](query, args...)
+}
+
+func Into(name string, columns ...string) psql.InsertMod {
+	return iim.Into[tag.InsertTag](name, columns...)
+}
+
+func OnConflict(columns ...string) InsertConflictUpdateChain {
+	return iim.OnConflict[tag.InsertTag](columns...)
+}
+
+func OnConflictOnConstraint(constraint string) InsertConflictUpdateChain {
+	return iim.OnConflictOnConstraint[tag.InsertTag](constraint)
+}
+
+func OverridingSystem() psql.InsertMod {
+	return iim.OverridingSystem[tag.InsertTag]()
+}
+
+func OverridingUser() psql.InsertMod {
+	return iim.OverridingUser[tag.InsertTag]()
+}
+
+func Query(q psql.SelectQuery) psql.InsertMod {
+	return iim.Query[tag.InsertTag, tag.SelectTag](q)
+}
+
+func Returning(clauses ...string) psql.InsertMod {
+	return iim.Returning[tag.InsertTag](clauses...)
+}
+
+func Values(values ...any) psql.InsertMod {
+	return iim.Values[tag.InsertTag](values...)
+}
+
+func ValuesArgNamed(argumentNames ...string) psql.InsertMod {
+	return iim.ValuesArgNamed[tag.InsertTag](argumentNames...)
+}
+
+func ValuesExpr(clauses ...litsql.Expression) psql.InsertMod {
+	return iim.ValuesExpr[tag.InsertTag](clauses...)
+}
+
+func ValuesString(clauses ...string) psql.InsertMod {
+	return iim.ValuesString[tag.InsertTag](clauses...)
 }
 
 func With(name string, columns ...string) WithChain {

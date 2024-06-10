@@ -23,12 +23,28 @@ func ColumnsClause(query string, args ...any) psql.SelectMod {
 	return ism.ColumnsClause[tag.SelectTag](query, args...)
 }
 
+func CrossJoin(table string) JoinChain {
+	return ism.CrossJoin[tag.SelectTag](table)
+}
+
+func CrossJoinExpr(table litsql.Expression) JoinChain {
+	return ism.CrossJoinExpr[tag.SelectTag](table)
+}
+
 func Distinct(on ...string) psql.SelectMod {
 	return ism.Distinct[tag.SelectTag](on...)
 }
 
 func DistinctExpr(on ...litsql.Expression) psql.SelectMod {
 	return ism.DistinctExpr[tag.SelectTag](on...)
+}
+
+func Except(q psql.SelectQuery) psql.SelectMod {
+	return ism.Except[tag.SelectTag](q)
+}
+
+func ExceptAll(q psql.SelectQuery) psql.SelectMod {
+	return ism.ExceptAll[tag.SelectTag](q)
 }
 
 func From(table string) FromChain {
@@ -41,6 +57,14 @@ func FromExpr(table litsql.Expression) FromChain {
 
 func FromQuery(q psql.SelectQuery) FromChain {
 	return ism.FromQuery[tag.SelectTag, tag.SelectTag](q)
+}
+
+func FullJoin(table string) JoinChain {
+	return ism.FullJoin[tag.SelectTag](table)
+}
+
+func FullJoinExpr(table litsql.Expression) JoinChain {
+	return ism.FullJoinExpr[tag.SelectTag](table)
 }
 
 func GroupBy(columns ...string) GroupByChain {
@@ -71,44 +95,20 @@ func InnerJoinExpr(table litsql.Expression) JoinChain {
 	return ism.InnerJoinExpr[tag.SelectTag](table)
 }
 
+func Intersect(q psql.SelectQuery) psql.SelectMod {
+	return ism.Intersect[tag.SelectTag](q)
+}
+
+func IntersectAll(q psql.SelectQuery) psql.SelectMod {
+	return ism.Intersect[tag.SelectTag](q)
+}
+
 func LeftJoin(table string) JoinChain {
 	return ism.LeftJoin[tag.SelectTag](table)
 }
 
 func LeftJoinExpr(table litsql.Expression) JoinChain {
 	return ism.LeftJoinExpr[tag.SelectTag](table)
-}
-
-func RightJoin(table string) JoinChain {
-	return ism.RightJoin[tag.SelectTag](table)
-}
-
-func RightJoinExpr(table litsql.Expression) JoinChain {
-	return ism.RightJoinExpr[tag.SelectTag](table)
-}
-
-func FullJoin(table string) JoinChain {
-	return ism.FullJoin[tag.SelectTag](table)
-}
-
-func FullJoinExpr(table litsql.Expression) JoinChain {
-	return ism.FullJoinExpr[tag.SelectTag](table)
-}
-
-func CrossJoin(table string) JoinChain {
-	return ism.CrossJoin[tag.SelectTag](table)
-}
-
-func CrossJoinExpr(table litsql.Expression) JoinChain {
-	return ism.CrossJoinExpr[tag.SelectTag](table)
-}
-
-func StraightJoin(table string) JoinChain {
-	return ism.StraightJoin[tag.SelectTag](table)
-}
-
-func StraightJoinExpr(table litsql.Expression) JoinChain {
-	return ism.StraightJoinExpr[tag.SelectTag](table)
 }
 
 func Limit(count int) psql.SelectMod {
@@ -151,28 +151,28 @@ func OrderByExpr(names ...litsql.Expression) psql.SelectMod {
 	return ism.OrderByExpr[tag.SelectTag](names...)
 }
 
+func RightJoin(table string) JoinChain {
+	return ism.RightJoin[tag.SelectTag](table)
+}
+
+func RightJoinExpr(table litsql.Expression) JoinChain {
+	return ism.RightJoinExpr[tag.SelectTag](table)
+}
+
+func StraightJoin(table string) JoinChain {
+	return ism.StraightJoin[tag.SelectTag](table)
+}
+
+func StraightJoinExpr(table litsql.Expression) JoinChain {
+	return ism.StraightJoinExpr[tag.SelectTag](table)
+}
+
 func Union(q psql.SelectQuery) psql.SelectMod {
 	return ism.Union[tag.SelectTag](q)
 }
 
 func UnionAll(q psql.SelectQuery) psql.SelectMod {
 	return ism.UnionAll[tag.SelectTag](q)
-}
-
-func Intersect(q psql.SelectQuery) psql.SelectMod {
-	return ism.Intersect[tag.SelectTag](q)
-}
-
-func IntersectAll(q psql.SelectQuery) psql.SelectMod {
-	return ism.Intersect[tag.SelectTag](q)
-}
-
-func Except(q psql.SelectQuery) psql.SelectMod {
-	return ism.Except[tag.SelectTag](q)
-}
-
-func ExceptAll(q psql.SelectQuery) psql.SelectMod {
-	return ism.ExceptAll[tag.SelectTag](q)
 }
 
 func Where(condition string) psql.SelectMod {

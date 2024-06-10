@@ -11,8 +11,24 @@ func Apply(f func(a psql.UpdateModApply)) psql.UpdateMod {
 	return ium.Apply(f)
 }
 
+func CrossJoin(table string) JoinChain {
+	return ium.CrossJoin[tag.UpdateTag](table)
+}
+
+func CrossJoinExpr(table litsql.Expression) JoinChain {
+	return ium.CrossJoinExpr[tag.UpdateTag](table)
+}
+
 func From(table string) FromChain {
 	return ium.From[tag.UpdateTag](table)
+}
+
+func FullJoin(table string) JoinChain {
+	return ium.FullJoin[tag.UpdateTag](table)
+}
+
+func FullJoinExpr(table litsql.Expression) JoinChain {
+	return ium.FullJoinExpr[tag.UpdateTag](table)
 }
 
 func FromExpr(table litsql.Expression) FromChain {
@@ -39,44 +55,20 @@ func LeftJoinExpr(table litsql.Expression) JoinChain {
 	return ium.LeftJoinExpr[tag.UpdateTag](table)
 }
 
-func RightJoin(table string) JoinChain {
-	return ium.RightJoin[tag.UpdateTag](table)
-}
-
-func RightJoinExpr(table litsql.Expression) JoinChain {
-	return ium.RightJoinExpr[tag.UpdateTag](table)
-}
-
-func FullJoin(table string) JoinChain {
-	return ium.FullJoin[tag.UpdateTag](table)
-}
-
-func FullJoinExpr(table litsql.Expression) JoinChain {
-	return ium.FullJoinExpr[tag.UpdateTag](table)
-}
-
-func CrossJoin(table string) JoinChain {
-	return ium.CrossJoin[tag.UpdateTag](table)
-}
-
-func CrossJoinExpr(table litsql.Expression) JoinChain {
-	return ium.CrossJoinExpr[tag.UpdateTag](table)
-}
-
-func StraightJoin(table string) JoinChain {
-	return ium.StraightJoin[tag.UpdateTag](table)
-}
-
-func StraightJoinExpr(table litsql.Expression) JoinChain {
-	return ium.StraightJoinExpr[tag.UpdateTag](table)
-}
-
 func Only() psql.UpdateMod {
 	return ium.Only[tag.UpdateTag](true)
 }
 
 func Returning(clauses ...string) psql.UpdateMod {
 	return ium.Returning[tag.UpdateTag](clauses...)
+}
+
+func RightJoin(table string) JoinChain {
+	return ium.RightJoin[tag.UpdateTag](table)
+}
+
+func RightJoinExpr(table litsql.Expression) JoinChain {
+	return ium.RightJoinExpr[tag.UpdateTag](table)
 }
 
 func Set(column string, arg any) psql.UpdateMod {
@@ -105,6 +97,14 @@ func SetClause(query string, args ...any) psql.UpdateMod {
 
 func SetExprClause(assignment litsql.Expression) psql.UpdateMod {
 	return ium.SetExprClause[tag.UpdateTag](assignment)
+}
+
+func StraightJoin(table string) JoinChain {
+	return ium.StraightJoin[tag.UpdateTag](table)
+}
+
+func StraightJoinExpr(table litsql.Expression) JoinChain {
+	return ium.StraightJoinExpr[tag.UpdateTag](table)
 }
 
 func Table(name string) psql.UpdateMod {
