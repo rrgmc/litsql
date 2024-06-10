@@ -1,18 +1,4 @@
 dialects:
-  psql:
-    mods:
-#      dm:
-#        funcs:
-#          - prefix: Using
-#            secondTypeParam: SelectTag
-#      im:
-#        funcs:
-#          - prefix: Query
-#            secondTypeParam: SelectTag
-#      um:
-#        funcs:
-#          - prefix: FromQuery
-#            secondTypeParam: SelectTag
   sqlite:
     mods:
       sm:
@@ -20,13 +6,3 @@ dialects:
           From:
             methods:
               - As
-#      dm:
-#        funcs:
-#          - prefix: Using
-#            secondTypeParam: SelectTag
-      im:
-        funcs:
-          - prefix: Where
-            replacePrefix: ConflictWhere
-#          - prefix: Query
-#            secondTypeParam: SelectTag
