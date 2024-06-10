@@ -23,20 +23,20 @@ func From(table string) FromChain {
 	return ium.From[tag.UpdateTag](table)
 }
 
-func FullJoin(table string) JoinChain {
-	return ium.FullJoin[tag.UpdateTag](table)
-}
-
-func FullJoinExpr(table litsql.Expression) JoinChain {
-	return ium.FullJoinExpr[tag.UpdateTag](table)
-}
-
 func FromExpr(table litsql.Expression) FromChain {
 	return ium.FromExpr[tag.UpdateTag](table)
 }
 
 func FromQuery(q psql.SelectQuery) FromChain {
 	return ium.FromQuery[tag.UpdateTag, tag.SelectTag](q)
+}
+
+func FullJoin(table string) JoinChain {
+	return ium.FullJoin[tag.UpdateTag](table)
+}
+
+func FullJoinExpr(table litsql.Expression) JoinChain {
+	return ium.FullJoinExpr[tag.UpdateTag](table)
 }
 
 func InnerJoin(table string) JoinChain {
