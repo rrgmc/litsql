@@ -6,6 +6,6 @@ import (
 	"github.com/rrgmc/litsql/sq/chain"
 )
 
-type WithChain = chain.With[tag.InsertTag]
-
 type InsertConflictUpdateChain = chain.InsertConflictUpdate[tag.InsertTag, imod.InsertConflictUpdateModTag]
+
+type WithChain = chain.With[tag.InsertTag]

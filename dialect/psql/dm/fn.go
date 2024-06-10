@@ -87,12 +87,12 @@ func Where(condition string) psql.DeleteMod {
 	return idm.Where[tag.DeleteTag](condition)
 }
 
-func WhereExpr(condition litsql.Expression) psql.DeleteMod {
-	return idm.WhereExpr[tag.DeleteTag](condition)
-}
-
 func WhereClause(query string, args ...any) psql.DeleteMod {
 	return idm.WhereClause[tag.DeleteTag](query, args...)
+}
+
+func WhereExpr(condition litsql.Expression) psql.DeleteMod {
+	return idm.WhereExpr[tag.DeleteTag](condition)
 }
 
 func With(name string, columns ...string) WithChain {

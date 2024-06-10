@@ -79,8 +79,16 @@ func SetArgNamed(column string, argumentName string) psql.UpdateMod {
 	return ium.SetArgNamed[tag.UpdateTag](column, argumentName)
 }
 
+func SetClause(query string, args ...any) psql.UpdateMod {
+	return ium.SetClause[tag.UpdateTag](query, args...)
+}
+
 func SetExpr(column string, value litsql.Expression) psql.UpdateMod {
 	return ium.SetExpr[tag.UpdateTag](column, value)
+}
+
+func SetExprClause(assignment litsql.Expression) psql.UpdateMod {
+	return ium.SetExprClause[tag.UpdateTag](assignment)
 }
 
 func SetQuery(column string, q psql.SelectQuery) psql.UpdateMod {
@@ -89,14 +97,6 @@ func SetQuery(column string, q psql.SelectQuery) psql.UpdateMod {
 
 func SetString(column string, right string) psql.UpdateMod {
 	return ium.SetString[tag.UpdateTag](column, right)
-}
-
-func SetClause(query string, args ...any) psql.UpdateMod {
-	return ium.SetClause[tag.UpdateTag](query, args...)
-}
-
-func SetExprClause(assignment litsql.Expression) psql.UpdateMod {
-	return ium.SetExprClause[tag.UpdateTag](assignment)
 }
 
 func StraightJoin(table string) JoinChain {
@@ -115,12 +115,12 @@ func Where(condition string) psql.UpdateMod {
 	return ium.Where[tag.UpdateTag](condition)
 }
 
-func WhereExpr(condition litsql.Expression) psql.UpdateMod {
-	return ium.WhereExpr[tag.UpdateTag](condition)
-}
-
 func WhereClause(query string, args ...any) psql.UpdateMod {
 	return ium.WhereClause[tag.UpdateTag](query, args...)
+}
+
+func WhereExpr(condition litsql.Expression) psql.UpdateMod {
+	return ium.WhereExpr[tag.UpdateTag](condition)
 }
 
 func With(name string, columns ...string) WithChain {

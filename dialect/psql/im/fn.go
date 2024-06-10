@@ -19,8 +19,16 @@ func ConflictSetArgNamed(column string, argumentName string) InsertConflictUpdat
 	return iim.ConflictSetArgNamed[tag.InsertTag](column, argumentName)
 }
 
+func ConflictSetClause(query string, args ...any) InsertConflictUpdateMod {
+	return iim.ConflictSetClause[tag.InsertTag](query, args...)
+}
+
 func ConflictSetExpr(column string, value litsql.Expression) InsertConflictUpdateMod {
 	return iim.ConflictSetExpr[tag.InsertTag](column, value)
+}
+
+func ConflictSetExprClause(assignment litsql.Expression) InsertConflictUpdateMod {
+	return iim.ConflictSetExprClause[tag.InsertTag](assignment)
 }
 
 func ConflictSetQuery(column string, q psql.SelectQuery) InsertConflictUpdateMod {
@@ -31,24 +39,16 @@ func ConflictSetString(column string, right string) InsertConflictUpdateMod {
 	return iim.ConflictSetString[tag.InsertTag](column, right)
 }
 
-func ConflictSetClause(query string, args ...any) InsertConflictUpdateMod {
-	return iim.ConflictSetClause[tag.InsertTag](query, args...)
-}
-
-func ConflictSetExprClause(assignment litsql.Expression) InsertConflictUpdateMod {
-	return iim.ConflictSetExprClause[tag.InsertTag](assignment)
-}
-
 func ConflictWhere(condition string) InsertConflictUpdateMod {
 	return iim.ConflictWhere[tag.InsertTag](condition)
 }
 
-func ConflictWhereExpr(condition litsql.Expression) InsertConflictUpdateMod {
-	return iim.ConflictWhereExpr[tag.InsertTag](condition)
-}
-
 func ConflictWhereClause(query string, args ...any) InsertConflictUpdateMod {
 	return iim.ConflictWhereClause[tag.InsertTag](query, args...)
+}
+
+func ConflictWhereExpr(condition litsql.Expression) InsertConflictUpdateMod {
+	return iim.ConflictWhereExpr[tag.InsertTag](condition)
 }
 
 func Into(name string, columns ...string) psql.InsertMod {
