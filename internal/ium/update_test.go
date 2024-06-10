@@ -28,7 +28,7 @@ func TestUpdateBasic(t *testing.T) {
 
 	query := Update[testutils.TestTag](testutils.NewTestDialect(),
 		Table[testutils.TestTag]("users"),
-		Only[testutils.TestTag](true),
+		Only[testutils.TestTag](),
 		Set[testutils.TestTag]("name", "John"),
 		SetString[testutils.TestTag]("created_at", "TIME()"),
 		WhereClause[testutils.TestTag]("id = ?", 15),

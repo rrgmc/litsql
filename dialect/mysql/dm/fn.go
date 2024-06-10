@@ -64,7 +64,7 @@ func StraightJoinExpr(table litsql.Expression) JoinChain {
 }
 
 func Only() mysql.DeleteMod {
-	return idm.Only[tag.DeleteTag](true)
+	return idm.Only[tag.DeleteTag]()
 }
 
 func Returning(clauses ...string) mysql.DeleteMod {

@@ -27,7 +27,7 @@ func TestDeleteBasic(t *testing.T) {
 
 	query := Delete[testutils.TestTag](testutils.NewTestDialect(),
 		From[testutils.TestTag]("users"),
-		Only[testutils.TestTag](true),
+		Only[testutils.TestTag](),
 		WhereClause[testutils.TestTag]("id = ?", 15),
 		Returning[testutils.TestTag]("id"),
 	)

@@ -6,8 +6,8 @@ import (
 	"github.com/rrgmc/litsql/sq"
 )
 
-func Only[T any](only bool) sq.QueryMod[T] {
+func Only[T any]() sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
-		a.AddQueryClause(&iclause.UpdateOnly{Only: only})
+		a.AddQueryClause(&iclause.UpdateOnly{Only: true})
 	})
 }

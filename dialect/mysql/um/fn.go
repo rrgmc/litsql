@@ -72,7 +72,7 @@ func StraightJoinExpr(table litsql.Expression) JoinChain {
 }
 
 func Only() mysql.UpdateMod {
-	return ium.Only[tag.UpdateTag](true)
+	return ium.Only[tag.UpdateTag]()
 }
 
 func Returning(clauses ...string) mysql.UpdateMod {

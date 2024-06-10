@@ -48,7 +48,7 @@ func LeftJoinExpr(table litsql.Expression) JoinChain {
 }
 
 func Only() psql.DeleteMod {
-	return idm.Only[tag.DeleteTag](true)
+	return idm.Only[tag.DeleteTag]()
 }
 
 func Returning(clauses ...string) psql.DeleteMod {

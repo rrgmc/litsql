@@ -56,7 +56,7 @@ func LeftJoinExpr(table litsql.Expression) JoinChain {
 }
 
 func Only() sqlite.UpdateMod {
-	return ium.Only[tag.UpdateTag](true)
+	return ium.Only[tag.UpdateTag]()
 }
 
 func Returning(clauses ...string) sqlite.UpdateMod {
