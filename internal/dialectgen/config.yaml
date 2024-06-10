@@ -6,7 +6,13 @@ dialects:
           From:
             methods:
               - As
+      dm:
+        funcs:
+          - prefix: Using
+            secondTypeParam: SelectTag
       im:
         funcs:
           - prefix: Where
             replacePrefix: ConflictWhere
+          - prefix: Query
+            secondTypeParam: SelectTag

@@ -193,7 +193,9 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 				}
 			}
 
-			funcName := applyFuncConfig(funcTyp.Name(), config.FindDialectFunc(*dialect, sdir, funcTyp.Name()))
+			funcConfig := config.FindDialectFunc(*dialect, sdir, funcTyp.Name())
+
+			funcName := applyFuncConfig(funcTyp.Name(), funcConfig)
 
 			// f.Comment(types.ObjectString(funcTyp, qual))
 			if doc != nil {
@@ -209,7 +211,15 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 						rblock := jen.Qual(ispkg, funcTyp.Name()).
 							TypesFunc(func(tgroup *jen.Group) {
 								for k := 0; k < sig.TypeParams().Len(); k++ {
-									tgroup.Add(sdialectTag)
+									if funcConfig != nil {
+										fmt.Println("ok")
+									}
+
+									if k > 0 && funcConfig != nil && funcConfig.SecondTypeParam != "" {
+										tgroup.Add(jen.Qual(sdialecttagpkg, funcConfig.SecondTypeParam))
+									} else {
+										tgroup.Add(sdialectTag)
+									}
 								}
 							}).
 							CallFunc(func(pgroup *jen.Group) {

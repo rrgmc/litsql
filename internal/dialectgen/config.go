@@ -22,8 +22,9 @@ type ConfigDialectMod struct {
 }
 
 type ConfigDialectModFunc struct {
-	Prefix        string `yaml:"prefix"`
-	ReplacePrefix string `yaml:"replacePrefix"`
+	Prefix          string `yaml:"prefix"`
+	ReplacePrefix   string `yaml:"replacePrefix"`
+	SecondTypeParam string `yaml:"secondTypeParam"`
 }
 
 type ConfigDialectModChain struct {
