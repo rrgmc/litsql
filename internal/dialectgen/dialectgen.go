@@ -150,6 +150,15 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 				continue
 			}
 
+			// skip functions
+			if slices.ContainsFunc([]string{
+				"RawQuery",
+			}, func(s string) bool {
+				return strings.HasPrefix(funcTyp.Name(), s)
+			}) {
+				continue
+			}
+
 			docFound := false
 			var doc *ast.CommentGroup
 
