@@ -81,15 +81,15 @@ func ConflictSetExprClause(assignment litsql.Expression) InsertConflictUpdateMod
 }
 
 func ConflictWhere(condition string) InsertConflictUpdateMod {
-	return iim.Where[tag.InsertTag](condition)
+	return iim.ConflictWhere[tag.InsertTag](condition)
 }
 
 func ConflictWhereExpr(condition litsql.Expression) InsertConflictUpdateMod {
-	return iim.WhereExpr[tag.InsertTag](condition)
+	return iim.ConflictWhereExpr[tag.InsertTag](condition)
 }
 
 func ConflictWhereClause(query string, args ...any) InsertConflictUpdateMod {
-	return iim.WhereClause[tag.InsertTag](query, args...)
+	return iim.ConflictWhereClause[tag.InsertTag](query, args...)
 }
 
 func With(name string, columns ...string) WithChain {

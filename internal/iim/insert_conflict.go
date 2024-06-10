@@ -67,16 +67,16 @@ func ConflictSetExprClause[T any](assignment litsql.Expression) mod.InsertConfli
 	})
 }
 
-func Where[T any](condition string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
-	return WhereExpr[T](expr.String(condition))
+func ConflictWhere[T any](condition string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
+	return ConflictWhereExpr[T](expr.String(condition))
 }
 
-func WhereExpr[T any](condition litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
+func ConflictWhereExpr[T any](condition litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
 	return mod.InsertConflictUpdateModFunc[T, imod.InsertConflictUpdateModTag](func(a *iclause.InsertConflictUpdate) {
 		a.Where.Conditions = append(a.Where.Conditions, condition)
 	})
 }
 
-func WhereClause[T any](query string, args ...any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
-	return WhereExpr[T](expr.Clause(query, args...))
+func ConflictWhereClause[T any](query string, args ...any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
+	return ConflictWhereExpr[T](expr.Clause(query, args...))
 }
