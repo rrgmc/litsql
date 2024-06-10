@@ -23,7 +23,6 @@ func OverridingUser() sqlite.InsertMod {
 	return iim.OverridingUser[tag.InsertTag]()
 }
 
-// Insert from a query
 func Query(q sqlite.SelectQuery) sqlite.InsertMod {
 	return iim.Query[tag.InsertTag, tag.SelectTag](q)
 }

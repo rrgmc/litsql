@@ -11,6 +11,6 @@ type GroupByChain = chain.GroupBy[tag.SelectTag]
 
 type JoinChain = chain.Join[tag.SelectTag]
 
-type WithChain = chain.With[tag.SelectTag]
-
 type WindowChain = chain.Window[tag.SelectTag]
+
+type WithChain = chain.With[tag.SelectTag]

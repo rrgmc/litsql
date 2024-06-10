@@ -32,7 +32,6 @@ func ValuesString[T any](clauses ...string) sq.QueryMod[T] {
 	return ValuesExpr[T](expr.StringList(clauses)...)
 }
 
-// Insert from a query
 func Query[T, A any](q isq.Query[A]) sq.QueryMod[T] {
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
 		a.AddQueryClause(&iclause.Values{

@@ -23,7 +23,6 @@ func OverridingUser() mysql.InsertMod {
 	return iim.OverridingUser[tag.InsertTag]()
 }
 
-// Insert from a query
 func Query(q mysql.SelectQuery) mysql.InsertMod {
 	return iim.Query[tag.InsertTag, tag.SelectTag](q)
 }
