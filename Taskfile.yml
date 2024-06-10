@@ -1,6 +1,12 @@
 version: '3'
 
 tasks:
+  gen:
+    dir: ./internal/dialectgen
+    cmds:
+      - 'go run github.com/rrgmc/litsql/internal/dialectgen --dialect=psql'
+      - 'go run github.com/rrgmc/litsql/internal/dialectgen --dialect=sqlite'
+      - 'go run github.com/rrgmc/litsql/internal/dialectgen --dialect=mysql'
   current-version:
     cmds:
       - 'echo "Version: {{.GIT_TAG_CURRENT}}"'
