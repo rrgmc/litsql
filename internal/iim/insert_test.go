@@ -3,6 +3,8 @@ package iim
 import (
 	"testing"
 
+	"github.com/rrgmc/litsql/internal/ichain"
+	"github.com/rrgmc/litsql/internal/imod"
 	"github.com/rrgmc/litsql/internal/ism"
 	"github.com/rrgmc/litsql/internal/testutils"
 	"github.com/rrgmc/litsql/sq"
@@ -28,8 +30,8 @@ func TestInsertBasic(t *testing.T) {
 		Into[testutils.TestTag]("users", "id", "name"),
 		Values[testutils.TestTag](15, "John"),
 		Values[testutils.TestTag](16, "Mary"),
-		OnConflict[testutils.TestTag]("id").DoUpdate(
-			ConflictSetString[testutils.TestTag]("name", "EXCLUDED.name"),
+		OnConflict[testutils.TestTag, ichain.InsertConflictUpdate[testutils.TestTag, imod.InsertConflictUpdateModTag]]("id").DoUpdate(
+			ConflictSetString[testutils.TestTag, ichain.InsertConflictUpdate[testutils.TestTag, imod.InsertConflictUpdateModTag]]("name", "EXCLUDED.name"),
 		),
 		Returning[testutils.TestTag]("id"),
 	)
@@ -55,10 +57,10 @@ func TestInsertWith(t *testing.T) {
 	expectedArgs := []any{2, 15, "John"}
 
 	query := Insert[testutils.TestTag](testutils.NewTestDialect(),
-		With[testutils.TestTag]("city", "city_id").As(
+		With[testutils.TestTag, ichain.With[testutils.TestTag]]("city", "city_id").As(
 			ism.Select[testutils.TestTag](testutils.NewTestDialect(),
 				ism.Columns[testutils.TestTag]("city"),
-				ism.From[testutils.TestTag]("users"),
+				ism.From[testutils.TestTag, ichain.From[testutils.TestTag]]("users"),
 				ism.WhereClause[testutils.TestTag]("id = ?", 2),
 			),
 		),
