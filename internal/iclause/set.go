@@ -8,8 +8,9 @@ import (
 )
 
 type Set struct {
-	Set     []litsql.Expression
-	Starter bool
+	Set        []litsql.Expression
+	Starter    bool
+	SkipClause bool
 }
 
 func (c *Set) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
@@ -17,8 +18,10 @@ func (c *Set) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, err
 		if len(c.Set) == 0 {
 			return nil, internal.NewClauseError("'SET' fields are required")
 		}
-		w.AddSeparator(true)
-		w.Write("SET")
+		if !c.SkipClause {
+			w.AddSeparator(true)
+			w.Write("SET")
+		}
 		w.WriteSeparator()
 		w.Indent()
 	}

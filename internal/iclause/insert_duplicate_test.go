@@ -23,8 +23,6 @@ func TestInsertDuplicateKey(t *testing.T) {
 	o.Write("ON DUPLICATE KEY UPDATE")
 
 	o.WriteSeparator()
-	o.Write("SET")
-	o.WriteSeparator()
 	o.WriteIndent(1)
 	o.Write("id = 1,")
 	o.WriteSeparator()

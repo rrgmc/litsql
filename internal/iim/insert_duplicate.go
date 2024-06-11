@@ -43,7 +43,8 @@ func OnDuplicateKeySetExprClause[T any](assignment litsql.Expression) sq.QueryMo
 	return sq.QueryModFunc[T](func(a litsql.QueryBuilder) {
 		a.AddQueryClause(&iclause.InsertDuplicateKey{
 			Set: iclause.Set{
-				Set: []litsql.Expression{assignment},
+				Starter: false,
+				Set:     []litsql.Expression{assignment},
 			},
 		})
 	})

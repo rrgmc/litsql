@@ -87,3 +87,19 @@ func TestInsertApply(t *testing.T) {
 
 	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)
 }
+
+func TestInsertOnDuplicateKey(t *testing.T) {
+	expectedQuery := "INSERT INTO users (id, name) VALUES ($1, $2), ($3, $4) ON DUPLICATE KEY UPDATE name = $5, age = $6 RETURNING id"
+	expectedArgs := []any{15, "John", 16, "Mary", "Ron", 19}
+
+	query := Insert[testutils.TestTag](testutils.NewTestDialect(),
+		Into[testutils.TestTag]("users", "id", "name"),
+		Values[testutils.TestTag](15, "John"),
+		Values[testutils.TestTag](16, "Mary"),
+		OnDuplicateKeySet[testutils.TestTag]("name", "Ron"),
+		OnDuplicateKeySet[testutils.TestTag]("age", 19),
+		Returning[testutils.TestTag]("id"),
+	)
+
+	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)
+}

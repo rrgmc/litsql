@@ -22,6 +22,9 @@ func (c *InsertDuplicateKey) WriteSQL(w litsql.Writer, d litsql.Dialect, start i
 	if !c.Set.Starter {
 		c.Set.Starter = true
 	}
+	if !c.Set.SkipClause {
+		c.Set.SkipClause = true
+	}
 	b.ExpressIf(&c.Set, len(c.Set.Set) > 0, nil, nil)
 
 	return b.Result()
