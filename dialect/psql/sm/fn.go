@@ -72,15 +72,17 @@ func FullJoinExpr(table litsql.Expression) JoinChain {
 }
 
 func GroupBy(columns ...string) GroupByChain {
-	return &groupByChainAdapter{
-		chain: ism.GroupBy[tag.SelectTag](columns...),
-	}
+	// return &groupByChainAdapter{
+	// 	GroupByChain: ism.GroupBy[tag.SelectTag, GroupByChain](columns...),
+	// }
+	return  ism.GroupBy[tag.SelectTag, GroupByChain](columns...)
 }
 
 func GroupByExpr(columns ...litsql.Expression) GroupByChain {
-	return &groupByChainAdapter{
-		chain: ism.GroupByExpr[tag.SelectTag](columns...),
-	}
+	// return &groupByChainAdapter{
+	// 	GroupByChain: ism.GroupByExpr[tag.SelectTag, GroupByChain](columns...),
+	// }
+	return  ism.GroupByExpr[tag.SelectTag, GroupByChain](columns...)
 }
 
 func Having(condition string) psql.SelectMod {

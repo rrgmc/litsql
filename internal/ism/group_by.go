@@ -5,15 +5,14 @@ import (
 	"github.com/rrgmc/litsql/expr"
 	"github.com/rrgmc/litsql/internal/ichain"
 	"github.com/rrgmc/litsql/internal/iclause"
-	"github.com/rrgmc/litsql/sq/chain"
 )
 
-func GroupBy[T any](columns ...string) chain.GroupBy[T] {
-	return GroupByExpr[T](expr.StringList(columns)...)
+func GroupBy[T, SELF any](columns ...string) *ichain.GroupByChain[T, SELF] {
+	return GroupByExpr[T, SELF](expr.StringList(columns)...)
 }
 
-func GroupByExpr[T any](columns ...litsql.Expression) chain.GroupBy[T] {
-	return &ichain.GroupByChain[T]{
+func GroupByExpr[T, SELF any](columns ...litsql.Expression) *ichain.GroupByChain[T, SELF] {
+	return &ichain.GroupByChain[T, SELF]{
 		GroupBy: &iclause.GroupBy{
 			Groups: columns,
 		},

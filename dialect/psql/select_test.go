@@ -28,3 +28,16 @@ func TestSelectRaw(t *testing.T) {
 	assert.Equal(t, "select * from users where id = ?", queryStr)
 	assert.DeepEqual(t, []any{12, 15}, params)
 }
+
+func TestSelectG(t *testing.T) {
+	query := psql.Select(
+		sm.Columns("a", "b"),
+		sm.From("device"),
+		sm.GroupBy("b"),
+	)
+	queryStr, params, err := query.Build()
+
+	assert.NilError(t, err)
+	assert.Assert(t, queryStr != "")
+	assert.Assert(t, len(params) == 0)
+}

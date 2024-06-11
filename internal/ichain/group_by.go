@@ -4,24 +4,30 @@ import (
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/internal/iclause"
 	"github.com/rrgmc/litsql/sq"
-	"github.com/rrgmc/litsql/sq/chain"
 )
 
-type GroupByChain[T any] struct {
+type GroupBy[T, SELF any] interface {
+	sq.QueryMod[T]
+	Distinct() SELF
+	With(with string) SELF
+}
+
+type GroupByChain[T, SELF any] struct {
 	sq.ModTagImpl[T]
+	self SELF
 	*iclause.GroupBy
 }
 
-func (c *GroupByChain[T]) Apply(a litsql.QueryBuilder) {
+func (c *GroupByChain[T, SELF]) Apply(a litsql.QueryBuilder) {
 	a.AddQueryClause(c.GroupBy)
 }
 
-func (c *GroupByChain[T]) Distinct() chain.GroupBy[T] {
+func (c *GroupByChain[T, SELF]) Distinct() SELF {
 	c.SetGroupByDistinct(true)
-	return c
+	return c.self
 }
 
-func (c *GroupByChain[T]) With(with string) chain.GroupBy[T] {
+func (c *GroupByChain[T, SELF]) With(with string) SELF {
 	c.SetGroupWith(with)
-	return c
+	return c.self
 }
