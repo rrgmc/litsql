@@ -9,10 +9,10 @@ import (
 
 type Directives map[string]Directive
 
-func (d Directives) IsListValue(directive string, value string) bool {
+func (d Directives) IsListValue(directive string, value string, defVal bool) bool {
 	di, ok := d[directive]
 	if !ok {
-		return false
+		return defVal
 	}
 	return di.IsListValue(value)
 }
@@ -29,6 +29,10 @@ func (d Directive) IsListValue(value string) bool {
 func ParseDoc(doc *ast.CommentGroup) ([]string, Directives) {
 	var lines []string
 	directives := Directives{}
+
+	if doc == nil {
+		return lines, directives
+	}
 
 	for _, docLine := range doc.List {
 		dmatches := reDirective.FindStringSubmatch(docLine.Text)
@@ -48,7 +52,7 @@ func ParseDoc(doc *ast.CommentGroup) ([]string, Directives) {
 	lastline := len(lines) - 1
 	if len(directives) > 0 {
 		for ; lastline >= 0; lastline-- {
-			if strings.TrimSpace(lines[lastline]) != "" {
+			if strings.TrimSpace(strings.TrimPrefix(lines[lastline], "//")) != "" {
 				break
 			}
 		}
@@ -58,5 +62,5 @@ func ParseDoc(doc *ast.CommentGroup) ([]string, Directives) {
 }
 
 var (
-	reDirective = regexp.MustCompile(`^([a-z0-9]+):([a-z0-9]+) (.+)$`)
+	reDirective = regexp.MustCompile(`^//([a-z0-9]+):([a-z0-9]+) (.+)$`)
 )

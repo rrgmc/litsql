@@ -19,18 +19,18 @@ func TestParseDoc(t *testing.T) {
 			doc: &ast.CommentGroup{
 				List: []*ast.Comment{
 					{
-						Text: "This is a comment",
+						Text: "// This is a comment",
 					},
 					{
-						Text: "",
+						Text: "//",
 					},
 					{
-						Text: "litsql:dialects psql,sqlite",
+						Text: "//litsql:dialects psql,sqlite",
 					},
 				},
 			},
 			lines: []string{
-				"This is a comment",
+				"// This is a comment",
 			},
 			directives: Directives{
 				"dialects": Directive{
@@ -44,16 +44,16 @@ func TestParseDoc(t *testing.T) {
 			doc: &ast.CommentGroup{
 				List: []*ast.Comment{
 					{
-						Text: "This is a comment",
+						Text: "// This is a comment",
 					},
 					{
-						Text: "",
+						Text: "// ",
 					},
 				},
 			},
 			lines: []string{
-				"This is a comment",
-				"",
+				"// This is a comment",
+				"// ",
 			},
 			directives: Directives{},
 		},
@@ -62,7 +62,7 @@ func TestParseDoc(t *testing.T) {
 			doc: &ast.CommentGroup{
 				List: []*ast.Comment{
 					{
-						Text: "litsql:dialects psql,sqlite",
+						Text: "//litsql:dialects psql,sqlite",
 					},
 				},
 			},

@@ -180,6 +180,14 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 				}
 			}
 
+			docLines, docDirectives := genutil.ParseDoc(doc)
+			// check "dialects" directive
+			if doc != nil && len(doc.List) > 0 {
+				if !docDirectives.IsListValue("dialects", *dialect, true) {
+					continue
+				}
+			}
+
 			sig := funcTyp.Type().(*types.Signature)
 			// fmt.Printf("%s\n", types.ObjectString(funcTyp, qual))
 
@@ -209,10 +217,8 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 			funcName := applyFuncConfig(funcTyp.Name(), funcConfig)
 
 			// f.Comment(types.ObjectString(funcTyp, qual))
-			if doc != nil {
-				for _, docLine := range doc.List {
-					f.Comment(docLine.Text)
-				}
+			for _, docLine := range docLines {
+				f.Comment(docLine)
 			}
 			f.Func().Id(funcName).
 				ParamsFunc(genutil.AddParams(sig.Params(), sig.Variadic(), customNamedType)).
