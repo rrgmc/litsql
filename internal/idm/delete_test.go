@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal/ichain"
 	"github.com/rrgmc/litsql/internal/ism"
 	"github.com/rrgmc/litsql/internal/testutils"
 	"github.com/rrgmc/litsql/sq"
@@ -43,8 +44,8 @@ func TestDeleteUsing(t *testing.T) {
 
 	query := Delete[testutils.TestTag](d,
 		From[testutils.TestTag]("users"),
-		Using[testutils.TestTag]("address AS adr"),
-		InnerJoin[testutils.TestTag]("cities AS ct").On("adr.city_id = ct.id"),
+		Using[testutils.TestTag, ichain.From[testutils.TestTag]]("address AS adr"),
+		InnerJoin[testutils.TestTag, ichain.Join[testutils.TestTag]]("cities AS ct").On("adr.city_id = ct.id"),
 		WhereClause[testutils.TestTag]("users.address_id = adr.address_id"),
 	)
 
@@ -59,10 +60,10 @@ func TestDeleteUsingQuery(t *testing.T) {
 
 	query := Delete[testutils.TestTag](d,
 		From[testutils.TestTag]("users"),
-		UsingQuery[testutils.TestTag, testutils.TestTag](
+		UsingQuery[testutils.TestTag, ichain.From[testutils.TestTag], testutils.TestTag](
 			ism.Select[testutils.TestTag](d,
 				ism.Columns[testutils.TestTag]("address", "city", "state"),
-				ism.From[testutils.TestTag]("address"),
+				ism.From[testutils.TestTag, ichain.From[testutils.TestTag]]("address"),
 				ism.WhereClause[testutils.TestTag]("id IN (?)", expr.In([]any{15, 16, 17})),
 			),
 		).As("adr"),
@@ -77,10 +78,10 @@ func TestDeleteWith(t *testing.T) {
 	expectedArgs := []any{2, 15}
 
 	query := Delete[testutils.TestTag](testutils.NewTestDialect(),
-		With[testutils.TestTag]("city", "city_id").As(
+		With[testutils.TestTag, ichain.With[testutils.TestTag]]("city", "city_id").As(
 			ism.Select[testutils.TestTag](testutils.NewTestDialect(),
 				ism.Columns[testutils.TestTag]("city"),
-				ism.From[testutils.TestTag]("users"),
+				ism.From[testutils.TestTag, ichain.From[testutils.TestTag]]("users"),
 				ism.WhereClause[testutils.TestTag]("id = ?", 2),
 			),
 		),
