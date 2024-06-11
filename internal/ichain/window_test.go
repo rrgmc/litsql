@@ -10,10 +10,10 @@ import (
 )
 
 func TestWindowChain(t *testing.T) {
-	chain := &WindowChain[testutils.TestTag]{
+	chain := NewWindowChain[testutils.TestTag, Window[testutils.TestTag]](&WindowChain[testutils.TestTag, Window[testutils.TestTag]]{
 		Windows:     &iclause.Windows{},
 		NamedWindow: &iclause.NamedWindow{},
-	}
+	})
 
 	chain.
 		From("from_test").

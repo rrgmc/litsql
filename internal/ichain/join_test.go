@@ -9,11 +9,11 @@ import (
 )
 
 func TestJoinChain(t *testing.T) {
-	chain := &JoinChain[testutils.TestTag]{
+	chain := NewJoinChain[testutils.TestTag, Join[testutils.TestTag]](&JoinChain[testutils.TestTag, Join[testutils.TestTag]]{
 		Join: &iclause.Join{
 			To: &iclause.From{},
 		},
-	}
+	})
 
 	chain.
 		As("test_alias", "c1", "c2").

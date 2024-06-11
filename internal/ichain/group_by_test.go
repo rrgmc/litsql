@@ -13,10 +13,6 @@ func TestGroupByChain(t *testing.T) {
 		GroupBy: &iclause.GroupBy{},
 	})
 
-	// chain := &GroupByChain[testutils.TestTag]{
-	// 	GroupBy: &iclause.GroupBy{},
-	// }
-
 	chain.
 		Distinct().
 		With("test_with")

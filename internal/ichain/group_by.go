@@ -27,10 +27,6 @@ func (c *GroupByChain[T, CHAIN]) Apply(a litsql.QueryBuilder) {
 	a.AddQueryClause(c.GroupBy)
 }
 
-func (c *GroupByChain[T, CHAIN]) SetChainSelf(self CHAIN) {
-	c.Self = self
-}
-
 func (c *GroupByChain[T, CHAIN]) Distinct() CHAIN {
 	c.SetGroupByDistinct(true)
 	return c.Self.(CHAIN)

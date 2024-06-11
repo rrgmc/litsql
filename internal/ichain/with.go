@@ -5,66 +5,83 @@ import (
 	"github.com/rrgmc/litsql/expr"
 	"github.com/rrgmc/litsql/internal/iclause"
 	"github.com/rrgmc/litsql/sq"
-	"github.com/rrgmc/litsql/sq/chain"
 )
 
-type WithChain[T any] struct {
-	sq.ModTagImpl[T]
-	*iclause.With
-	CTE *iclause.CTE
+type With[T any] interface {
+	sq.QueryMod[T]
+	Recursive() With[T]
+	As(q litsql.Query) With[T]
+	NotMaterialized() With[T]
+	Materialized() With[T]
+	SearchBreadth(setCol string, searchCols ...string) With[T]
+	SearchDepth(setCol string, searchCols ...string) With[T]
+	Cycle(set, using string, cols ...string) With[T]
+	CycleValue(value, defaultVal any) With[T]
 }
 
-func (c *WithChain[T]) Apply(a litsql.QueryBuilder) {
+func NewWithChain[T, CHAIN any](chain *WithChain[T, CHAIN]) *WithChain[T, CHAIN] {
+	chain.Self = chain
+	return chain
+}
+
+type WithChain[T, CHAIN any] struct {
+	sq.ModTagImpl[T]
+	*iclause.With
+	CTE  *iclause.CTE
+	Self any
+}
+
+func (c *WithChain[T, CHAIN]) Apply(a litsql.QueryBuilder) {
 	a.AddQueryClause(c.With)
 }
 
-func (c *WithChain[T]) Recursive() chain.With[T] {
+func (c *WithChain[T, CHAIN]) Recursive() CHAIN {
 	c.SetRecursive(true)
-	return c
+	return c.Self.(CHAIN)
 }
 
-func (c *WithChain[T]) As(q litsql.Query) chain.With[T] {
+func (c *WithChain[T, CHAIN]) As(q litsql.Query) CHAIN {
 	c.CTE.SetQuery(q)
-	return c
+	return c.Self.(CHAIN)
 }
 
-func (c *WithChain[T]) NotMaterialized() chain.With[T] {
+func (c *WithChain[T, CHAIN]) NotMaterialized() CHAIN {
 	c.CTE.SetNotMaterialized()
-	return c
+	return c.Self.(CHAIN)
 }
 
-func (c *WithChain[T]) Materialized() chain.With[T] {
+func (c *WithChain[T, CHAIN]) Materialized() CHAIN {
 	c.CTE.SetMaterialized()
-	return c
+	return c.Self.(CHAIN)
 }
 
-func (c *WithChain[T]) SearchBreadth(setCol string, searchCols ...string) chain.With[T] {
+func (c *WithChain[T, CHAIN]) SearchBreadth(setCol string, searchCols ...string) CHAIN {
 	c.CTE.Search = iclause.CTESearch{
 		Order:   iclause.SearchBreadth,
 		Columns: searchCols,
 		Set:     setCol,
 	}
-	return c
+	return c.Self.(CHAIN)
 }
 
-func (c *WithChain[T]) SearchDepth(setCol string, searchCols ...string) chain.With[T] {
+func (c *WithChain[T, CHAIN]) SearchDepth(setCol string, searchCols ...string) CHAIN {
 	c.CTE.Search = iclause.CTESearch{
 		Order:   iclause.SearchDepth,
 		Columns: searchCols,
 		Set:     setCol,
 	}
-	return c
+	return c.Self.(CHAIN)
 }
 
-func (c *WithChain[T]) Cycle(set, using string, cols ...string) chain.With[T] {
+func (c *WithChain[T, CHAIN]) Cycle(set, using string, cols ...string) CHAIN {
 	c.CTE.Cycle.Set = set
 	c.CTE.Cycle.Using = using
 	c.CTE.Cycle.Columns = cols
-	return c
+	return c.Self.(CHAIN)
 }
 
-func (c *WithChain[T]) CycleValue(value, defaultVal any) chain.With[T] {
+func (c *WithChain[T, CHAIN]) CycleValue(value, defaultVal any) CHAIN {
 	c.CTE.Cycle.SetVal = expr.Arg(value)
 	c.CTE.Cycle.DefaultVal = expr.Arg(defaultVal)
-	return c
+	return c.Self.(CHAIN)
 }

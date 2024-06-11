@@ -5,125 +5,154 @@ import (
 	"github.com/rrgmc/litsql/expr"
 	"github.com/rrgmc/litsql/internal/iclause"
 	"github.com/rrgmc/litsql/sq"
-	"github.com/rrgmc/litsql/sq/chain"
 )
 
-type WindowChain[T any] struct {
+type Window[T any] interface {
+	sq.QueryMod[T]
+	From(name string) Window[T]
+	PartitionBy(condition ...string) Window[T]
+	PartitionByExpr(condition ...litsql.Expression) Window[T]
+	OrderBy(order ...string) Window[T]
+	OrderByExpr(order ...litsql.Expression) Window[T]
+	Range() Window[T]
+	Rows() Window[T]
+	Groups() Window[T]
+	FromUnboundedPreceding() Window[T]
+	FromPreceding(exp litsql.Expression) Window[T]
+	FromCurrentRow() Window[T]
+	FromFollowing(exp litsql.Expression) Window[T]
+	ToPreceding(exp litsql.Expression) Window[T]
+	ToCurrentRow(count int) Window[T]
+	ToFollowing(exp litsql.Expression) Window[T]
+	ToUnboundedFollowing() Window[T]
+	ExcludeNoOthers() Window[T]
+	ExcludeCurrentRow() Window[T]
+	ExcludeGroup() Window[T]
+	ExcludeTies() Window[T]
+}
+
+func NewWindowChain[T, CHAIN any](chain *WindowChain[T, CHAIN]) *WindowChain[T, CHAIN] {
+	chain.Self = chain
+	return chain
+}
+
+type WindowChain[T, CHAIN any] struct {
 	sq.ModTagImpl[T]
 	*iclause.Windows
 	NamedWindow *iclause.NamedWindow
+	Self        any
 }
 
-var _ chain.Window[int] = (*WindowChain[int])(nil)
+var _ Window[int] = (*WindowChain[int, Window[int]])(nil)
 
-func (f *WindowChain[T]) Apply(a litsql.QueryBuilder) {
+func (f *WindowChain[T, CHAIN]) Apply(a litsql.QueryBuilder) {
 	a.AddQueryClause(f.Windows)
 }
 
-func (f *WindowChain[T]) From(name string) chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) From(name string) CHAIN {
 	f.NamedWindow.Definition.SetFrom(name)
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) PartitionBy(condition ...string) chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) PartitionBy(condition ...string) CHAIN {
 	f.NamedWindow.Definition.AddPartitionBy(expr.StringList(condition)...)
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) PartitionByExpr(condition ...litsql.Expression) chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) PartitionByExpr(condition ...litsql.Expression) CHAIN {
 	f.NamedWindow.Definition.AddPartitionBy(condition...)
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) OrderBy(order ...string) chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) OrderBy(order ...string) CHAIN {
 	f.NamedWindow.Definition.AddOrderBy(expr.StringList(order)...)
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) OrderByExpr(order ...litsql.Expression) chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) OrderByExpr(order ...litsql.Expression) CHAIN {
 	f.NamedWindow.Definition.AddOrderBy(order...)
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) Range() chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) Range() CHAIN {
 	f.NamedWindow.Definition.SetMode("RANGE")
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) Rows() chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) Rows() CHAIN {
 	f.NamedWindow.Definition.SetMode("ROWS")
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) Groups() chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) Groups() CHAIN {
 	f.NamedWindow.Definition.SetMode("GROUPS")
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) FromUnboundedPreceding() chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) FromUnboundedPreceding() CHAIN {
 	f.NamedWindow.Definition.SetStart(expr.Raw("UNBOUNDED PRECEDING"))
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) FromPreceding(exp litsql.Expression) chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) FromPreceding(exp litsql.Expression) CHAIN {
 	f.NamedWindow.Definition.SetStart(litsql.ExpressionFunc(func(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
 		return litsql.ExpressIf(w, d, start, exp, true, nil, expr.Raw(" PRECEDING"))
 	}))
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) FromCurrentRow() chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) FromCurrentRow() CHAIN {
 	f.NamedWindow.Definition.SetStart(expr.Raw("CURRENT ROW"))
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) FromFollowing(exp litsql.Expression) chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) FromFollowing(exp litsql.Expression) CHAIN {
 	f.NamedWindow.Definition.SetStart(litsql.ExpressionFunc(func(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
 		return litsql.ExpressIf(w, d, start, exp, true, nil, expr.Raw(" FOLLOWING"))
 	}))
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) ToPreceding(exp litsql.Expression) chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) ToPreceding(exp litsql.Expression) CHAIN {
 	f.NamedWindow.Definition.SetEnd(litsql.ExpressionFunc(func(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
 		return litsql.ExpressIf(w, d, start, exp, true, nil, expr.Raw(" PRECEDING"))
 	}))
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) ToCurrentRow(count int) chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) ToCurrentRow(count int) CHAIN {
 	f.NamedWindow.Definition.SetEnd(expr.Raw("CURRENT ROW"))
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) ToFollowing(exp litsql.Expression) chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) ToFollowing(exp litsql.Expression) CHAIN {
 	f.NamedWindow.Definition.SetEnd(litsql.ExpressionFunc(func(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
 		return litsql.ExpressIf(w, d, start, exp, true, nil, expr.Raw(" FOLLOWING"))
 	}))
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) ToUnboundedFollowing() chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) ToUnboundedFollowing() CHAIN {
 	f.NamedWindow.Definition.SetEnd(expr.Raw("UNBOUNDED FOLLOWING"))
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) ExcludeNoOthers() chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) ExcludeNoOthers() CHAIN {
 	f.NamedWindow.Definition.SetExclusion("NO OTHERS")
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) ExcludeCurrentRow() chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) ExcludeCurrentRow() CHAIN {
 	f.NamedWindow.Definition.SetExclusion("CURRENT ROW")
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) ExcludeGroup() chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) ExcludeGroup() CHAIN {
 	f.NamedWindow.Definition.SetExclusion("GROUP")
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T]) ExcludeTies() chain.Window[T] {
+func (f *WindowChain[T, CHAIN]) ExcludeTies() CHAIN {
 	f.NamedWindow.Definition.SetExclusion("TIES")
-	return f
+	return f.Self.(CHAIN)
 }

@@ -4,7 +4,6 @@ import (
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/internal/iclause"
 	"github.com/rrgmc/litsql/sq"
-	"github.com/rrgmc/litsql/sq/chain"
 )
 
 const (
@@ -16,56 +15,75 @@ const (
 	JoinStraightJoin = "STRAIGHT_JOIN"
 )
 
-type JoinChain[T any] struct {
-	sq.ModTagImpl[T]
-	*iclause.Join
+type Join[T any] interface {
+	sq.QueryMod[T]
+	As(alias string, columns ...string) Join[T]
+	Only() Join[T]
+	Lateral() Join[T]
+	WithOrdinality() Join[T]
+	Natural() Join[T]
+	On(on string) Join[T]
+	OnExpr(on litsql.Expression) Join[T]
+	OnClause(query string, args ...any) Join[T]
+	Using(using ...string) Join[T]
 }
 
-func (c *JoinChain[T]) Apply(a litsql.QueryBuilder) {
+func NewJoinChain[T, CHAIN any](chain *JoinChain[T, CHAIN]) *JoinChain[T, CHAIN] {
+	chain.Self = chain
+	return chain
+}
+
+type JoinChain[T, CHAIN any] struct {
+	sq.ModTagImpl[T]
+	*iclause.Join
+	Self any
+}
+
+func (c *JoinChain[T, CHAIN]) Apply(a litsql.QueryBuilder) {
 	a.AddQueryClause(c.Join)
 }
 
-func (c *JoinChain[T]) As(alias string, columns ...string) chain.Join[T] {
+func (c *JoinChain[T, CHAIN]) As(alias string, columns ...string) CHAIN {
 	c.To.SetAs(alias, columns...)
-	return c
+	return c.Self.(CHAIN)
 }
 
-func (c *JoinChain[T]) Only() chain.Join[T] {
+func (c *JoinChain[T, CHAIN]) Only() CHAIN {
 	c.To.SetOnly()
-	return c
+	return c.Self.(CHAIN)
 }
 
-func (c *JoinChain[T]) Lateral() chain.Join[T] {
+func (c *JoinChain[T, CHAIN]) Lateral() CHAIN {
 	c.To.SetLateral()
-	return c
+	return c.Self.(CHAIN)
 }
 
-func (c *JoinChain[T]) WithOrdinality() chain.Join[T] {
+func (c *JoinChain[T, CHAIN]) WithOrdinality() CHAIN {
 	c.To.SetWithOrdinality()
-	return c
+	return c.Self.(CHAIN)
 }
 
-func (c *JoinChain[T]) Natural() sq.QueryMod[T] {
+func (c *JoinChain[T, CHAIN]) Natural() CHAIN {
 	c.SetNatural()
-	return c
+	return c.Self.(CHAIN)
 }
 
-func (c *JoinChain[T]) On(on string) chain.Join[T] {
+func (c *JoinChain[T, CHAIN]) On(on string) CHAIN {
 	c.SetOn(on)
-	return c
+	return c.Self.(CHAIN)
 }
 
-func (c *JoinChain[T]) OnExpr(on litsql.Expression) chain.Join[T] {
+func (c *JoinChain[T, CHAIN]) OnExpr(on litsql.Expression) CHAIN {
 	c.SetOnExpr(on)
-	return c
+	return c.Self.(CHAIN)
 }
 
-func (c *JoinChain[T]) OnClause(query string, args ...any) chain.Join[T] {
+func (c *JoinChain[T, CHAIN]) OnClause(query string, args ...any) CHAIN {
 	c.SetOnClause(query, args...)
-	return c
+	return c.Self.(CHAIN)
 }
 
-func (c *JoinChain[T]) Using(using ...string) chain.Join[T] {
+func (c *JoinChain[T, CHAIN]) Using(using ...string) CHAIN {
 	c.SetUsing(using...)
-	return c
+	return c.Self.(CHAIN)
 }

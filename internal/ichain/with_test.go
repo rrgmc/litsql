@@ -9,10 +9,10 @@ import (
 )
 
 func TestWithChain(t *testing.T) {
-	chain := &WithChain[testutils.TestTag]{
+	chain := NewWithChain[testutils.TestTag, With[testutils.TestTag]](&WithChain[testutils.TestTag, With[testutils.TestTag]]{
 		With: &iclause.With{},
 		CTE:  &iclause.CTE{},
-	}
+	})
 
 	chain.
 		Recursive().

@@ -9,9 +9,9 @@ import (
 )
 
 func TestFromChain(t *testing.T) {
-	chain := &FromChain[testutils.TestTag]{
+	chain := NewFromChain[testutils.TestTag, From[testutils.TestTag]](&FromChain[testutils.TestTag, From[testutils.TestTag]]{
 		From: &iclause.From{},
-	}
+	})
 
 	chain.
 		As("test_alias", "c1", "c2").

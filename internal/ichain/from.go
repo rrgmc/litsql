@@ -4,34 +4,47 @@ import (
 	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/internal/iclause"
 	"github.com/rrgmc/litsql/sq"
-	"github.com/rrgmc/litsql/sq/chain"
 )
 
-type FromChain[T any] struct {
-	sq.ModTagImpl[T]
-	*iclause.From
+type From[T any] interface {
+	sq.QueryMod[T]
+	As(alias string, columns ...string) From[T]
+	Only() From[T]
+	Lateral() From[T]
+	WithOrdinality() From[T]
 }
 
-func (f *FromChain[T]) Apply(a litsql.QueryBuilder) {
+func NewFromChain[T, CHAIN any](chain *FromChain[T, CHAIN]) *FromChain[T, CHAIN] {
+	chain.Self = chain
+	return chain
+}
+
+type FromChain[T, CHAIN any] struct {
+	sq.ModTagImpl[T]
+	*iclause.From
+	Self any
+}
+
+func (f *FromChain[T, CHAIN]) Apply(a litsql.QueryBuilder) {
 	a.AddQueryClause(f.From)
 }
 
-func (f *FromChain[T]) As(alias string, columns ...string) chain.From[T] {
+func (f *FromChain[T, CHAIN]) As(alias string, columns ...string) CHAIN {
 	f.SetAs(alias, columns...)
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *FromChain[T]) Only() chain.From[T] {
+func (f *FromChain[T, CHAIN]) Only() CHAIN {
 	f.SetOnly()
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *FromChain[T]) Lateral() chain.From[T] {
+func (f *FromChain[T, CHAIN]) Lateral() CHAIN {
 	f.SetLateral()
-	return f
+	return f.Self.(CHAIN)
 }
 
-func (f *FromChain[T]) WithOrdinality() chain.From[T] {
+func (f *FromChain[T, CHAIN]) WithOrdinality() CHAIN {
 	f.SetWithOrdinality()
-	return f
+	return f.Self.(CHAIN)
 }
