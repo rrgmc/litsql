@@ -29,6 +29,8 @@ dialects:
           methods: ['With']
         Join:
           methods: ['As', 'Lateral', 'Natural', 'On', 'OnExpr', 'OnClause', 'Using']
+        Window:
+          methods: ['From', 'PartitionBy', 'PartitionByExpr', 'OrderBy', 'OrderByExpr', 'Range', 'Rows', 'FromUnboundedPreceding', 'FromPreceding', 'FromCurrentRow', 'FromFollowing', 'ToPreceding', 'ToCurrentRow', 'ToFollowing', 'ToUnboundedFollowing']
         With:
           methods: ['As', 'Recursive']
     mods:

@@ -6,7 +6,6 @@ import (
 	mysql "github.com/rrgmc/litsql/dialect/mysql"
 	tag "github.com/rrgmc/litsql/dialect/mysql/tag"
 	sq "github.com/rrgmc/litsql/sq"
-	chain "github.com/rrgmc/litsql/sq/chain"
 )
 
 type FromChain interface {
@@ -31,7 +30,24 @@ type JoinChain interface {
 	Using(using ...string) JoinChain
 }
 
-type WindowChain = chain.Window[tag.SelectTag]
+type WindowChain interface {
+	sq.QueryMod[tag.SelectTag]
+	From(name string) WindowChain
+	FromCurrentRow() WindowChain
+	FromFollowing(exp litsql.Expression) WindowChain
+	FromPreceding(exp litsql.Expression) WindowChain
+	FromUnboundedPreceding() WindowChain
+	OrderBy(order ...string) WindowChain
+	OrderByExpr(order ...litsql.Expression) WindowChain
+	PartitionBy(condition ...string) WindowChain
+	PartitionByExpr(condition ...litsql.Expression) WindowChain
+	Range() WindowChain
+	Rows() WindowChain
+	ToCurrentRow(count int) WindowChain
+	ToFollowing(exp litsql.Expression) WindowChain
+	ToPreceding(exp litsql.Expression) WindowChain
+	ToUnboundedFollowing() WindowChain
+}
 
 type WithChain interface {
 	sq.QueryMod[tag.SelectTag]

@@ -226,7 +226,9 @@ func WhereExpr(condition litsql.Expression) mysql.SelectMod {
 }
 
 func Window(name string) WindowChain {
-	return ism.Window[tag.SelectTag](name)
+	return &windowChainAdapter{
+		chain: ism.Window[tag.SelectTag](name),
+	}
 }
 
 func With(name string, columns ...string) WithChain {
