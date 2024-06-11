@@ -210,11 +210,9 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 				return fmt.Errorf("function '%s' must have only 1 return value", name)
 			}
 
-			// don't generate root Query call
-			// isChainRet := false
 			var chainName string
-			// sigResult := sig.Results().At(0)
 			if sigResultType, stNamed := sig.Results().At(0).Type().(*types.Named); stNamed {
+				// don't generate root Query call
 				// fmt.Println(sigResultType.Obj().Name(), sigResultType.Obj().Pkg().Path())
 				if sigResultType.Obj().Name() == "Query" && sigResultType.Obj().Pkg().Path() == sqpkg {
 					continue
@@ -230,12 +228,9 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 			} else if sigResultPtr, stPointer := sig.Results().At(0).Type().(*types.Pointer); stPointer {
 				if sigResultType, stNamed := sigResultPtr.Elem().(*types.Named); stNamed {
 					// detect chain return
-					// fmt.Println(sigResultType.Obj().Pkg().Name(), sigResultType.Obj().Pkg().Path())
 					if sigResultType.Obj().Pkg().Name() == "ichain" && sigResultType.Obj().Pkg().Path() == ichainpkg {
-						// isChainRet = true
-						chainName = sigResultType.Obj().Name()
-						// chains[sigResultType.Obj().Name()] = sigResultType.TypeParams().Len()
-						chains[sigResultType.Obj().Name()] = sigResultType
+						chainName = strings.TrimSuffix(sigResultType.Obj().Name(), "Chain")
+						chains[chainName] = sigResultType
 					}
 				}
 			}
@@ -259,7 +254,7 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 									if k > 0 {
 										if sig.TypeParams().At(k).Obj().Name() == "CHAIN" {
 											if chainName != "" {
-												tgroup.Add(jen.Id(chainName))
+												tgroup.Add(jen.Id(chainName + "Chain"))
 											} else {
 												tgroup.Add(jen.Id("NOT_A_CHAIN"))
 											}
@@ -329,22 +324,7 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 		for _, chain := range chainNames {
 			chainTyp := chains[chain]
 
-			dchain := config.FindDialectChain(*dialect, sdir, strings.TrimSuffix(chain, "Chain"))
-
-			// chainObj := chainPkg.Types.Scope().Lookup(chain)
-			// if chainObj == nil {
-			// 	return fmt.Errorf("chain '%s' not found", chain)
-			// }
-			// if !chainObj.Exported() {
-			// 	continue // skip unexported names
-			// }
-			//
-			// chainTyp, ok := chainObj.Type().(*types.Named)
-			// if !ok {
-			// 	return fmt.Errorf("chain '%s' is not a named type", chain)
-			// }
-
-			// chainTyp := chainObj.Type().Underlying().(*types.Interface).Complete()
+			dchain := config.FindDialectChain(*dialect, sdir, chain)
 
 			fchain.Type().
 				Id(chain).
