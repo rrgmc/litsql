@@ -12,11 +12,6 @@ type GroupBy[T any] interface {
 	With(with string) GroupBy[T]
 }
 
-// func NewGroupByChain[T any](chain *GroupByChain[T, GroupBy[T]]) GroupBy[T] {
-// 	chain.SetChainSelf(chain)
-// 	return chain
-// }
-
 func NewGroupByChain[T, CHAIN any](chain *GroupByChain[T, CHAIN]) *GroupByChain[T, CHAIN] {
 	chain.Self = chain
 	return chain

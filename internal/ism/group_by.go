@@ -17,9 +17,4 @@ func GroupByExpr[T, CHAIN any](columns ...litsql.Expression) *ichain.GroupByChai
 			Groups: columns,
 		},
 	})
-	// return &ichain.GroupByChain[T, CHAIN]{
-	// 	GroupBy: &iclause.GroupBy{
-	// 		Groups: columns,
-	// 	},
-	// }
 }
