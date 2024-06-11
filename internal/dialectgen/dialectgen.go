@@ -41,16 +41,8 @@ func runDialect() error {
 		return err
 	}
 
-	chainDir := filepath.Clean(filepath.Join(getCurrentDir(), "..", "..", "sq", "chain"))
-	chainPkg, err := genutil.PkgInfoFromPath(
-		chainDir, packages.NeedName|packages.NeedTypes,
-	)
-	if err != nil {
-		return fmt.Errorf("couldn't load chain package: %s", err)
-	}
-
 	for _, sdir := range []string{"sm", "im", "um", "dm"} {
-		err := runPkg(config, sdir, chainPkg)
+		err := runPkg(config, sdir)
 		if err != nil {
 			return err
 		}
@@ -58,7 +50,7 @@ func runDialect() error {
 	return nil
 }
 
-func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
+func runPkg(config Config, sdir string) error {
 	var sname string
 	switch sdir {
 	case "sm":
@@ -85,9 +77,7 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 	ispkg := "github.com/rrgmc/litsql/internal/i" + sdir
 	isqpkg := "github.com/rrgmc/litsql/internal/isq"
 	ichainpkg := "github.com/rrgmc/litsql/internal/ichain"
-	// imodpkg := "github.com/rrgmc/litsql/internal/imod"
 	sqpkg := "github.com/rrgmc/litsql/sq"
-	// sqchainpkg := sqpkg + "/chain"
 	sqmodpkg := sqpkg + "/mod"
 	sdialectpkg := fmt.Sprintf("github.com/rrgmc/litsql/dialect/%s", sdialect)
 	sdialecttagpkg := sdialectpkg + "/tag"
@@ -146,7 +136,6 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 		return name
 	}
 
-	// chains := map[string]int{}
 	chains := map[string]*types.Named{}
 
 	f := jen.NewFile(sdir)
@@ -213,21 +202,12 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 			var chainName string
 			if sigResultType, stNamed := sig.Results().At(0).Type().(*types.Named); stNamed {
 				// don't generate root Query call
-				// fmt.Println(sigResultType.Obj().Name(), sigResultType.Obj().Pkg().Path())
 				if sigResultType.Obj().Name() == "Query" && sigResultType.Obj().Pkg().Path() == sqpkg {
 					continue
 				}
-
-				// // detect chain return
-				// // fmt.Println(sigResultType.Obj().Pkg().Name(), sigResultType.Obj().Pkg().Path())
-				// if sigResultType.Obj().Pkg().Name() == "ichain" && sigResultType.Obj().Pkg().Path() == ichainpkg {
-				// 	// isChainRet = true
-				// 	chainName = sigResultType.Obj().Name()
-				// 	chains[sigResultType.Obj().Name()] = sigResultType.TypeParams().Len()
-				// }
 			} else if sigResultPtr, stPointer := sig.Results().At(0).Type().(*types.Pointer); stPointer {
+				// detect chain return
 				if sigResultType, stNamed := sigResultPtr.Elem().(*types.Named); stNamed {
-					// detect chain return
 					if sigResultType.Obj().Pkg().Name() == "ichain" && sigResultType.Obj().Pkg().Path() == ichainpkg {
 						chainName = strings.TrimSuffix(sigResultType.Obj().Name(), "Chain")
 						chains[chainName] = sigResultType
@@ -248,7 +228,7 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 				ParamsFunc(genutil.AddParams(sig.Results(), false, customType)).
 				Block(
 					jen.ReturnFunc(func(rgroup *jen.Group) {
-						rblock := jen.Qual(ispkg, funcTyp.Name()).
+						rgroup.Add(jen.Qual(ispkg, funcTyp.Name()).
 							TypesFunc(func(tgroup *jen.Group) {
 								for k := 0; k < sig.TypeParams().Len(); k++ {
 									if k > 0 {
@@ -277,16 +257,7 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 									}
 									pgroup.Add(c)
 								}
-							})
-
-						// if isChainRet {
-						// 	if dchain := config.FindDialectChain(*dialect, sdir, sigResultType.Obj().Name()); dchain != nil {
-						// 		rgroup.Op("&").Id(genutil.InitialToLower(sigResultType.Obj().Name()) + "ChainAdapter").
-						// 			Block(jen.Id("chain").Op(":").Add(rblock).Op(","))
-						// 		return
-						// 	}
-						// }
-						rgroup.Add(rblock)
+							}))
 					}),
 				)
 
@@ -364,7 +335,6 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 
 		chainfile := filepath.Join(smDir, "chain.go")
 		if !*dryRun {
-			// fmt.Println(fnfile)
 			chainFile, cerr := os.Create(chainfile)
 			if cerr != nil {
 				return cerr
