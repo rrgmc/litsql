@@ -1,17 +1,65 @@
 dialects:
+  psql:
+    mods:
+      sm:
+        chains:
+          From:
+            methods: ['As', 'Lateral']
+          GroupBy:
+            methods: ['Distinct']
+      dm:
+        chains:
+          From:
+            methods: ['As', 'Lateral']
+      um:
+        chains:
+          From:
+            methods: ['As', 'Lateral']
   sqlite:
     mods:
       sm:
         chains:
           From:
             methods: ['As']
+          GroupBy:
+            methods: ['Distinct']
+          Join:
+            methods: ['As', 'Lateral', 'Natural', 'On', 'OnExpr', 'OnClause', 'Using']
       im:
         skip: ['OverridingSystem', 'OverridingUser']
+      dm:
+        chains:
+          From:
+            methods: ['As']
+          Join:
+            methods: ['As', 'Lateral', 'Natural', 'On', 'OnExpr', 'OnClause', 'Using']
+      um:
+        chains:
+          From:
+            methods: ['As']
+          Join:
+            methods: ['As', 'Lateral', 'Natural', 'On', 'OnExpr', 'OnClause', 'Using']
   mysql:
     mods:
       sm:
         chains:
           From:
             methods: ['As', 'Lateral']
+          GroupBy:
+            methods: ['With']
+          Join:
+            methods: ['As', 'Lateral', 'Natural', 'On', 'OnExpr', 'OnClause', 'Using']
       im:
         skip: ['OverridingSystem', 'OverridingUser']
+      dm:
+        chains:
+          From:
+            methods: ['As', 'Lateral']
+          Join:
+            methods: ['As', 'Lateral', 'Natural', 'On', 'OnExpr', 'OnClause', 'Using']
+      um:
+        chains:
+          From:
+            methods: ['As', 'Lateral']
+          Join:
+            methods: ['As', 'Lateral', 'Natural', 'On', 'OnExpr', 'OnClause', 'Using']

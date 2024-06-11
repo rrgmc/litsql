@@ -1,4 +1,4 @@
-package sm
+package dm
 
 import (
 	litsql "github.com/rrgmc/litsql"
@@ -9,8 +9,8 @@ import (
 )
 
 type fromChainAdapter struct {
-	sq.ModTagImpl[tag.SelectTag]
-	chain chain.From[tag.SelectTag]
+	sq.ModTagImpl[tag.DeleteTag]
+	chain chain.From[tag.DeleteTag]
 }
 
 func (a *fromChainAdapter) Apply(apply litsql.QueryBuilder) {
@@ -27,23 +27,9 @@ func (a *fromChainAdapter) Lateral() FromChain {
 	return a
 }
 
-type groupByChainAdapter struct {
-	sq.ModTagImpl[tag.SelectTag]
-	chain chain.GroupBy[tag.SelectTag]
-}
-
-func (a *groupByChainAdapter) Apply(apply litsql.QueryBuilder) {
-	a.chain.Apply(apply)
-}
-
-func (a *groupByChainAdapter) With(with string) GroupByChain {
-	_ = a.chain.With(with)
-	return a
-}
-
 type joinChainAdapter struct {
-	sq.ModTagImpl[tag.SelectTag]
-	chain chain.Join[tag.SelectTag]
+	sq.ModTagImpl[tag.DeleteTag]
+	chain chain.Join[tag.DeleteTag]
 }
 
 func (a *joinChainAdapter) Apply(apply litsql.QueryBuilder) {
@@ -60,7 +46,7 @@ func (a *joinChainAdapter) Lateral() JoinChain {
 	return a
 }
 
-func (a *joinChainAdapter) Natural() mysql.SelectMod {
+func (a *joinChainAdapter) Natural() mysql.DeleteMod {
 	_ = a.chain.Natural()
 	return a
 }

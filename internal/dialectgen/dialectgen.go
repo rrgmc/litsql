@@ -327,7 +327,7 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 					Id(aname).
 					Struct(
 						jen.Add(jen.Qual(sqpkg, "ModTagImpl").Types(sdialectTag)),
-						jen.Add(jen.Id("chain").Qual(sqchainpkg, "From").Types(sdialectTag)),
+						jen.Add(jen.Id("chain").Qual(sqchainpkg, chain).Types(sdialectTag)),
 					)
 				fadapters.Line()
 

@@ -2,6 +2,8 @@
 package sm
 
 import (
+	litsql "github.com/rrgmc/litsql"
+	mysql "github.com/rrgmc/litsql/dialect/mysql"
 	tag "github.com/rrgmc/litsql/dialect/mysql/tag"
 	sq "github.com/rrgmc/litsql/sq"
 	chain "github.com/rrgmc/litsql/sq/chain"
@@ -13,9 +15,21 @@ type FromChain interface {
 	Lateral() FromChain
 }
 
-type GroupByChain = chain.GroupBy[tag.SelectTag]
+type GroupByChain interface {
+	sq.QueryMod[tag.SelectTag]
+	With(with string) GroupByChain
+}
 
-type JoinChain = chain.Join[tag.SelectTag]
+type JoinChain interface {
+	sq.QueryMod[tag.SelectTag]
+	As(alias string, columns ...string) JoinChain
+	Lateral() JoinChain
+	Natural() mysql.SelectMod
+	On(on string) JoinChain
+	OnClause(query string, args ...any) JoinChain
+	OnExpr(on litsql.Expression) JoinChain
+	Using(using ...string) JoinChain
+}
 
 type WindowChain = chain.Window[tag.SelectTag]
 

@@ -28,11 +28,15 @@ func ColumnsExpr(names ...litsql.Expression) mysql.SelectMod {
 }
 
 func CrossJoin(table string) JoinChain {
-	return ism.CrossJoin[tag.SelectTag](table)
+	return &joinChainAdapter{
+		chain: ism.CrossJoin[tag.SelectTag](table),
+	}
 }
 
 func CrossJoinExpr(table litsql.Expression) JoinChain {
-	return ism.CrossJoinExpr[tag.SelectTag](table)
+	return &joinChainAdapter{
+		chain: ism.CrossJoinExpr[tag.SelectTag](table),
+	}
 }
 
 func Distinct(on ...string) mysql.SelectMod {
@@ -70,19 +74,27 @@ func FromQuery(q mysql.SelectQuery) FromChain {
 }
 
 func FullJoin(table string) JoinChain {
-	return ism.FullJoin[tag.SelectTag](table)
+	return &joinChainAdapter{
+		chain: ism.FullJoin[tag.SelectTag](table),
+	}
 }
 
 func FullJoinExpr(table litsql.Expression) JoinChain {
-	return ism.FullJoinExpr[tag.SelectTag](table)
+	return &joinChainAdapter{
+		chain: ism.FullJoinExpr[tag.SelectTag](table),
+	}
 }
 
 func GroupBy(columns ...string) GroupByChain {
-	return ism.GroupBy[tag.SelectTag](columns...)
+	return &groupByChainAdapter{
+		chain: ism.GroupBy[tag.SelectTag](columns...),
+	}
 }
 
 func GroupByExpr(columns ...litsql.Expression) GroupByChain {
-	return ism.GroupByExpr[tag.SelectTag](columns...)
+	return &groupByChainAdapter{
+		chain: ism.GroupByExpr[tag.SelectTag](columns...),
+	}
 }
 
 func Having(condition string) mysql.SelectMod {
@@ -98,11 +110,15 @@ func HavingExpr(condition litsql.Expression) mysql.SelectMod {
 }
 
 func InnerJoin(table string) JoinChain {
-	return ism.InnerJoin[tag.SelectTag](table)
+	return &joinChainAdapter{
+		chain: ism.InnerJoin[tag.SelectTag](table),
+	}
 }
 
 func InnerJoinExpr(table litsql.Expression) JoinChain {
-	return ism.InnerJoinExpr[tag.SelectTag](table)
+	return &joinChainAdapter{
+		chain: ism.InnerJoinExpr[tag.SelectTag](table),
+	}
 }
 
 func Intersect(q mysql.SelectQuery) mysql.SelectMod {
@@ -114,11 +130,15 @@ func IntersectAll(q mysql.SelectQuery) mysql.SelectMod {
 }
 
 func LeftJoin(table string) JoinChain {
-	return ism.LeftJoin[tag.SelectTag](table)
+	return &joinChainAdapter{
+		chain: ism.LeftJoin[tag.SelectTag](table),
+	}
 }
 
 func LeftJoinExpr(table litsql.Expression) JoinChain {
-	return ism.LeftJoinExpr[tag.SelectTag](table)
+	return &joinChainAdapter{
+		chain: ism.LeftJoinExpr[tag.SelectTag](table),
+	}
 }
 
 func Limit(count int) mysql.SelectMod {
@@ -162,19 +182,27 @@ func OrderByExpr(names ...litsql.Expression) mysql.SelectMod {
 }
 
 func RightJoin(table string) JoinChain {
-	return ism.RightJoin[tag.SelectTag](table)
+	return &joinChainAdapter{
+		chain: ism.RightJoin[tag.SelectTag](table),
+	}
 }
 
 func RightJoinExpr(table litsql.Expression) JoinChain {
-	return ism.RightJoinExpr[tag.SelectTag](table)
+	return &joinChainAdapter{
+		chain: ism.RightJoinExpr[tag.SelectTag](table),
+	}
 }
 
 func StraightJoin(table string) JoinChain {
-	return ism.StraightJoin[tag.SelectTag](table)
+	return &joinChainAdapter{
+		chain: ism.StraightJoin[tag.SelectTag](table),
+	}
 }
 
 func StraightJoinExpr(table litsql.Expression) JoinChain {
-	return ism.StraightJoinExpr[tag.SelectTag](table)
+	return &joinChainAdapter{
+		chain: ism.StraightJoinExpr[tag.SelectTag](table),
+	}
 }
 
 func Union(q mysql.SelectQuery) mysql.SelectMod {

@@ -2,12 +2,28 @@
 package dm
 
 import (
+	litsql "github.com/rrgmc/litsql"
+	mysql "github.com/rrgmc/litsql/dialect/mysql"
 	tag "github.com/rrgmc/litsql/dialect/mysql/tag"
+	sq "github.com/rrgmc/litsql/sq"
 	chain "github.com/rrgmc/litsql/sq/chain"
 )
 
-type FromChain = chain.From[tag.DeleteTag]
+type FromChain interface {
+	sq.QueryMod[tag.DeleteTag]
+	As(alias string, columns ...string) FromChain
+	Lateral() FromChain
+}
 
-type JoinChain = chain.Join[tag.DeleteTag]
+type JoinChain interface {
+	sq.QueryMod[tag.DeleteTag]
+	As(alias string, columns ...string) JoinChain
+	Lateral() JoinChain
+	Natural() mysql.DeleteMod
+	On(on string) JoinChain
+	OnClause(query string, args ...any) JoinChain
+	OnExpr(on litsql.Expression) JoinChain
+	Using(using ...string) JoinChain
+}
 
 type WithChain = chain.With[tag.DeleteTag]
