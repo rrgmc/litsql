@@ -39,55 +39,55 @@ func OnConflictOnConstraint[T, CHAIN any](constraint string) *ichain.InsertConfl
 }
 
 //litsql:dialects psql,sqlite
-func ConflictSet[T, CHAIN any](column string, arg any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
-	return ConflictSetExprClause[T, CHAIN](expr.JoinSep(" = ", expr.String(column), expr.Arg(arg)))
+func ConflictSet[T any](column string, arg any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
+	return ConflictSetExprClause[T](expr.JoinSep(" = ", expr.String(column), expr.Arg(arg)))
 }
 
 //litsql:dialects psql,sqlite
-func ConflictSetArgNamed[T, CHAIN any](column string, argumentName string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
-	return ConflictSetExprClause[T, CHAIN](expr.JoinSep(" = ", expr.String(column), expr.ArgNamed(argumentName)))
+func ConflictSetArgNamed[T any](column string, argumentName string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
+	return ConflictSetExprClause[T](expr.JoinSep(" = ", expr.String(column), expr.ArgNamed(argumentName)))
 }
 
 //litsql:dialects psql,sqlite
-func ConflictSetExpr[T, CHAIN any](column string, value litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
-	return ConflictSetExprClause[T, CHAIN](expr.JoinSep(" = ", expr.String(column), value))
+func ConflictSetExpr[T any](column string, value litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
+	return ConflictSetExprClause[T](expr.JoinSep(" = ", expr.String(column), value))
 }
 
 //litsql:dialects psql,sqlite
-func ConflictSetQuery[T, CHAIN, A any](column string, q isq.Query[A]) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
-	return ConflictSetExpr[T, CHAIN](column, q)
+func ConflictSetQuery[T, A any](column string, q isq.Query[A]) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
+	return ConflictSetExpr[T](column, q)
 }
 
 //litsql:dialects psql,sqlite
-func ConflictSetString[T, CHAIN any](column string, right string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
-	return ConflictSetExpr[T, CHAIN](column, expr.String(right))
+func ConflictSetString[T any](column string, right string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
+	return ConflictSetExpr[T](column, expr.String(right))
 }
 
 //litsql:dialects psql,sqlite
-func ConflictSetClause[T, CHAIN any](query string, args ...any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
-	return ConflictSetExprClause[T, CHAIN](expr.Clause(query, args...))
+func ConflictSetClause[T any](query string, args ...any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
+	return ConflictSetExprClause[T](expr.Clause(query, args...))
 }
 
 //litsql:dialects psql,sqlite
-func ConflictSetExprClause[T, CHAIN any](assignment litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
+func ConflictSetExprClause[T any](assignment litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
 	return mod.InsertConflictUpdateModFunc[T, imod.InsertConflictUpdateModTag](func(a *iclause.InsertConflictUpdate) {
 		a.SetSet(assignment)
 	})
 }
 
 //litsql:dialects psql,sqlite
-func ConflictWhere[T, CHAIN any](condition string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
-	return ConflictWhereExpr[T, CHAIN](expr.String(condition))
+func ConflictWhere[T any](condition string) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
+	return ConflictWhereExpr[T](expr.String(condition))
 }
 
 //litsql:dialects psql,sqlite
-func ConflictWhereExpr[T, CHAIN any](condition litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
+func ConflictWhereExpr[T any](condition litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
 	return mod.InsertConflictUpdateModFunc[T, imod.InsertConflictUpdateModTag](func(a *iclause.InsertConflictUpdate) {
 		a.Where.Conditions = append(a.Where.Conditions, condition)
 	})
 }
 
 //litsql:dialects psql,sqlite
-func ConflictWhereClause[T, CHAIN any](query string, args ...any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
-	return ConflictWhereExpr[T, CHAIN](expr.Clause(query, args...))
+func ConflictWhereClause[T any](query string, args ...any) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
+	return ConflictWhereExpr[T](expr.Clause(query, args...))
 }
