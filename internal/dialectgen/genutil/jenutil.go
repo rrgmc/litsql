@@ -8,31 +8,38 @@ import (
 	"github.com/dave/jennifer/jen"
 )
 
-type CNT func(st jen.Statement, tt *types.Named) *jen.Statement
+type CustomType interface {
+	NamedType(st jen.Statement, tt *types.Named) *jen.Statement
+	IsPointer(tt *types.Pointer) bool
+}
 
-func GetQualCode(typ types.Type, customNamedType CNT) *jen.Statement {
+// type CustomType func(st jen.Statement, tt *types.Named) *jen.Statement
+
+func GetQualCode(typ types.Type, customType CustomType) *jen.Statement {
 	var st jen.Statement
 	for {
 		switch tt := typ.(type) {
 		case *types.Basic:
 			return st.Add(jen.Id(tt.Name()))
 		case *types.Array:
-			return st.Add(jen.Index(jen.Lit(tt.Len())).Add(GetQualCode(tt.Elem(), customNamedType)))
+			return st.Add(jen.Index(jen.Lit(tt.Len())).Add(GetQualCode(tt.Elem(), customType)))
 		case *types.Slice:
-			return st.Add(jen.Index().Add(GetQualCode(tt.Elem(), customNamedType)))
+			return st.Add(jen.Index().Add(GetQualCode(tt.Elem(), customType)))
 		case *types.Pointer:
-			st.Add(jen.Op("*"))
+			if customType == nil || customType.IsPointer(tt) {
+				st.Add(jen.Op("*"))
+			}
 			typ = tt.Elem()
 		case *types.Tuple:
 			var items jen.Statement
 			for i := 0; i < tt.Len(); i++ {
-				items.Add(jen.Id(tt.At(i).Name()).Add(GetQualCode(tt.At(i).Type(), customNamedType)))
+				items.Add(jen.Id(tt.At(i).Name()).Add(GetQualCode(tt.At(i).Type(), customType)))
 			}
 			return st.Add(jen.Params(items...))
 		case *types.Interface:
 			return st.Add(jen.Id(tt.String()))
 		case *types.Map:
-			return st.Add(jen.Map(GetQualCode(tt.Key(), customNamedType)).Add(GetQualCode(tt.Elem(), customNamedType)))
+			return st.Add(jen.Map(GetQualCode(tt.Key(), customType)).Add(GetQualCode(tt.Elem(), customType)))
 		case *types.Chan:
 			var chanDesc *jen.Statement
 			switch tt.Dir() {
@@ -45,42 +52,24 @@ func GetQualCode(typ types.Type, customNamedType CNT) *jen.Statement {
 			default:
 				panic("unknown channel direction")
 			}
-			return st.Add(chanDesc.Add(GetQualCode(tt.Elem(), customNamedType)))
+			return st.Add(chanDesc.Add(GetQualCode(tt.Elem(), customType)))
 		case *types.Named:
 			if tt.Obj().Pkg() != nil {
-				if customNamedType != nil {
-					customRet := customNamedType(st, tt)
+				if customType != nil {
+					customRet := customType.NamedType(st, tt)
 					if customRet != nil {
 						return customRet
 					}
 				}
-				return st.Add(jen.Qual(tt.Obj().Pkg().Path(), tt.Obj().Name()).TypesFunc(AddTypeList(tt.TypeArgs(), customNamedType)))
+				return st.Add(jen.Qual(tt.Obj().Pkg().Path(), tt.Obj().Name()).TypesFunc(AddTypeList(tt.TypeArgs(), customType)))
 			}
-			return st.Add(jen.Id(tt.Obj().Name()).TypesFunc(AddTypeList(tt.TypeArgs(), customNamedType)))
+			return st.Add(jen.Id(tt.Obj().Name()).TypesFunc(AddTypeList(tt.TypeArgs(), customType)))
 		case *types.TypeParam:
 			return st.Add(jen.Id(tt.Obj().Name()))
 		case *types.Signature:
 			return st.Add(jen.Func().
-				ParamsFunc(AddParams(tt.Params(), tt.Variadic(), customNamedType)).
-				// ParamsFunc(func(pgroup *jen.Group) {
-				// 	for k := 0; k < tt.Params().Len(); k++ {
-				// 		sigParam := tt.Params().At(k)
-				// 		c := jen.Id(ParamName(k, sigParam))
-				// 		if tt.Variadic() && k == tt.Params().Len()-1 {
-				// 			c.Add(GetQualCode(sigParam.Type().(*types.Slice).Elem(), customNamedType)).Op("...")
-				// 		} else {
-				// 			c.Add(GetQualCode(sigParam.Type(), customNamedType))
-				// 		}
-				// 		pgroup.Add(c)
-				// 	}
-				// }).
-				ParamsFunc(AddParams(tt.Results(), false, customNamedType)))
-			// ParamsFunc(func(rgroup *jen.Group) {
-			// 	for k := 0; k < tt.Results().Len(); k++ {
-			// 		sigParam := tt.Results().At(k)
-			// 		rgroup.Id(sigParam.Name()).Add(GetQualCode(sigParam.Type(), customNamedType))
-			// 	}
-			// }))
+				ParamsFunc(AddParams(tt.Params(), tt.Variadic(), customType)).
+				ParamsFunc(AddParams(tt.Results(), false, customType)))
 		default:
 			panic(fmt.Errorf("unknown type %T", typ))
 		}
@@ -105,7 +94,7 @@ func TypeNameCode(typeName string) (*jen.Statement, error) {
 	return nil, fmt.Errorf("invalid type name format (must have a dot to determine the type): %s", typeName)
 }
 
-func AddTypeParamsList(typeList *types.TypeParamList, withType bool, customNamedType CNT) func(*jen.Group) {
+func AddTypeParamsList(typeList *types.TypeParamList, withType bool, customNamedType CustomType) func(*jen.Group) {
 	return func(tgroup *jen.Group) {
 		for t := 0; t < typeList.Len(); t++ {
 			tparam := typeList.At(t)
@@ -118,7 +107,7 @@ func AddTypeParamsList(typeList *types.TypeParamList, withType bool, customNamed
 	}
 }
 
-func AddTypeList(typeList *types.TypeList, customNamedType CNT) func(*jen.Group) {
+func AddTypeList(typeList *types.TypeList, customNamedType CustomType) func(*jen.Group) {
 	return func(tgroup *jen.Group) {
 		for t := 0; t < typeList.Len(); t++ {
 			tparam := typeList.At(t)
@@ -127,7 +116,7 @@ func AddTypeList(typeList *types.TypeList, customNamedType CNT) func(*jen.Group)
 	}
 }
 
-func AddParams(params *types.Tuple, isVariadic bool, customNamedType CNT) func(*jen.Group) {
+func AddParams(params *types.Tuple, isVariadic bool, customNamedType CustomType) func(*jen.Group) {
 	return func(group *jen.Group) {
 		for k := 0; k < params.Len(); k++ {
 			sigParam := params.At(k)
@@ -143,4 +132,17 @@ func AddParams(params *types.Tuple, isVariadic bool, customNamedType CNT) func(*
 			group.Add(c)
 		}
 	}
+}
+
+type CTFunc struct {
+	FuncNamedType func(st jen.Statement, tt *types.Named) *jen.Statement
+	FuncIsPointer func(tt *types.Pointer) bool
+}
+
+func (f *CTFunc) NamedType(st jen.Statement, tt *types.Named) *jen.Statement {
+	return f.FuncNamedType(st, tt)
+}
+
+func (f *CTFunc) IsPointer(tt *types.Pointer) bool {
+	return f.FuncIsPointer(tt)
 }
