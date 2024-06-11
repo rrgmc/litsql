@@ -4,6 +4,7 @@ package dm
 import (
 	litsql "github.com/rrgmc/litsql"
 	tag "github.com/rrgmc/litsql/dialect/psql/tag"
+	ichain "github.com/rrgmc/litsql/internal/ichain"
 	sq "github.com/rrgmc/litsql/sq"
 )
 
@@ -39,3 +40,11 @@ type WithChain interface {
 	Cycle(set string, using string, cols ...string) WithChain
 	CycleValue(value any, defaultVal any) WithChain
 }
+
+// ensure interface is implemented by source type
+
+var _ FromChain = (*ichain.FromChain[tag.DeleteTag, FromChain])(nil)
+
+var _ JoinChain = (*ichain.JoinChain[tag.DeleteTag, JoinChain])(nil)
+
+var _ WithChain = (*ichain.WithChain[tag.DeleteTag, WithChain])(nil)

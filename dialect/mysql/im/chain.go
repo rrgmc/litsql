@@ -4,6 +4,7 @@ package im
 import (
 	litsql "github.com/rrgmc/litsql"
 	tag "github.com/rrgmc/litsql/dialect/mysql/tag"
+	ichain "github.com/rrgmc/litsql/internal/ichain"
 	sq "github.com/rrgmc/litsql/sq"
 )
 
@@ -12,3 +13,7 @@ type WithChain interface {
 	Recursive() WithChain
 	As(q litsql.Query) WithChain
 }
+
+// ensure interface is implemented by source type
+
+var _ WithChain = (*ichain.WithChain[tag.InsertTag, WithChain])(nil)

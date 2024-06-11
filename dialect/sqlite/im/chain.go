@@ -4,6 +4,7 @@ package im
 import (
 	litsql "github.com/rrgmc/litsql"
 	tag "github.com/rrgmc/litsql/dialect/sqlite/tag"
+	ichain "github.com/rrgmc/litsql/internal/ichain"
 	sq "github.com/rrgmc/litsql/sq"
 )
 
@@ -22,3 +23,9 @@ type WithChain interface {
 	NotMaterialized() WithChain
 	Materialized() WithChain
 }
+
+// ensure interface is implemented by source type
+
+var _ InsertConflictUpdateChain = (*ichain.InsertConflictUpdateChain[tag.InsertTag, InsertConflictUpdateChain])(nil)
+
+var _ WithChain = (*ichain.WithChain[tag.InsertTag, WithChain])(nil)
