@@ -33,4 +33,8 @@ type JoinChain interface {
 
 type WindowChain = chain.Window[tag.SelectTag]
 
-type WithChain = chain.With[tag.SelectTag]
+type WithChain interface {
+	sq.QueryMod[tag.SelectTag]
+	As(q litsql.Query) WithChain
+	Recursive() WithChain
+}

@@ -70,3 +70,22 @@ func (a *joinChainAdapter) Using(using ...string) JoinChain {
 	_ = a.chain.Using(using...)
 	return a
 }
+
+type withChainAdapter struct {
+	sq.ModTagImpl[tag.DeleteTag]
+	chain chain.With[tag.DeleteTag]
+}
+
+func (a *withChainAdapter) Apply(apply litsql.QueryBuilder) {
+	a.chain.Apply(apply)
+}
+
+func (a *withChainAdapter) As(q litsql.Query) WithChain {
+	_ = a.chain.As(q)
+	return a
+}
+
+func (a *withChainAdapter) Recursive() WithChain {
+	_ = a.chain.Recursive()
+	return a
+}

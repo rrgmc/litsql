@@ -159,9 +159,13 @@ func WhereExpr(condition litsql.Expression) mysql.UpdateMod {
 }
 
 func With(name string, columns ...string) WithChain {
-	return ium.With[tag.UpdateTag](name, columns...)
+	return &withChainAdapter{
+		chain: ium.With[tag.UpdateTag](name, columns...),
+	}
 }
 
 func WithExpr(name string, columns ...litsql.Expression) WithChain {
-	return ium.WithExpr[tag.UpdateTag](name, columns...)
+	return &withChainAdapter{
+		chain: ium.WithExpr[tag.UpdateTag](name, columns...),
+	}
 }

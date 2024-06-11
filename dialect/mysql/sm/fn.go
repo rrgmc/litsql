@@ -230,9 +230,13 @@ func Window(name string) WindowChain {
 }
 
 func With(name string, columns ...string) WithChain {
-	return ism.With[tag.SelectTag](name, columns...)
+	return &withChainAdapter{
+		chain: ism.With[tag.SelectTag](name, columns...),
+	}
 }
 
 func WithExpr(name string, columns ...litsql.Expression) WithChain {
-	return ism.WithExpr[tag.SelectTag](name, columns...)
+	return &withChainAdapter{
+		chain: ism.WithExpr[tag.SelectTag](name, columns...),
+	}
 }

@@ -127,9 +127,13 @@ func WhereExpr(condition litsql.Expression) mysql.DeleteMod {
 }
 
 func With(name string, columns ...string) WithChain {
-	return idm.With[tag.DeleteTag](name, columns...)
+	return &withChainAdapter{
+		chain: idm.With[tag.DeleteTag](name, columns...),
+	}
 }
 
 func WithExpr(name string, columns ...litsql.Expression) WithChain {
-	return idm.WithExpr[tag.DeleteTag](name, columns...)
+	return &withChainAdapter{
+		chain: idm.WithExpr[tag.DeleteTag](name, columns...),
+	}
 }

@@ -6,7 +6,6 @@ import (
 	mysql "github.com/rrgmc/litsql/dialect/mysql"
 	tag "github.com/rrgmc/litsql/dialect/mysql/tag"
 	sq "github.com/rrgmc/litsql/sq"
-	chain "github.com/rrgmc/litsql/sq/chain"
 )
 
 type FromChain interface {
@@ -26,4 +25,8 @@ type JoinChain interface {
 	Using(using ...string) JoinChain
 }
 
-type WithChain = chain.With[tag.UpdateTag]
+type WithChain interface {
+	sq.QueryMod[tag.UpdateTag]
+	As(q litsql.Query) WithChain
+	Recursive() WithChain
+}
