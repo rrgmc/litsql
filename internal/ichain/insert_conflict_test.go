@@ -12,9 +12,9 @@ import (
 )
 
 func TestInsertConflictChain(t *testing.T) {
-	chain := &InsertConflictChain[testutils.TestTag]{
+	chain := NewInsertConflictChain[testutils.TestTag, InsertConflict[testutils.TestTag, imod.InsertConflictUpdateModTag]](&InsertConflictChain[testutils.TestTag, InsertConflict[testutils.TestTag, imod.InsertConflictUpdateModTag]]{
 		InsertConflictUpdate: &iclause.InsertConflictUpdate{},
-	}
+	})
 
 	chain.
 		Where("a = 1").
