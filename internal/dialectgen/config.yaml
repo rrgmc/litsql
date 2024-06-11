@@ -15,9 +15,6 @@ dialects:
           methods: ['As', 'Lateral', 'Natural', 'On', 'OnExpr', 'OnClause', 'Using']
         With:
           methods: ['As', 'NotMaterialized', 'Materialized']
-    mods:
-      im:
-        skip: ['OverridingSystem', 'OverridingUser']
   mysql:
     default:
       chains:
@@ -31,6 +28,3 @@ dialects:
           methods: ['From', 'PartitionBy', 'PartitionByExpr', 'OrderBy', 'OrderByExpr', 'Range', 'Rows', 'FromUnboundedPreceding', 'FromPreceding', 'FromCurrentRow', 'FromFollowing', 'ToPreceding', 'ToCurrentRow', 'ToFollowing', 'ToUnboundedFollowing']
         With:
           methods: ['As', 'Recursive']
-    mods:
-      im:
-        skip: ['OverridingSystem', 'OverridingUser']
