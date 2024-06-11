@@ -3,6 +3,7 @@ package ism
 import (
 	"testing"
 
+	"github.com/rrgmc/litsql/internal/ichain"
 	"github.com/rrgmc/litsql/internal/testutils"
 	"github.com/rrgmc/litsql/sq"
 )
@@ -142,7 +143,7 @@ func TestSelectGroupBy(t *testing.T) {
 	query := Select[testutils.TestTag](testutils.NewTestDialect(),
 		Columns[testutils.TestTag]("country", "AVG(age) as age_avg"),
 		From[testutils.TestTag]("users"),
-		GroupBy[testutils.TestTag]("country"),
+		GroupBy[testutils.TestTag, ichain.GroupBy[testutils.TestTag]]("country").Distinct(),
 		Having[testutils.TestTag]("AVG(age) > 10"),
 	)
 
@@ -199,7 +200,7 @@ func TestSelectWith(t *testing.T) {
 			Select[testutils.TestTag](d,
 				Columns[testutils.TestTag]("region", "SUM(amount) AS total_sales"),
 				From[testutils.TestTag]("orders"),
-				GroupBy[testutils.TestTag]("region"),
+				GroupBy[testutils.TestTag, ichain.GroupBy[testutils.TestTag]]("region"),
 			),
 		),
 		With[testutils.TestTag]("top_regions").As(
@@ -222,7 +223,7 @@ func TestSelectWith(t *testing.T) {
 				From[testutils.TestTag]("top_regions"),
 			),
 		),
-		GroupBy[testutils.TestTag]("region", "product"),
+		GroupBy[testutils.TestTag, ichain.GroupBy[testutils.TestTag]]("region", "product"),
 	)
 
 	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)

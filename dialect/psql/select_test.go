@@ -1,6 +1,7 @@
 package psql_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/rrgmc/litsql/dialect/psql"
@@ -33,9 +34,11 @@ func TestSelectG(t *testing.T) {
 	query := psql.Select(
 		sm.Columns("a", "b"),
 		sm.From("device"),
-		sm.GroupBy("b"),
+		sm.GroupBy("b").Distinct(),
 	)
 	queryStr, params, err := query.Build()
+
+	fmt.Println(queryStr)
 
 	assert.NilError(t, err)
 	assert.Assert(t, queryStr != "")

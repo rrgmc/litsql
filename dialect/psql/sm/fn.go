@@ -75,14 +75,20 @@ func GroupBy(columns ...string) GroupByChain {
 	// return &groupByChainAdapter{
 	// 	GroupByChain: ism.GroupBy[tag.SelectTag, GroupByChain](columns...),
 	// }
-	return  ism.GroupBy[tag.SelectTag, GroupByChain](columns...)
+	return newGroupByChain(ism.GroupBy[tag.SelectTag, GroupByChain](columns...))
+	// chain := ism.GroupBy[tag.SelectTag, GroupByChain](columns...)
+	// chain.SetChainSelf(chain)
+	// return chain
 }
 
 func GroupByExpr(columns ...litsql.Expression) GroupByChain {
 	// return &groupByChainAdapter{
 	// 	GroupByChain: ism.GroupByExpr[tag.SelectTag, GroupByChain](columns...),
 	// }
-	return  ism.GroupByExpr[tag.SelectTag, GroupByChain](columns...)
+	return newGroupByChain(ism.GroupByExpr[tag.SelectTag, GroupByChain](columns...))
+	// chain := ism.GroupByExpr[tag.SelectTag, GroupByChain](columns...)
+	// chain.SetChainSelf(chain)
+	// return chain
 }
 
 func Having(condition string) psql.SelectMod {
