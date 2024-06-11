@@ -50,6 +50,10 @@ func (c *InsertConflictUpdate) SetWhere(condition litsql.Expression) {
 	c.Target.Where = append(c.Target.Where, condition)
 }
 
+func (c *InsertConflictUpdate) SetSet(assignment litsql.Expression) {
+	c.Set.Set = append(c.Set.Set, assignment)
+}
+
 func (c *InsertConflictUpdate) SetDoNothing() {
 	c.Do = "NOTHING"
 }

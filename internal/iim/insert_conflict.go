@@ -72,7 +72,7 @@ func ConflictSetClause[T any](query string, args ...any) mod.InsertConflictUpdat
 //litsql:dialects psql,sqlite
 func ConflictSetExprClause[T any](assignment litsql.Expression) mod.InsertConflictUpdateMod[T, imod.InsertConflictUpdateModTag] {
 	return mod.InsertConflictUpdateModFunc[T, imod.InsertConflictUpdateModTag](func(a *iclause.InsertConflictUpdate) {
-		a.Set.Set = append(a.Set.Set, assignment)
+		a.SetSet(assignment)
 	})
 }
 

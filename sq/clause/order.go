@@ -26,12 +26,13 @@ const (
 // insert
 const (
 	// OrderWith = 50
-	OrderInsertStart      = 150 // the INSERT should be printed after this order
-	OrderTable            = 200
-	OrderInsertOverriding = 250
-	OrderValues           = 1000
-	OrderInsertConflict   = 1500
-	OrderReturning        = 2000
+	OrderInsertStart        = 150 // the INSERT should be printed after this order
+	OrderTable              = 200
+	OrderInsertOverriding   = 250
+	OrderValues             = 1000
+	OrderInsertConflict     = 1500
+	OrderInsertDuplicateKey = 1501
+	OrderReturning          = 2000
 )
 
 // update

@@ -20,6 +20,34 @@ func IntoAs(name string, alias string, columns ...string) mysql.InsertMod {
 	return iim.IntoAs[tag.InsertTag](name, alias, columns...)
 }
 
+func OnDuplicateKeySet(column string, arg any) mysql.InsertMod {
+	return iim.OnDuplicateKeySet[tag.InsertTag](column, arg)
+}
+
+func OnDuplicateKeySetArgNamed(column string, argumentName string) mysql.InsertMod {
+	return iim.OnDuplicateKeySetArgNamed[tag.InsertTag](column, argumentName)
+}
+
+func OnDuplicateKeySetClause(query string, args ...any) mysql.InsertMod {
+	return iim.OnDuplicateKeySetClause[tag.InsertTag](query, args...)
+}
+
+func OnDuplicateKeySetExpr(column string, value litsql.Expression) mysql.InsertMod {
+	return iim.OnDuplicateKeySetExpr[tag.InsertTag](column, value)
+}
+
+func OnDuplicateKeySetExprClause(assignment litsql.Expression) mysql.InsertMod {
+	return iim.OnDuplicateKeySetExprClause[tag.InsertTag](assignment)
+}
+
+func OnDuplicateKeySetQuery(column string, q mysql.SelectQuery) mysql.InsertMod {
+	return iim.OnDuplicateKeySetQuery[tag.InsertTag, tag.SelectTag](column, q)
+}
+
+func OnDuplicateKeySetString(column string, right string) mysql.InsertMod {
+	return iim.OnDuplicateKeySetString[tag.InsertTag](column, right)
+}
+
 func Query(q mysql.SelectQuery) mysql.InsertMod {
 	return iim.Query[tag.InsertTag, tag.SelectTag](q)
 }
