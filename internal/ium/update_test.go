@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/rrgmc/litsql/expr"
+	"github.com/rrgmc/litsql/internal/ichain"
 	"github.com/rrgmc/litsql/internal/ism"
 	"github.com/rrgmc/litsql/internal/testutils"
 	"github.com/rrgmc/litsql/sq"
@@ -46,8 +47,8 @@ func TestUpdateFrom(t *testing.T) {
 
 	query := Update[testutils.TestTag](d,
 		Table[testutils.TestTag]("users"),
-		From[testutils.TestTag]("address AS adr"),
-		InnerJoin[testutils.TestTag]("cities AS ct").On("adr.city_id = ct.id"),
+		From[testutils.TestTag, ichain.From[testutils.TestTag]]("address AS adr"),
+		InnerJoin[testutils.TestTag, ichain.Join[testutils.TestTag]]("cities AS ct").On("adr.city_id = ct.id"),
 		SetString[testutils.TestTag]("address", "adr.address"),
 		SetString[testutils.TestTag]("city", "ct.city"),
 		SetString[testutils.TestTag]("state", "adr.state"),
@@ -65,10 +66,10 @@ func TestUpdateFromQuery(t *testing.T) {
 
 	query := Update[testutils.TestTag](d,
 		Table[testutils.TestTag]("users"),
-		FromQuery[testutils.TestTag, testutils.TestTag](
+		FromQuery[testutils.TestTag, ichain.From[testutils.TestTag], testutils.TestTag](
 			ism.Select[testutils.TestTag](d,
 				ism.Columns[testutils.TestTag]("address", "city", "state"),
-				ism.From[testutils.TestTag]("address"),
+				ism.From[testutils.TestTag, ichain.From[testutils.TestTag]]("address"),
 				ism.WhereClause[testutils.TestTag]("id IN (?)", expr.In([]any{15, 16, 17})),
 			),
 		).As("adr"),
@@ -86,10 +87,10 @@ func TestUpdateWith(t *testing.T) {
 	expectedArgs := []any{2, "John", 15}
 
 	query := Update[testutils.TestTag](testutils.NewTestDialect(),
-		With[testutils.TestTag]("city", "city_id").As(
+		With[testutils.TestTag, ichain.With[testutils.TestTag]]("city", "city_id").As(
 			ism.Select[testutils.TestTag](testutils.NewTestDialect(),
 				ism.Columns[testutils.TestTag]("city"),
-				ism.From[testutils.TestTag]("users"),
+				ism.From[testutils.TestTag, ichain.From[testutils.TestTag]]("users"),
 				ism.WhereClause[testutils.TestTag]("id = ?", 2),
 			),
 		),
