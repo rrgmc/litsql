@@ -3,15 +3,15 @@ package ism
 import (
 	"github.com/rrgmc/litsql/internal/ichain"
 	"github.com/rrgmc/litsql/internal/iclause"
-	"github.com/rrgmc/litsql/sq/chain"
 )
 
-func Window[T any](name string) chain.Window[T] {
+func Window[T, CHAIN any](name string) *ichain.WindowChain[T, CHAIN] {
 	w := &iclause.Windows{
 		Windows: []*iclause.NamedWindow{{Name: name}},
 	}
-	return &ichain.WindowChain[T]{
+
+	return ichain.NewWindowChain[T, CHAIN](&ichain.WindowChain[T, CHAIN]{
 		Windows:     w,
 		NamedWindow: w.Windows[0],
-	}
+	})
 }

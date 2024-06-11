@@ -5,53 +5,62 @@ import (
 	"github.com/rrgmc/litsql/expr"
 	"github.com/rrgmc/litsql/internal/ichain"
 	"github.com/rrgmc/litsql/internal/iclause"
-	"github.com/rrgmc/litsql/sq/chain"
 )
 
-func InnerJoin[T any](table string) chain.Join[T] {
-	return InnerJoinExpr[T](expr.String(table))
+//litsql:dialects none
+func JoinExpr[T, CHAIN any](typ string, table litsql.Expression) *ichain.JoinChain[T, CHAIN] {
+	return ichain.NewJoinChain[T, CHAIN](&ichain.JoinChain[T, CHAIN]{
+		Join: &iclause.Join{
+			Type: typ,
+			To:   &iclause.From{Table: table},
+		},
+	})
 }
 
-func InnerJoinExpr[T any](table litsql.Expression) chain.Join[T] {
-	return &ichain.JoinChain[T]{Join: &iclause.Join{Type: ichain.JoinInnerJoin, To: &iclause.From{Table: table}}}
+func InnerJoin[T, CHAIN any](table string) *ichain.JoinChain[T, CHAIN] {
+	return InnerJoinExpr[T, CHAIN](expr.String(table))
 }
 
-func LeftJoin[T any](table string) chain.Join[T] {
-	return LeftJoinExpr[T](expr.String(table))
+func InnerJoinExpr[T, CHAIN any](table litsql.Expression) *ichain.JoinChain[T, CHAIN] {
+	return JoinExpr[T, CHAIN](ichain.JoinInnerJoin, table)
 }
 
-func LeftJoinExpr[T any](table litsql.Expression) chain.Join[T] {
-	return &ichain.JoinChain[T]{Join: &iclause.Join{Type: ichain.JoinLeftJoin, To: &iclause.From{Table: table}}}
+func LeftJoin[T, CHAIN any](table string) *ichain.JoinChain[T, CHAIN] {
+	return LeftJoinExpr[T, CHAIN](expr.String(table))
 }
 
-func RightJoin[T any](table string) chain.Join[T] {
-	return RightJoinExpr[T](expr.String(table))
+func LeftJoinExpr[T, CHAIN any](table litsql.Expression) *ichain.JoinChain[T, CHAIN] {
+	return JoinExpr[T, CHAIN](ichain.JoinLeftJoin, table)
 }
 
-func RightJoinExpr[T any](table litsql.Expression) chain.Join[T] {
-	return &ichain.JoinChain[T]{Join: &iclause.Join{Type: ichain.JoinRightJoin, To: &iclause.From{Table: table}}}
+func RightJoin[T, CHAIN any](table string) *ichain.JoinChain[T, CHAIN] {
+	return RightJoinExpr[T, CHAIN](expr.String(table))
 }
 
-func FullJoin[T any](table string) chain.Join[T] {
-	return FullJoinExpr[T](expr.String(table))
+func RightJoinExpr[T, CHAIN any](table litsql.Expression) *ichain.JoinChain[T, CHAIN] {
+	return JoinExpr[T, CHAIN](ichain.JoinRightJoin, table)
 }
 
-func FullJoinExpr[T any](table litsql.Expression) chain.Join[T] {
-	return &ichain.JoinChain[T]{Join: &iclause.Join{Type: ichain.JoinFullJoin, To: &iclause.From{Table: table}}}
+func FullJoin[T, CHAIN any](table string) *ichain.JoinChain[T, CHAIN] {
+	return FullJoinExpr[T, CHAIN](expr.String(table))
 }
 
-func CrossJoin[T any](table string) chain.Join[T] {
-	return CrossJoinExpr[T](expr.String(table))
+func FullJoinExpr[T, CHAIN any](table litsql.Expression) *ichain.JoinChain[T, CHAIN] {
+	return JoinExpr[T, CHAIN](ichain.JoinFullJoin, table)
 }
 
-func CrossJoinExpr[T any](table litsql.Expression) chain.Join[T] {
-	return &ichain.JoinChain[T]{Join: &iclause.Join{Type: ichain.JoinCrossJoin, To: &iclause.From{Table: table}}}
+func CrossJoin[T, CHAIN any](table string) *ichain.JoinChain[T, CHAIN] {
+	return CrossJoinExpr[T, CHAIN](expr.String(table))
 }
 
-func StraightJoin[T any](table string) chain.Join[T] {
-	return StraightJoinExpr[T](expr.String(table))
+func CrossJoinExpr[T, CHAIN any](table litsql.Expression) *ichain.JoinChain[T, CHAIN] {
+	return JoinExpr[T, CHAIN](ichain.JoinCrossJoin, table)
 }
 
-func StraightJoinExpr[T any](table litsql.Expression) chain.Join[T] {
-	return &ichain.JoinChain[T]{Join: &iclause.Join{Type: ichain.JoinStraightJoin, To: &iclause.From{Table: table}}}
+func StraightJoin[T, CHAIN any](table string) *ichain.JoinChain[T, CHAIN] {
+	return StraightJoinExpr[T, CHAIN](expr.String(table))
+}
+
+func StraightJoinExpr[T, CHAIN any](table litsql.Expression) *ichain.JoinChain[T, CHAIN] {
+	return JoinExpr[T, CHAIN](ichain.JoinStraightJoin, table)
 }

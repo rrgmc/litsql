@@ -14,7 +14,7 @@ func TestSelect(t *testing.T) {
 
 	query := Select[testutils.TestTag](testutils.NewTestDialect(),
 		Columns[testutils.TestTag]("id", "name"),
-		From[testutils.TestTag]("users"),
+		From[testutils.TestTag, ichain.From[testutils.TestTag]]("users"),
 		Where[testutils.TestTag]("age < 10"),
 	)
 
@@ -28,8 +28,8 @@ func TestSelectBasic(t *testing.T) {
 	query := Select[testutils.TestTag](testutils.NewTestDialect(),
 		Distinct[testutils.TestTag](),
 		Columns[testutils.TestTag]("u.id", "u.name", "ua.address"),
-		From[testutils.TestTag]("users AS u"),
-		InnerJoin[testutils.TestTag]("users_address AS a").On("users.id = a.user_id"),
+		From[testutils.TestTag, ichain.From[testutils.TestTag]]("users AS u"),
+		InnerJoin[testutils.TestTag, ichain.Join[testutils.TestTag]]("users_address AS a").On("users.id = a.user_id"),
 		Where[testutils.TestTag]("age < 10"),
 		OrderBy[testutils.TestTag]("name ASC"),
 		Offset[testutils.TestTag](10),
@@ -46,8 +46,8 @@ func TestSelectBasicArgs(t *testing.T) {
 	query := Select[testutils.TestTag](testutils.NewTestDialect(),
 		Distinct[testutils.TestTag](),
 		Columns[testutils.TestTag]("u.id", "u.name", "ua.address"),
-		From[testutils.TestTag]("users AS u"),
-		InnerJoin[testutils.TestTag]("users_address AS a").On("users.id = a.user_id"),
+		From[testutils.TestTag, ichain.From[testutils.TestTag]]("users AS u"),
+		InnerJoin[testutils.TestTag, ichain.Join[testutils.TestTag]]("users_address AS a").On("users.id = a.user_id"),
 		WhereClause[testutils.TestTag]("age < ?", 10),
 		OrderBy[testutils.TestTag]("name ASC"),
 		OffsetArg[testutils.TestTag](10),
@@ -64,8 +64,8 @@ func TestSelectBasicNamedArgs(t *testing.T) {
 	query := Select[testutils.TestTag](testutils.NewTestDialect(),
 		Distinct[testutils.TestTag](),
 		Columns[testutils.TestTag]("u.id", "u.name", "ua.address"),
-		From[testutils.TestTag]("users AS u"),
-		InnerJoin[testutils.TestTag]("users_address AS a").On("users.id = a.user_id"),
+		From[testutils.TestTag, ichain.From[testutils.TestTag]]("users AS u"),
+		InnerJoin[testutils.TestTag, ichain.Join[testutils.TestTag]]("users_address AS a").On("users.id = a.user_id"),
 		WhereClause[testutils.TestTag]("age < ?", sq.NamedArg("age")),
 		OrderBy[testutils.TestTag]("name ASC"),
 		OffsetArg[testutils.TestTag](sq.NamedArg("offset")),
@@ -86,7 +86,7 @@ func TestSelectDistinctOn(t *testing.T) {
 	query := Select[testutils.TestTag](testutils.NewTestDialect(),
 		Distinct[testutils.TestTag]("id", "name"),
 		Columns[testutils.TestTag]("id", "name"),
-		From[testutils.TestTag]("users"),
+		From[testutils.TestTag, ichain.From[testutils.TestTag]]("users"),
 		Where[testutils.TestTag]("age < 10"),
 	)
 
@@ -101,10 +101,10 @@ func TestSelectFromQuery(t *testing.T) {
 
 	query := Select[testutils.TestTag](d,
 		Columns[testutils.TestTag]("id", "name"),
-		FromQuery[testutils.TestTag, testutils.TestTag](
+		FromQuery[testutils.TestTag, ichain.From[testutils.TestTag], testutils.TestTag](
 			Select[testutils.TestTag](d,
 				Columns[testutils.TestTag]("address", "city", "state"),
-				From[testutils.TestTag]("user_address ua"),
+				From[testutils.TestTag, ichain.From[testutils.TestTag]]("user_address ua"),
 				Where[testutils.TestTag]("ua.user_id = u.id"),
 			),
 		),
@@ -122,12 +122,12 @@ func TestSelectUnion(t *testing.T) {
 
 	query := Select[testutils.TestTag](d,
 		Columns[testutils.TestTag]("id", "name"),
-		From[testutils.TestTag]("users"),
+		From[testutils.TestTag, ichain.From[testutils.TestTag]]("users"),
 		Where[testutils.TestTag]("age < 10"),
 		Union[testutils.TestTag](
 			Select[testutils.TestTag](d,
 				Columns[testutils.TestTag]("id", "name"),
-				From[testutils.TestTag]("users"),
+				From[testutils.TestTag, ichain.From[testutils.TestTag]]("users"),
 				Where[testutils.TestTag]("age > 50"),
 			),
 		),
@@ -142,7 +142,7 @@ func TestSelectGroupBy(t *testing.T) {
 
 	query := Select[testutils.TestTag](testutils.NewTestDialect(),
 		Columns[testutils.TestTag]("country", "AVG(age) as age_avg"),
-		From[testutils.TestTag]("users"),
+		From[testutils.TestTag, ichain.From[testutils.TestTag]]("users"),
 		GroupBy[testutils.TestTag, ichain.GroupBy[testutils.TestTag]]("country").Distinct(),
 		Having[testutils.TestTag]("AVG(age) > 10"),
 	)
@@ -156,13 +156,13 @@ func TestSelectJoin(t *testing.T) {
 
 	query := Select[testutils.TestTag](testutils.NewTestDialect(),
 		Columns[testutils.TestTag]("u.id", "u.name", "ai.address"),
-		From[testutils.TestTag]("users AS u"),
-		InnerJoin[testutils.TestTag]("users_address AS ai").On("users.id = ai.user_id"),
-		LeftJoin[testutils.TestTag]("users_address AS al").On("users.id = al.user_id"),
-		RightJoin[testutils.TestTag]("users_address AS ar").On("users.id = ar.user_id"),
-		FullJoin[testutils.TestTag]("users_address AS af").On("users.id = af.user_id"),
-		CrossJoin[testutils.TestTag]("users_address AS ac").On("users.id = ac.user_id"),
-		StraightJoin[testutils.TestTag]("users_address AS as").On("users.id = as.user_id"),
+		From[testutils.TestTag, ichain.From[testutils.TestTag]]("users AS u"),
+		InnerJoin[testutils.TestTag, ichain.Join[testutils.TestTag]]("users_address AS ai").On("users.id = ai.user_id"),
+		LeftJoin[testutils.TestTag, ichain.Join[testutils.TestTag]]("users_address AS al").On("users.id = al.user_id"),
+		RightJoin[testutils.TestTag, ichain.Join[testutils.TestTag]]("users_address AS ar").On("users.id = ar.user_id"),
+		FullJoin[testutils.TestTag, ichain.Join[testutils.TestTag]]("users_address AS af").On("users.id = af.user_id"),
+		CrossJoin[testutils.TestTag, ichain.Join[testutils.TestTag]]("users_address AS ac").On("users.id = ac.user_id"),
+		StraightJoin[testutils.TestTag, ichain.Join[testutils.TestTag]]("users_address AS as").On("users.id = as.user_id"),
 	)
 
 	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)
@@ -176,11 +176,11 @@ func TestSelectJoinSubSelect(t *testing.T) {
 
 	query := Select[testutils.TestTag](d,
 		Columns[testutils.TestTag]("u.id", "u.name", "ai.address"),
-		From[testutils.TestTag]("users AS u"),
-		InnerJoinExpr[testutils.TestTag](
+		From[testutils.TestTag, ichain.From[testutils.TestTag]]("users AS u"),
+		InnerJoinExpr[testutils.TestTag, ichain.Join[testutils.TestTag]](
 			Select[testutils.TestTag](d,
 				Columns[testutils.TestTag]("address", "city", "state"),
-				From[testutils.TestTag]("users_address AS ua"),
+				From[testutils.TestTag, ichain.From[testutils.TestTag]]("users_address AS ua"),
 				Where[testutils.TestTag]("u.id = ua.user_id"),
 			),
 		).As("ua").On("users.id = ua.user_id"),
@@ -196,31 +196,31 @@ func TestSelectWith(t *testing.T) {
 	d := testutils.NewTestDialect()
 
 	query := Select[testutils.TestTag](d,
-		With[testutils.TestTag]("regional_sales").As(
+		With[testutils.TestTag, ichain.With[testutils.TestTag]]("regional_sales").As(
 			Select[testutils.TestTag](d,
 				Columns[testutils.TestTag]("region", "SUM(amount) AS total_sales"),
-				From[testutils.TestTag]("orders"),
+				From[testutils.TestTag, ichain.From[testutils.TestTag]]("orders"),
 				GroupBy[testutils.TestTag, ichain.GroupBy[testutils.TestTag]]("region"),
 			),
 		),
-		With[testutils.TestTag]("top_regions").As(
+		With[testutils.TestTag, ichain.With[testutils.TestTag]]("top_regions").As(
 			Select[testutils.TestTag](d,
 				Columns[testutils.TestTag]("region"),
-				From[testutils.TestTag]("regional_sales"),
+				From[testutils.TestTag, ichain.From[testutils.TestTag]]("regional_sales"),
 				WhereClause[testutils.TestTag]("total_sales > ?",
 					Select[testutils.TestTag](d,
 						Columns[testutils.TestTag]("SUM(total_sales)/10"),
-						From[testutils.TestTag]("regional_sales"),
+						From[testutils.TestTag, ichain.From[testutils.TestTag]]("regional_sales"),
 					),
 				),
 			),
 		),
 		Columns[testutils.TestTag]("region", "product", "SUM(quantity) AS product_units", "SUM(amount) AS product_sales"),
-		From[testutils.TestTag]("orders"),
+		From[testutils.TestTag, ichain.From[testutils.TestTag]]("orders"),
 		WhereClause[testutils.TestTag]("region IN ?",
 			Select[testutils.TestTag](d,
 				Columns[testutils.TestTag]("region"),
-				From[testutils.TestTag]("top_regions"),
+				From[testutils.TestTag, ichain.From[testutils.TestTag]]("top_regions"),
 			),
 		),
 		GroupBy[testutils.TestTag, ichain.GroupBy[testutils.TestTag]]("region", "product"),
@@ -235,8 +235,8 @@ func TestSelectWindow(t *testing.T) {
 
 	query := Select[testutils.TestTag](testutils.NewTestDialect(),
 		Columns[testutils.TestTag]("sum(salary) OVER w", "avg(salary) OVER w"),
-		From[testutils.TestTag]("empsalary"),
-		Window[testutils.TestTag]("w").
+		From[testutils.TestTag, ichain.From[testutils.TestTag]]("empsalary"),
+		Window[testutils.TestTag, ichain.Window[testutils.TestTag]]("w").
 			PartitionBy("depname").
 			OrderBy("salary DESC"),
 	)
@@ -256,7 +256,7 @@ func TestSelectApply(t *testing.T) {
 				OrderBy[testutils.TestTag]("name"),
 			)
 		}),
-		From[testutils.TestTag]("users"),
+		From[testutils.TestTag, ichain.From[testutils.TestTag]]("users"),
 	)
 
 	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)
