@@ -324,10 +324,11 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 		for _, chain := range chainNames {
 			chainTyp := chains[chain]
 
+			currentName := chain + "Chain"
 			dchain := config.FindDialectChain(*dialect, sdir, chain)
 
 			fchain.Type().
-				Id(chain).
+				Id(currentName).
 				InterfaceFunc(func(igroup *jen.Group) {
 					igroup.Add(jen.Qual(sqpkg, "QueryMod").Types(sdialectTag))
 					for cm := range chainTyp.NumMethods() {
@@ -342,8 +343,7 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 
 						igroup.Add(jen.Id(cmethod.Name()).
 							ParamsFunc(genutil.AddParams(csig.Params(), csig.Variadic(), customType)).
-							Params(jen.Id(chain)),
-						// ParamsFunc(genutil.AddParams(csig.Results(), false, customType)),
+							Params(jen.Id(currentName)),
 						)
 					}
 				})
