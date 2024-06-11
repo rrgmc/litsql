@@ -12,9 +12,14 @@ func GroupBy[T, CHAIN any](columns ...string) *ichain.GroupByChain[T, CHAIN] {
 }
 
 func GroupByExpr[T, CHAIN any](columns ...litsql.Expression) *ichain.GroupByChain[T, CHAIN] {
-	return &ichain.GroupByChain[T, CHAIN]{
+	return ichain.NewGroupByChain[T, CHAIN](&ichain.GroupByChain[T, CHAIN]{
 		GroupBy: &iclause.GroupBy{
 			Groups: columns,
 		},
-	}
+	})
+	// return &ichain.GroupByChain[T, CHAIN]{
+	// 	GroupBy: &iclause.GroupBy{
+	// 		Groups: columns,
+	// 	},
+	// }
 }

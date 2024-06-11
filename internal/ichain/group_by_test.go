@@ -9,9 +9,13 @@ import (
 )
 
 func TestGroupByChain(t *testing.T) {
-	chain := &GroupByChain[testutils.TestTag]{
+	chain := NewGroupByChain[testutils.TestTag, GroupBy[testutils.TestTag]](&GroupByChain[testutils.TestTag, GroupBy[testutils.TestTag]]{
 		GroupBy: &iclause.GroupBy{},
-	}
+	})
+
+	// chain := &GroupByChain[testutils.TestTag]{
+	// 	GroupBy: &iclause.GroupBy{},
+	// }
 
 	chain.
 		Distinct().

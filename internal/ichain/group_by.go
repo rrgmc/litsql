@@ -12,15 +12,20 @@ type GroupBy[T any] interface {
 	With(with string) GroupBy[T]
 }
 
-func NewGroupByChain[T any](chain *GroupByChain[T, GroupBy[T]]) GroupBy[T] {
-	chain.SetChainSelf(chain)
+// func NewGroupByChain[T any](chain *GroupByChain[T, GroupBy[T]]) GroupBy[T] {
+// 	chain.SetChainSelf(chain)
+// 	return chain
+// }
+
+func NewGroupByChain[T, CHAIN any](chain *GroupByChain[T, CHAIN]) *GroupByChain[T, CHAIN] {
+	chain.Self = chain
 	return chain
 }
 
 type GroupByChain[T, CHAIN any] struct {
 	sq.ModTagImpl[T]
-	Self CHAIN
 	*iclause.GroupBy
+	Self any
 }
 
 func (c *GroupByChain[T, CHAIN]) Apply(a litsql.QueryBuilder) {
@@ -33,10 +38,10 @@ func (c *GroupByChain[T, CHAIN]) SetChainSelf(self CHAIN) {
 
 func (c *GroupByChain[T, CHAIN]) Distinct() CHAIN {
 	c.SetGroupByDistinct(true)
-	return c.Self
+	return c.Self.(CHAIN)
 }
 
 func (c *GroupByChain[T, CHAIN]) With(with string) CHAIN {
 	c.SetGroupWith(with)
-	return c.Self
+	return c.Self.(CHAIN)
 }
