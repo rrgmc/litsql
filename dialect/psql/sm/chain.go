@@ -2,20 +2,69 @@
 package sm
 
 import (
+	litsql "github.com/rrgmc/litsql"
 	tag "github.com/rrgmc/litsql/dialect/psql/tag"
 	sq "github.com/rrgmc/litsql/sq"
-	chain "github.com/rrgmc/litsql/sq/chain"
 )
 
-type FromChain = chain.From[tag.SelectTag]
+type FromChain interface {
+	sq.QueryMod[tag.SelectTag]
+	As(alias string, columns ...string) FromChain
+	Only() FromChain
+	Lateral() FromChain
+	WithOrdinality() FromChain
+}
 
 type GroupByChain interface {
 	sq.QueryMod[tag.SelectTag]
 	Distinct() GroupByChain
 }
 
-type JoinChain = chain.Join[tag.SelectTag]
+type JoinChain interface {
+	sq.QueryMod[tag.SelectTag]
+	As(alias string, columns ...string) JoinChain
+	Only() JoinChain
+	Lateral() JoinChain
+	WithOrdinality() JoinChain
+	Natural() JoinChain
+	On(on string) JoinChain
+	OnExpr(on litsql.Expression) JoinChain
+	OnClause(query string, args ...any) JoinChain
+	Using(using ...string) JoinChain
+}
 
-type WindowChain = chain.Window[tag.SelectTag]
+type WindowChain interface {
+	sq.QueryMod[tag.SelectTag]
+	From(name string) WindowChain
+	PartitionBy(condition ...string) WindowChain
+	PartitionByExpr(condition ...litsql.Expression) WindowChain
+	OrderBy(order ...string) WindowChain
+	OrderByExpr(order ...litsql.Expression) WindowChain
+	Range() WindowChain
+	Rows() WindowChain
+	Groups() WindowChain
+	FromUnboundedPreceding() WindowChain
+	FromPreceding(exp litsql.Expression) WindowChain
+	FromCurrentRow() WindowChain
+	FromFollowing(exp litsql.Expression) WindowChain
+	ToPreceding(exp litsql.Expression) WindowChain
+	ToCurrentRow(count int) WindowChain
+	ToFollowing(exp litsql.Expression) WindowChain
+	ToUnboundedFollowing() WindowChain
+	ExcludeNoOthers() WindowChain
+	ExcludeCurrentRow() WindowChain
+	ExcludeGroup() WindowChain
+	ExcludeTies() WindowChain
+}
 
-type WithChain = chain.With[tag.SelectTag]
+type WithChain interface {
+	sq.QueryMod[tag.SelectTag]
+	Recursive() WithChain
+	As(q litsql.Query) WithChain
+	NotMaterialized() WithChain
+	Materialized() WithChain
+	SearchBreadth(setCol string, searchCols ...string) WithChain
+	SearchDepth(setCol string, searchCols ...string) WithChain
+	Cycle(set string, using string, cols ...string) WithChain
+	CycleValue(value any, defaultVal any) WithChain
+}

@@ -61,11 +61,11 @@ func IntoAs(name string, alias string, columns ...string) psql.InsertMod {
 }
 
 func OnConflict(columns ...string) InsertConflictUpdateChain {
-	return iim.OnConflict[tag.InsertTag](columns...)
+	return iim.OnConflict[tag.InsertTag, InsertConflictUpdateChain](columns...)
 }
 
 func OnConflictOnConstraint(constraint string) InsertConflictUpdateChain {
-	return iim.OnConflictOnConstraint[tag.InsertTag](constraint)
+	return iim.OnConflictOnConstraint[tag.InsertTag, InsertConflictUpdateChain](constraint)
 }
 
 func OverridingSystem() psql.InsertMod {
@@ -101,9 +101,9 @@ func ValuesString(clauses ...string) psql.InsertMod {
 }
 
 func With(name string, columns ...string) WithChain {
-	return iim.With[tag.InsertTag](name, columns...)
+	return iim.With[tag.InsertTag, WithChain](name, columns...)
 }
 
 func WithExpr(name string, columns ...litsql.Expression) WithChain {
-	return iim.WithExpr[tag.InsertTag](name, columns...)
+	return iim.WithExpr[tag.InsertTag, WithChain](name, columns...)
 }

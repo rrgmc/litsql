@@ -2,11 +2,28 @@
 package im
 
 import (
+	litsql "github.com/rrgmc/litsql"
 	tag "github.com/rrgmc/litsql/dialect/psql/tag"
-	imod "github.com/rrgmc/litsql/internal/imod"
-	chain "github.com/rrgmc/litsql/sq/chain"
+	sq "github.com/rrgmc/litsql/sq"
 )
 
-type InsertConflictUpdateChain = chain.InsertConflictUpdate[tag.InsertTag, imod.InsertConflictUpdateModTag]
+type InsertConflictUpdateChain interface {
+	sq.QueryMod[tag.InsertTag]
+	Where(condition string) InsertConflictUpdateChain
+	WhereExpr(condition litsql.Expression) InsertConflictUpdateChain
+	WhereClause(query string, args ...any) InsertConflictUpdateChain
+	DoNothing() InsertConflictUpdateChain
+	DoUpdate(mods ...InsertConflictUpdateMod) InsertConflictUpdateChain
+}
 
-type WithChain = chain.With[tag.InsertTag]
+type WithChain interface {
+	sq.QueryMod[tag.InsertTag]
+	Recursive() WithChain
+	As(q litsql.Query) WithChain
+	NotMaterialized() WithChain
+	Materialized() WithChain
+	SearchBreadth(setCol string, searchCols ...string) WithChain
+	SearchDepth(setCol string, searchCols ...string) WithChain
+	Cycle(set string, using string, cols ...string) WithChain
+	CycleValue(value any, defaultVal any) WithChain
+}

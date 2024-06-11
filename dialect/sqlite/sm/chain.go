@@ -3,10 +3,8 @@ package sm
 
 import (
 	litsql "github.com/rrgmc/litsql"
-	sqlite "github.com/rrgmc/litsql/dialect/sqlite"
 	tag "github.com/rrgmc/litsql/dialect/sqlite/tag"
 	sq "github.com/rrgmc/litsql/sq"
-	chain "github.com/rrgmc/litsql/sq/chain"
 )
 
 type FromChain interface {
@@ -23,18 +21,40 @@ type JoinChain interface {
 	sq.QueryMod[tag.SelectTag]
 	As(alias string, columns ...string) JoinChain
 	Lateral() JoinChain
-	Natural() sqlite.SelectMod
+	Natural() JoinChain
 	On(on string) JoinChain
-	OnClause(query string, args ...any) JoinChain
 	OnExpr(on litsql.Expression) JoinChain
+	OnClause(query string, args ...any) JoinChain
 	Using(using ...string) JoinChain
 }
 
-type WindowChain = chain.Window[tag.SelectTag]
+type WindowChain interface {
+	sq.QueryMod[tag.SelectTag]
+	From(name string) WindowChain
+	PartitionBy(condition ...string) WindowChain
+	PartitionByExpr(condition ...litsql.Expression) WindowChain
+	OrderBy(order ...string) WindowChain
+	OrderByExpr(order ...litsql.Expression) WindowChain
+	Range() WindowChain
+	Rows() WindowChain
+	Groups() WindowChain
+	FromUnboundedPreceding() WindowChain
+	FromPreceding(exp litsql.Expression) WindowChain
+	FromCurrentRow() WindowChain
+	FromFollowing(exp litsql.Expression) WindowChain
+	ToPreceding(exp litsql.Expression) WindowChain
+	ToCurrentRow(count int) WindowChain
+	ToFollowing(exp litsql.Expression) WindowChain
+	ToUnboundedFollowing() WindowChain
+	ExcludeNoOthers() WindowChain
+	ExcludeCurrentRow() WindowChain
+	ExcludeGroup() WindowChain
+	ExcludeTies() WindowChain
+}
 
 type WithChain interface {
 	sq.QueryMod[tag.SelectTag]
 	As(q litsql.Query) WithChain
-	Materialized() WithChain
 	NotMaterialized() WithChain
+	Materialized() WithChain
 }

@@ -61,11 +61,11 @@ func IntoAs(name string, alias string, columns ...string) sqlite.InsertMod {
 }
 
 func OnConflict(columns ...string) InsertConflictUpdateChain {
-	return iim.OnConflict[tag.InsertTag](columns...)
+	return iim.OnConflict[tag.InsertTag, InsertConflictUpdateChain](columns...)
 }
 
 func OnConflictOnConstraint(constraint string) InsertConflictUpdateChain {
-	return iim.OnConflictOnConstraint[tag.InsertTag](constraint)
+	return iim.OnConflictOnConstraint[tag.InsertTag, InsertConflictUpdateChain](constraint)
 }
 
 func Query(q sqlite.SelectQuery) sqlite.InsertMod {
@@ -93,13 +93,9 @@ func ValuesString(clauses ...string) sqlite.InsertMod {
 }
 
 func With(name string, columns ...string) WithChain {
-	return &withChainAdapter{
-		chain: iim.With[tag.InsertTag](name, columns...),
-	}
+	return iim.With[tag.InsertTag, WithChain](name, columns...)
 }
 
 func WithExpr(name string, columns ...litsql.Expression) WithChain {
-	return &withChainAdapter{
-		chain: iim.WithExpr[tag.InsertTag](name, columns...),
-	}
+	return iim.WithExpr[tag.InsertTag, WithChain](name, columns...)
 }

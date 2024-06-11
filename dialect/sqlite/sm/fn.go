@@ -28,15 +28,11 @@ func ColumnsExpr(names ...litsql.Expression) sqlite.SelectMod {
 }
 
 func CrossJoin(table string) JoinChain {
-	return &joinChainAdapter{
-		chain: ism.CrossJoin[tag.SelectTag](table),
-	}
+	return ism.CrossJoin[tag.SelectTag, JoinChain](table)
 }
 
 func CrossJoinExpr(table litsql.Expression) JoinChain {
-	return &joinChainAdapter{
-		chain: ism.CrossJoinExpr[tag.SelectTag](table),
-	}
+	return ism.CrossJoinExpr[tag.SelectTag, JoinChain](table)
 }
 
 func Distinct(on ...string) sqlite.SelectMod {
@@ -56,45 +52,31 @@ func ExceptAll(q sqlite.SelectQuery) sqlite.SelectMod {
 }
 
 func From(table string) FromChain {
-	return &fromChainAdapter{
-		chain: ism.From[tag.SelectTag](table),
-	}
+	return ism.From[tag.SelectTag, FromChain](table)
 }
 
 func FromExpr(table litsql.Expression) FromChain {
-	return &fromChainAdapter{
-		chain: ism.FromExpr[tag.SelectTag](table),
-	}
+	return ism.FromExpr[tag.SelectTag, FromChain](table)
 }
 
 func FromQuery(q sqlite.SelectQuery) FromChain {
-	return &fromChainAdapter{
-		chain: ism.FromQuery[tag.SelectTag, tag.SelectTag](q),
-	}
+	return ism.FromQuery[tag.SelectTag, FromChain, tag.SelectTag](q)
 }
 
 func FullJoin(table string) JoinChain {
-	return &joinChainAdapter{
-		chain: ism.FullJoin[tag.SelectTag](table),
-	}
+	return ism.FullJoin[tag.SelectTag, JoinChain](table)
 }
 
 func FullJoinExpr(table litsql.Expression) JoinChain {
-	return &joinChainAdapter{
-		chain: ism.FullJoinExpr[tag.SelectTag](table),
-	}
+	return ism.FullJoinExpr[tag.SelectTag, JoinChain](table)
 }
 
 func GroupBy(columns ...string) GroupByChain {
-	return &groupByChainAdapter{
-		chain: ism.GroupBy[tag.SelectTag](columns...),
-	}
+	return ism.GroupBy[tag.SelectTag, GroupByChain](columns...)
 }
 
 func GroupByExpr(columns ...litsql.Expression) GroupByChain {
-	return &groupByChainAdapter{
-		chain: ism.GroupByExpr[tag.SelectTag](columns...),
-	}
+	return ism.GroupByExpr[tag.SelectTag, GroupByChain](columns...)
 }
 
 func Having(condition string) sqlite.SelectMod {
@@ -110,15 +92,11 @@ func HavingExpr(condition litsql.Expression) sqlite.SelectMod {
 }
 
 func InnerJoin(table string) JoinChain {
-	return &joinChainAdapter{
-		chain: ism.InnerJoin[tag.SelectTag](table),
-	}
+	return ism.InnerJoin[tag.SelectTag, JoinChain](table)
 }
 
 func InnerJoinExpr(table litsql.Expression) JoinChain {
-	return &joinChainAdapter{
-		chain: ism.InnerJoinExpr[tag.SelectTag](table),
-	}
+	return ism.InnerJoinExpr[tag.SelectTag, JoinChain](table)
 }
 
 func Intersect(q sqlite.SelectQuery) sqlite.SelectMod {
@@ -130,15 +108,11 @@ func IntersectAll(q sqlite.SelectQuery) sqlite.SelectMod {
 }
 
 func LeftJoin(table string) JoinChain {
-	return &joinChainAdapter{
-		chain: ism.LeftJoin[tag.SelectTag](table),
-	}
+	return ism.LeftJoin[tag.SelectTag, JoinChain](table)
 }
 
 func LeftJoinExpr(table litsql.Expression) JoinChain {
-	return &joinChainAdapter{
-		chain: ism.LeftJoinExpr[tag.SelectTag](table),
-	}
+	return ism.LeftJoinExpr[tag.SelectTag, JoinChain](table)
 }
 
 func Limit(count int) sqlite.SelectMod {
@@ -182,27 +156,19 @@ func OrderByExpr(names ...litsql.Expression) sqlite.SelectMod {
 }
 
 func RightJoin(table string) JoinChain {
-	return &joinChainAdapter{
-		chain: ism.RightJoin[tag.SelectTag](table),
-	}
+	return ism.RightJoin[tag.SelectTag, JoinChain](table)
 }
 
 func RightJoinExpr(table litsql.Expression) JoinChain {
-	return &joinChainAdapter{
-		chain: ism.RightJoinExpr[tag.SelectTag](table),
-	}
+	return ism.RightJoinExpr[tag.SelectTag, JoinChain](table)
 }
 
 func StraightJoin(table string) JoinChain {
-	return &joinChainAdapter{
-		chain: ism.StraightJoin[tag.SelectTag](table),
-	}
+	return ism.StraightJoin[tag.SelectTag, JoinChain](table)
 }
 
 func StraightJoinExpr(table litsql.Expression) JoinChain {
-	return &joinChainAdapter{
-		chain: ism.StraightJoinExpr[tag.SelectTag](table),
-	}
+	return ism.StraightJoinExpr[tag.SelectTag, JoinChain](table)
 }
 
 func Union(q sqlite.SelectQuery) sqlite.SelectMod {
@@ -226,17 +192,13 @@ func WhereExpr(condition litsql.Expression) sqlite.SelectMod {
 }
 
 func Window(name string) WindowChain {
-	return ism.Window[tag.SelectTag](name)
+	return ism.Window[tag.SelectTag, WindowChain](name)
 }
 
 func With(name string, columns ...string) WithChain {
-	return &withChainAdapter{
-		chain: ism.With[tag.SelectTag](name, columns...),
-	}
+	return ism.With[tag.SelectTag, WithChain](name, columns...)
 }
 
 func WithExpr(name string, columns ...litsql.Expression) WithChain {
-	return &withChainAdapter{
-		chain: ism.WithExpr[tag.SelectTag](name, columns...),
-	}
+	return ism.WithExpr[tag.SelectTag, WithChain](name, columns...)
 }

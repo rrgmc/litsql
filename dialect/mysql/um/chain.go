@@ -3,7 +3,6 @@ package um
 
 import (
 	litsql "github.com/rrgmc/litsql"
-	mysql "github.com/rrgmc/litsql/dialect/mysql"
 	tag "github.com/rrgmc/litsql/dialect/mysql/tag"
 	sq "github.com/rrgmc/litsql/sq"
 )
@@ -18,15 +17,15 @@ type JoinChain interface {
 	sq.QueryMod[tag.UpdateTag]
 	As(alias string, columns ...string) JoinChain
 	Lateral() JoinChain
-	Natural() mysql.UpdateMod
+	Natural() JoinChain
 	On(on string) JoinChain
-	OnClause(query string, args ...any) JoinChain
 	OnExpr(on litsql.Expression) JoinChain
+	OnClause(query string, args ...any) JoinChain
 	Using(using ...string) JoinChain
 }
 
 type WithChain interface {
 	sq.QueryMod[tag.UpdateTag]
-	As(q litsql.Query) WithChain
 	Recursive() WithChain
+	As(q litsql.Query) WithChain
 }

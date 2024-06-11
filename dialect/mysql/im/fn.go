@@ -73,13 +73,9 @@ func ValuesString(clauses ...string) mysql.InsertMod {
 }
 
 func With(name string, columns ...string) WithChain {
-	return &withChainAdapter{
-		chain: iim.With[tag.InsertTag](name, columns...),
-	}
+	return iim.With[tag.InsertTag, WithChain](name, columns...)
 }
 
 func WithExpr(name string, columns ...litsql.Expression) WithChain {
-	return &withChainAdapter{
-		chain: iim.WithExpr[tag.InsertTag](name, columns...),
-	}
+	return iim.WithExpr[tag.InsertTag, WithChain](name, columns...)
 }

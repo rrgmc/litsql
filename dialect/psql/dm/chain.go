@@ -2,12 +2,40 @@
 package dm
 
 import (
+	litsql "github.com/rrgmc/litsql"
 	tag "github.com/rrgmc/litsql/dialect/psql/tag"
-	chain "github.com/rrgmc/litsql/sq/chain"
+	sq "github.com/rrgmc/litsql/sq"
 )
 
-type FromChain = chain.From[tag.DeleteTag]
+type FromChain interface {
+	sq.QueryMod[tag.DeleteTag]
+	As(alias string, columns ...string) FromChain
+	Only() FromChain
+	Lateral() FromChain
+	WithOrdinality() FromChain
+}
 
-type JoinChain = chain.Join[tag.DeleteTag]
+type JoinChain interface {
+	sq.QueryMod[tag.DeleteTag]
+	As(alias string, columns ...string) JoinChain
+	Only() JoinChain
+	Lateral() JoinChain
+	WithOrdinality() JoinChain
+	Natural() JoinChain
+	On(on string) JoinChain
+	OnExpr(on litsql.Expression) JoinChain
+	OnClause(query string, args ...any) JoinChain
+	Using(using ...string) JoinChain
+}
 
-type WithChain = chain.With[tag.DeleteTag]
+type WithChain interface {
+	sq.QueryMod[tag.DeleteTag]
+	Recursive() WithChain
+	As(q litsql.Query) WithChain
+	NotMaterialized() WithChain
+	Materialized() WithChain
+	SearchBreadth(setCol string, searchCols ...string) WithChain
+	SearchDepth(setCol string, searchCols ...string) WithChain
+	Cycle(set string, using string, cols ...string) WithChain
+	CycleValue(value any, defaultVal any) WithChain
+}

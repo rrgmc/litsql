@@ -13,15 +13,11 @@ func Apply(f func(a mysql.DeleteModApply)) mysql.DeleteMod {
 }
 
 func CrossJoin(table string) JoinChain {
-	return &joinChainAdapter{
-		chain: idm.CrossJoin[tag.DeleteTag](table),
-	}
+	return idm.CrossJoin[tag.DeleteTag, JoinChain](table)
 }
 
 func CrossJoinExpr(table litsql.Expression) JoinChain {
-	return &joinChainAdapter{
-		chain: idm.CrossJoinExpr[tag.DeleteTag](table),
-	}
+	return idm.CrossJoinExpr[tag.DeleteTag, JoinChain](table)
 }
 
 func From(table string) mysql.DeleteMod {
@@ -29,39 +25,27 @@ func From(table string) mysql.DeleteMod {
 }
 
 func FullJoin(table string) JoinChain {
-	return &joinChainAdapter{
-		chain: idm.FullJoin[tag.DeleteTag](table),
-	}
+	return idm.FullJoin[tag.DeleteTag, JoinChain](table)
 }
 
 func FullJoinExpr(table litsql.Expression) JoinChain {
-	return &joinChainAdapter{
-		chain: idm.FullJoinExpr[tag.DeleteTag](table),
-	}
+	return idm.FullJoinExpr[tag.DeleteTag, JoinChain](table)
 }
 
 func InnerJoin(table string) JoinChain {
-	return &joinChainAdapter{
-		chain: idm.InnerJoin[tag.DeleteTag](table),
-	}
+	return idm.InnerJoin[tag.DeleteTag, JoinChain](table)
 }
 
 func InnerJoinExpr(table litsql.Expression) JoinChain {
-	return &joinChainAdapter{
-		chain: idm.InnerJoinExpr[tag.DeleteTag](table),
-	}
+	return idm.InnerJoinExpr[tag.DeleteTag, JoinChain](table)
 }
 
 func LeftJoin(table string) JoinChain {
-	return &joinChainAdapter{
-		chain: idm.LeftJoin[tag.DeleteTag](table),
-	}
+	return idm.LeftJoin[tag.DeleteTag, JoinChain](table)
 }
 
 func LeftJoinExpr(table litsql.Expression) JoinChain {
-	return &joinChainAdapter{
-		chain: idm.LeftJoinExpr[tag.DeleteTag](table),
-	}
+	return idm.LeftJoinExpr[tag.DeleteTag, JoinChain](table)
 }
 
 func Only() mysql.DeleteMod {
@@ -73,45 +57,31 @@ func Returning(clauses ...string) mysql.DeleteMod {
 }
 
 func RightJoin(table string) JoinChain {
-	return &joinChainAdapter{
-		chain: idm.RightJoin[tag.DeleteTag](table),
-	}
+	return idm.RightJoin[tag.DeleteTag, JoinChain](table)
 }
 
 func RightJoinExpr(table litsql.Expression) JoinChain {
-	return &joinChainAdapter{
-		chain: idm.RightJoinExpr[tag.DeleteTag](table),
-	}
+	return idm.RightJoinExpr[tag.DeleteTag, JoinChain](table)
 }
 
 func StraightJoin(table string) JoinChain {
-	return &joinChainAdapter{
-		chain: idm.StraightJoin[tag.DeleteTag](table),
-	}
+	return idm.StraightJoin[tag.DeleteTag, JoinChain](table)
 }
 
 func StraightJoinExpr(table litsql.Expression) JoinChain {
-	return &joinChainAdapter{
-		chain: idm.StraightJoinExpr[tag.DeleteTag](table),
-	}
+	return idm.StraightJoinExpr[tag.DeleteTag, JoinChain](table)
 }
 
 func Using(table string) FromChain {
-	return &fromChainAdapter{
-		chain: idm.Using[tag.DeleteTag](table),
-	}
+	return idm.Using[tag.DeleteTag, FromChain](table)
 }
 
 func UsingExpr(table litsql.Expression) FromChain {
-	return &fromChainAdapter{
-		chain: idm.UsingExpr[tag.DeleteTag](table),
-	}
+	return idm.UsingExpr[tag.DeleteTag, FromChain](table)
 }
 
 func UsingQuery(q mysql.SelectQuery) FromChain {
-	return &fromChainAdapter{
-		chain: idm.UsingQuery[tag.DeleteTag, tag.SelectTag](q),
-	}
+	return idm.UsingQuery[tag.DeleteTag, FromChain, tag.SelectTag](q)
 }
 
 func Where(condition string) mysql.DeleteMod {
@@ -127,13 +97,9 @@ func WhereExpr(condition litsql.Expression) mysql.DeleteMod {
 }
 
 func With(name string, columns ...string) WithChain {
-	return &withChainAdapter{
-		chain: idm.With[tag.DeleteTag](name, columns...),
-	}
+	return idm.With[tag.DeleteTag, WithChain](name, columns...)
 }
 
 func WithExpr(name string, columns ...litsql.Expression) WithChain {
-	return &withChainAdapter{
-		chain: idm.WithExpr[tag.DeleteTag](name, columns...),
-	}
+	return idm.WithExpr[tag.DeleteTag, WithChain](name, columns...)
 }

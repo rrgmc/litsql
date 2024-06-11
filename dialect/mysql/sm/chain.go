@@ -3,7 +3,6 @@ package sm
 
 import (
 	litsql "github.com/rrgmc/litsql"
-	mysql "github.com/rrgmc/litsql/dialect/mysql"
 	tag "github.com/rrgmc/litsql/dialect/mysql/tag"
 	sq "github.com/rrgmc/litsql/sq"
 )
@@ -23,34 +22,34 @@ type JoinChain interface {
 	sq.QueryMod[tag.SelectTag]
 	As(alias string, columns ...string) JoinChain
 	Lateral() JoinChain
-	Natural() mysql.SelectMod
+	Natural() JoinChain
 	On(on string) JoinChain
-	OnClause(query string, args ...any) JoinChain
 	OnExpr(on litsql.Expression) JoinChain
+	OnClause(query string, args ...any) JoinChain
 	Using(using ...string) JoinChain
 }
 
 type WindowChain interface {
 	sq.QueryMod[tag.SelectTag]
 	From(name string) WindowChain
-	FromCurrentRow() WindowChain
-	FromFollowing(exp litsql.Expression) WindowChain
-	FromPreceding(exp litsql.Expression) WindowChain
-	FromUnboundedPreceding() WindowChain
-	OrderBy(order ...string) WindowChain
-	OrderByExpr(order ...litsql.Expression) WindowChain
 	PartitionBy(condition ...string) WindowChain
 	PartitionByExpr(condition ...litsql.Expression) WindowChain
+	OrderBy(order ...string) WindowChain
+	OrderByExpr(order ...litsql.Expression) WindowChain
 	Range() WindowChain
 	Rows() WindowChain
+	FromUnboundedPreceding() WindowChain
+	FromPreceding(exp litsql.Expression) WindowChain
+	FromCurrentRow() WindowChain
+	FromFollowing(exp litsql.Expression) WindowChain
+	ToPreceding(exp litsql.Expression) WindowChain
 	ToCurrentRow(count int) WindowChain
 	ToFollowing(exp litsql.Expression) WindowChain
-	ToPreceding(exp litsql.Expression) WindowChain
 	ToUnboundedFollowing() WindowChain
 }
 
 type WithChain interface {
 	sq.QueryMod[tag.SelectTag]
-	As(q litsql.Query) WithChain
 	Recursive() WithChain
+	As(q litsql.Query) WithChain
 }

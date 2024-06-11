@@ -9,6 +9,6 @@ import (
 
 type WithChain interface {
 	sq.QueryMod[tag.InsertTag]
-	As(q litsql.Query) WithChain
 	Recursive() WithChain
+	As(q litsql.Query) WithChain
 }
