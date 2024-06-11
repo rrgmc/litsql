@@ -93,9 +93,13 @@ func ValuesString(clauses ...string) sqlite.InsertMod {
 }
 
 func With(name string, columns ...string) WithChain {
-	return iim.With[tag.InsertTag](name, columns...)
+	return &withChainAdapter{
+		chain: iim.With[tag.InsertTag](name, columns...),
+	}
 }
 
 func WithExpr(name string, columns ...litsql.Expression) WithChain {
-	return iim.WithExpr[tag.InsertTag](name, columns...)
+	return &withChainAdapter{
+		chain: iim.WithExpr[tag.InsertTag](name, columns...),
+	}
 }

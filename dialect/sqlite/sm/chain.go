@@ -2,6 +2,8 @@
 package sm
 
 import (
+	litsql "github.com/rrgmc/litsql"
+	sqlite "github.com/rrgmc/litsql/dialect/sqlite"
 	tag "github.com/rrgmc/litsql/dialect/sqlite/tag"
 	sq "github.com/rrgmc/litsql/sq"
 	chain "github.com/rrgmc/litsql/sq/chain"
@@ -12,10 +14,27 @@ type FromChain interface {
 	As(alias string, columns ...string) FromChain
 }
 
-type GroupByChain = chain.GroupBy[tag.SelectTag]
+type GroupByChain interface {
+	sq.QueryMod[tag.SelectTag]
+	Distinct() GroupByChain
+}
 
-type JoinChain = chain.Join[tag.SelectTag]
+type JoinChain interface {
+	sq.QueryMod[tag.SelectTag]
+	As(alias string, columns ...string) JoinChain
+	Lateral() JoinChain
+	Natural() sqlite.SelectMod
+	On(on string) JoinChain
+	OnClause(query string, args ...any) JoinChain
+	OnExpr(on litsql.Expression) JoinChain
+	Using(using ...string) JoinChain
+}
 
 type WindowChain = chain.Window[tag.SelectTag]
 
-type WithChain = chain.With[tag.SelectTag]
+type WithChain interface {
+	sq.QueryMod[tag.SelectTag]
+	As(q litsql.Query) WithChain
+	Materialized() WithChain
+	NotMaterialized() WithChain
+}

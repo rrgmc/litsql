@@ -13,11 +13,15 @@ func Apply(f func(a sqlite.DeleteModApply)) sqlite.DeleteMod {
 }
 
 func CrossJoin(table string) JoinChain {
-	return idm.CrossJoin[tag.DeleteTag](table)
+	return &joinChainAdapter{
+		chain: idm.CrossJoin[tag.DeleteTag](table),
+	}
 }
 
 func CrossJoinExpr(table litsql.Expression) JoinChain {
-	return idm.CrossJoinExpr[tag.DeleteTag](table)
+	return &joinChainAdapter{
+		chain: idm.CrossJoinExpr[tag.DeleteTag](table),
+	}
 }
 
 func From(table string) sqlite.DeleteMod {
@@ -25,27 +29,39 @@ func From(table string) sqlite.DeleteMod {
 }
 
 func FullJoin(table string) JoinChain {
-	return idm.FullJoin[tag.DeleteTag](table)
+	return &joinChainAdapter{
+		chain: idm.FullJoin[tag.DeleteTag](table),
+	}
 }
 
 func FullJoinExpr(table litsql.Expression) JoinChain {
-	return idm.FullJoinExpr[tag.DeleteTag](table)
+	return &joinChainAdapter{
+		chain: idm.FullJoinExpr[tag.DeleteTag](table),
+	}
 }
 
 func InnerJoin(table string) JoinChain {
-	return idm.InnerJoin[tag.DeleteTag](table)
+	return &joinChainAdapter{
+		chain: idm.InnerJoin[tag.DeleteTag](table),
+	}
 }
 
 func InnerJoinExpr(table litsql.Expression) JoinChain {
-	return idm.InnerJoinExpr[tag.DeleteTag](table)
+	return &joinChainAdapter{
+		chain: idm.InnerJoinExpr[tag.DeleteTag](table),
+	}
 }
 
 func LeftJoin(table string) JoinChain {
-	return idm.LeftJoin[tag.DeleteTag](table)
+	return &joinChainAdapter{
+		chain: idm.LeftJoin[tag.DeleteTag](table),
+	}
 }
 
 func LeftJoinExpr(table litsql.Expression) JoinChain {
-	return idm.LeftJoinExpr[tag.DeleteTag](table)
+	return &joinChainAdapter{
+		chain: idm.LeftJoinExpr[tag.DeleteTag](table),
+	}
 }
 
 func Only() sqlite.DeleteMod {
@@ -57,31 +73,45 @@ func Returning(clauses ...string) sqlite.DeleteMod {
 }
 
 func RightJoin(table string) JoinChain {
-	return idm.RightJoin[tag.DeleteTag](table)
+	return &joinChainAdapter{
+		chain: idm.RightJoin[tag.DeleteTag](table),
+	}
 }
 
 func RightJoinExpr(table litsql.Expression) JoinChain {
-	return idm.RightJoinExpr[tag.DeleteTag](table)
+	return &joinChainAdapter{
+		chain: idm.RightJoinExpr[tag.DeleteTag](table),
+	}
 }
 
 func StraightJoin(table string) JoinChain {
-	return idm.StraightJoin[tag.DeleteTag](table)
+	return &joinChainAdapter{
+		chain: idm.StraightJoin[tag.DeleteTag](table),
+	}
 }
 
 func StraightJoinExpr(table litsql.Expression) JoinChain {
-	return idm.StraightJoinExpr[tag.DeleteTag](table)
+	return &joinChainAdapter{
+		chain: idm.StraightJoinExpr[tag.DeleteTag](table),
+	}
 }
 
 func Using(table string) FromChain {
-	return idm.Using[tag.DeleteTag](table)
+	return &fromChainAdapter{
+		chain: idm.Using[tag.DeleteTag](table),
+	}
 }
 
 func UsingExpr(table litsql.Expression) FromChain {
-	return idm.UsingExpr[tag.DeleteTag](table)
+	return &fromChainAdapter{
+		chain: idm.UsingExpr[tag.DeleteTag](table),
+	}
 }
 
 func UsingQuery(q sqlite.SelectQuery) FromChain {
-	return idm.UsingQuery[tag.DeleteTag, tag.SelectTag](q)
+	return &fromChainAdapter{
+		chain: idm.UsingQuery[tag.DeleteTag, tag.SelectTag](q),
+	}
 }
 
 func Where(condition string) sqlite.DeleteMod {
@@ -97,9 +127,13 @@ func WhereExpr(condition litsql.Expression) sqlite.DeleteMod {
 }
 
 func With(name string, columns ...string) WithChain {
-	return idm.With[tag.DeleteTag](name, columns...)
+	return &withChainAdapter{
+		chain: idm.With[tag.DeleteTag](name, columns...),
+	}
 }
 
 func WithExpr(name string, columns ...litsql.Expression) WithChain {
-	return idm.WithExpr[tag.DeleteTag](name, columns...)
+	return &withChainAdapter{
+		chain: idm.WithExpr[tag.DeleteTag](name, columns...),
+	}
 }

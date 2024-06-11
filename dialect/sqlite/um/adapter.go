@@ -1,4 +1,4 @@
-package sm
+package um
 
 import (
 	litsql "github.com/rrgmc/litsql"
@@ -9,8 +9,8 @@ import (
 )
 
 type fromChainAdapter struct {
-	sq.ModTagImpl[tag.SelectTag]
-	chain chain.From[tag.SelectTag]
+	sq.ModTagImpl[tag.UpdateTag]
+	chain chain.From[tag.UpdateTag]
 }
 
 func (a *fromChainAdapter) Apply(apply litsql.QueryBuilder) {
@@ -22,23 +22,9 @@ func (a *fromChainAdapter) As(alias string, columns ...string) FromChain {
 	return a
 }
 
-type groupByChainAdapter struct {
-	sq.ModTagImpl[tag.SelectTag]
-	chain chain.GroupBy[tag.SelectTag]
-}
-
-func (a *groupByChainAdapter) Apply(apply litsql.QueryBuilder) {
-	a.chain.Apply(apply)
-}
-
-func (a *groupByChainAdapter) Distinct() GroupByChain {
-	_ = a.chain.Distinct()
-	return a
-}
-
 type joinChainAdapter struct {
-	sq.ModTagImpl[tag.SelectTag]
-	chain chain.Join[tag.SelectTag]
+	sq.ModTagImpl[tag.UpdateTag]
+	chain chain.Join[tag.UpdateTag]
 }
 
 func (a *joinChainAdapter) Apply(apply litsql.QueryBuilder) {
@@ -55,7 +41,7 @@ func (a *joinChainAdapter) Lateral() JoinChain {
 	return a
 }
 
-func (a *joinChainAdapter) Natural() sqlite.SelectMod {
+func (a *joinChainAdapter) Natural() sqlite.UpdateMod {
 	_ = a.chain.Natural()
 	return a
 }
@@ -81,8 +67,8 @@ func (a *joinChainAdapter) Using(using ...string) JoinChain {
 }
 
 type withChainAdapter struct {
-	sq.ModTagImpl[tag.SelectTag]
-	chain chain.With[tag.SelectTag]
+	sq.ModTagImpl[tag.UpdateTag]
+	chain chain.With[tag.UpdateTag]
 }
 
 func (a *withChainAdapter) Apply(apply litsql.QueryBuilder) {

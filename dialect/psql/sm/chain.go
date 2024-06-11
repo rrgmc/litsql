@@ -3,12 +3,16 @@ package sm
 
 import (
 	tag "github.com/rrgmc/litsql/dialect/psql/tag"
+	sq "github.com/rrgmc/litsql/sq"
 	chain "github.com/rrgmc/litsql/sq/chain"
 )
 
 type FromChain = chain.From[tag.SelectTag]
 
-type GroupByChain = chain.GroupBy[tag.SelectTag]
+type GroupByChain interface {
+	sq.QueryMod[tag.SelectTag]
+	Distinct() GroupByChain
+}
 
 type JoinChain = chain.Join[tag.SelectTag]
 

@@ -2,8 +2,6 @@ dialects:
   psql:
     default:
       chains:
-        From:
-          methods: ['As', 'Lateral']
         GroupBy:
           methods: ['Distinct']
   sqlite:

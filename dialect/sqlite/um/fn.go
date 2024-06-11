@@ -13,47 +13,69 @@ func Apply(f func(a sqlite.UpdateModApply)) sqlite.UpdateMod {
 }
 
 func CrossJoin(table string) JoinChain {
-	return ium.CrossJoin[tag.UpdateTag](table)
+	return &joinChainAdapter{
+		chain: ium.CrossJoin[tag.UpdateTag](table),
+	}
 }
 
 func CrossJoinExpr(table litsql.Expression) JoinChain {
-	return ium.CrossJoinExpr[tag.UpdateTag](table)
+	return &joinChainAdapter{
+		chain: ium.CrossJoinExpr[tag.UpdateTag](table),
+	}
 }
 
 func From(table string) FromChain {
-	return ium.From[tag.UpdateTag](table)
+	return &fromChainAdapter{
+		chain: ium.From[tag.UpdateTag](table),
+	}
 }
 
 func FromExpr(table litsql.Expression) FromChain {
-	return ium.FromExpr[tag.UpdateTag](table)
+	return &fromChainAdapter{
+		chain: ium.FromExpr[tag.UpdateTag](table),
+	}
 }
 
 func FromQuery(q sqlite.SelectQuery) FromChain {
-	return ium.FromQuery[tag.UpdateTag, tag.SelectTag](q)
+	return &fromChainAdapter{
+		chain: ium.FromQuery[tag.UpdateTag, tag.SelectTag](q),
+	}
 }
 
 func FullJoin(table string) JoinChain {
-	return ium.FullJoin[tag.UpdateTag](table)
+	return &joinChainAdapter{
+		chain: ium.FullJoin[tag.UpdateTag](table),
+	}
 }
 
 func FullJoinExpr(table litsql.Expression) JoinChain {
-	return ium.FullJoinExpr[tag.UpdateTag](table)
+	return &joinChainAdapter{
+		chain: ium.FullJoinExpr[tag.UpdateTag](table),
+	}
 }
 
 func InnerJoin(table string) JoinChain {
-	return ium.InnerJoin[tag.UpdateTag](table)
+	return &joinChainAdapter{
+		chain: ium.InnerJoin[tag.UpdateTag](table),
+	}
 }
 
 func InnerJoinExpr(table litsql.Expression) JoinChain {
-	return ium.InnerJoinExpr[tag.UpdateTag](table)
+	return &joinChainAdapter{
+		chain: ium.InnerJoinExpr[tag.UpdateTag](table),
+	}
 }
 
 func LeftJoin(table string) JoinChain {
-	return ium.LeftJoin[tag.UpdateTag](table)
+	return &joinChainAdapter{
+		chain: ium.LeftJoin[tag.UpdateTag](table),
+	}
 }
 
 func LeftJoinExpr(table litsql.Expression) JoinChain {
-	return ium.LeftJoinExpr[tag.UpdateTag](table)
+	return &joinChainAdapter{
+		chain: ium.LeftJoinExpr[tag.UpdateTag](table),
+	}
 }
 
 func Only() sqlite.UpdateMod {
@@ -65,11 +87,15 @@ func Returning(clauses ...string) sqlite.UpdateMod {
 }
 
 func RightJoin(table string) JoinChain {
-	return ium.RightJoin[tag.UpdateTag](table)
+	return &joinChainAdapter{
+		chain: ium.RightJoin[tag.UpdateTag](table),
+	}
 }
 
 func RightJoinExpr(table litsql.Expression) JoinChain {
-	return ium.RightJoinExpr[tag.UpdateTag](table)
+	return &joinChainAdapter{
+		chain: ium.RightJoinExpr[tag.UpdateTag](table),
+	}
 }
 
 func Set(column string, arg any) sqlite.UpdateMod {
@@ -101,11 +127,15 @@ func SetString(column string, right string) sqlite.UpdateMod {
 }
 
 func StraightJoin(table string) JoinChain {
-	return ium.StraightJoin[tag.UpdateTag](table)
+	return &joinChainAdapter{
+		chain: ium.StraightJoin[tag.UpdateTag](table),
+	}
 }
 
 func StraightJoinExpr(table litsql.Expression) JoinChain {
-	return ium.StraightJoinExpr[tag.UpdateTag](table)
+	return &joinChainAdapter{
+		chain: ium.StraightJoinExpr[tag.UpdateTag](table),
+	}
 }
 
 func Table(name string) sqlite.UpdateMod {
@@ -129,9 +159,13 @@ func WhereExpr(condition litsql.Expression) sqlite.UpdateMod {
 }
 
 func With(name string, columns ...string) WithChain {
-	return ium.With[tag.UpdateTag](name, columns...)
+	return &withChainAdapter{
+		chain: ium.With[tag.UpdateTag](name, columns...),
+	}
 }
 
 func WithExpr(name string, columns ...litsql.Expression) WithChain {
-	return ium.WithExpr[tag.UpdateTag](name, columns...)
+	return &withChainAdapter{
+		chain: ium.WithExpr[tag.UpdateTag](name, columns...),
+	}
 }
