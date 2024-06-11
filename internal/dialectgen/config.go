@@ -13,7 +13,12 @@ type Config struct {
 }
 
 type ConfigDialect struct {
-	Mods map[string]ConfigDialectMod `yaml:"mods"`
+	Default ConfigDialectDefault        `yaml:"default"`
+	Mods    map[string]ConfigDialectMod `yaml:"mods"`
+}
+
+type ConfigDialectDefault struct {
+	Chains map[string]ConfigDialectModChain `yaml:"chains"`
 }
 
 type ConfigDialectMod struct {
@@ -77,6 +82,9 @@ func (c Config) FindDialectChain(dialect string, mod string, chain string) *Conf
 			if c, ok := m.Chains[chain]; ok {
 				return &c
 			}
+		}
+		if c, ok := d.Default.Chains[chain]; ok {
+			return &c
 		}
 	}
 	return nil
