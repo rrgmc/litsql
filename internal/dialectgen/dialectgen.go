@@ -348,12 +348,26 @@ func runPkg(config Config, sdir string, chainPkg *packages.Package) error {
 			fchain.Line()
 		}
 
+		fchain.Comment("ensure interface is implemented by source type")
+		fchain.Line()
+
+		// ensure type implements the interface
+		for _, chain := range chainNames {
+			currentName := chain + "Chain"
+			// var _ JoinChain = (*ichain.JoinChain[tag.DeleteTag, JoinChain])(nil)
+			fchain.Var().Id("_").Id(currentName).Op("=").
+				Params(jen.Op("*").Qual(ichainpkg, currentName).Types(sdialectTag, jen.Id(currentName))).
+				Params(jen.Nil())
+
+			fchain.Line()
+		}
+
 		chainfile := filepath.Join(smDir, "chain.go")
 		if !*dryRun {
 			// fmt.Println(fnfile)
-			chainFile, err := os.Create(chainfile)
-			if err != nil {
-				return err
+			chainFile, cerr := os.Create(chainfile)
+			if cerr != nil {
+				return cerr
 			}
 			defer chainFile.Close()
 			err = fchain.Render(chainFile)
