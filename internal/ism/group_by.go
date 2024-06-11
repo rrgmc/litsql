@@ -7,12 +7,12 @@ import (
 	"github.com/rrgmc/litsql/internal/iclause"
 )
 
-func GroupBy[T, SELF any](columns ...string) *ichain.GroupByChain[T, SELF] {
-	return GroupByExpr[T, SELF](expr.StringList(columns)...)
+func GroupBy[T, CHAIN any](columns ...string) *ichain.GroupByChain[T, CHAIN] {
+	return GroupByExpr[T, CHAIN](expr.StringList(columns)...)
 }
 
-func GroupByExpr[T, SELF any](columns ...litsql.Expression) *ichain.GroupByChain[T, SELF] {
-	return &ichain.GroupByChain[T, SELF]{
+func GroupByExpr[T, CHAIN any](columns ...litsql.Expression) *ichain.GroupByChain[T, CHAIN] {
+	return &ichain.GroupByChain[T, CHAIN]{
 		GroupBy: &iclause.GroupBy{
 			Groups: columns,
 		},
