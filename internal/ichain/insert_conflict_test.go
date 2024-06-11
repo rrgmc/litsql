@@ -11,8 +11,8 @@ import (
 	"gotest.tools/v3/assert"
 )
 
-func TestInsertConflictChain(t *testing.T) {
-	chain := NewInsertConflictChain[testutils.TestTag, InsertConflict[testutils.TestTag, imod.InsertConflictUpdateModTag]](&InsertConflictChain[testutils.TestTag, InsertConflict[testutils.TestTag, imod.InsertConflictUpdateModTag]]{
+func TestInsertConflictUpdateChain(t *testing.T) {
+	chain := NewInsertConflictUpdateChain[testutils.TestTag, InsertConflictUpdate[testutils.TestTag, imod.InsertConflictUpdateModTag]](&InsertConflictUpdateChain[testutils.TestTag, InsertConflictUpdate[testutils.TestTag, imod.InsertConflictUpdateModTag]]{
 		InsertConflictUpdate: &iclause.InsertConflictUpdate{},
 	})
 

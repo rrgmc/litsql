@@ -13,7 +13,7 @@ import (
 
 //litsql:dialects psql,sqlite
 func OnConflict[T any](columns ...string) chain.InsertConflictUpdate[T, imod.InsertConflictUpdateModTag] {
-	return &ichain.InsertConflictChain[T]{
+	return &ichain.InsertConflictUpdateChain[T]{
 		InsertConflictUpdate: &iclause.InsertConflictUpdate{
 			Target: iclause.InsertConflictTarget{
 				Columns: columns,
@@ -27,7 +27,7 @@ func OnConflict[T any](columns ...string) chain.InsertConflictUpdate[T, imod.Ins
 
 //litsql:dialects psql,sqlite
 func OnConflictOnConstraint[T any](constraint string) chain.InsertConflictUpdate[T, imod.InsertConflictUpdateModTag] {
-	return &ichain.InsertConflictChain[T]{
+	return &ichain.InsertConflictUpdateChain[T]{
 		InsertConflictUpdate: &iclause.InsertConflictUpdate{
 			Target: iclause.InsertConflictTarget{
 				Constraint: constraint,
