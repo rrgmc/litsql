@@ -137,7 +137,7 @@ func TestSelectUnion(t *testing.T) {
 }
 
 func TestSelectGroupBy(t *testing.T) {
-	expectedQuery := "SELECT country, AVG(age) as age_avg FROM users GROUP BY country HAVING AVG(age) > 10"
+	expectedQuery := "SELECT country, AVG(age) as age_avg FROM users GROUP BY DISTINCT country HAVING AVG(age) > 10"
 	var expectedArgs []any
 
 	query := Select[testutils.TestTag](testutils.NewTestDialect(),
