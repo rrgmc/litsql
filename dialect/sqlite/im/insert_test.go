@@ -3,16 +3,16 @@ package im
 import (
 	"testing"
 
-	"github.com/rrgmc/litsql/dialect/mysql"
-	"github.com/rrgmc/litsql/dialect/mysql/sm"
+	"github.com/rrgmc/litsql/dialect/sqlite"
+	"github.com/rrgmc/litsql/dialect/sqlite/sm"
 	"github.com/rrgmc/litsql/internal/testutils"
 )
 
 func TestInsert(t *testing.T) {
-	expectedQuery := "INSERT INTO users (id, name) VALUES (?, ?)"
+	expectedQuery := "INSERT INTO users (id, name) VALUES (?1, ?2)"
 	expectedArgs := []any{15, "John"}
 
-	query := mysql.Insert(
+	query := sqlite.Insert(
 		Into("users", "id", "name"),
 		Values(15, "John"),
 	)
@@ -21,13 +21,16 @@ func TestInsert(t *testing.T) {
 }
 
 func TestInsertBasic(t *testing.T) {
-	expectedQuery := "INSERT INTO users (id, name) VALUES (?, ?), (?, ?) RETURNING id"
+	expectedQuery := "INSERT INTO users (id, name) VALUES (?1, ?2), (?3, ?4) ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name RETURNING id"
 	expectedArgs := []any{15, "John", 16, "Mary"}
 
-	query := mysql.Insert(
+	query := sqlite.Insert(
 		Into("users", "id", "name"),
 		Values(15, "John"),
 		Values(16, "Mary"),
+		OnConflict("id").DoUpdate(
+			ConflictSetString("name", "EXCLUDED.name"),
+		),
 		Returning("id"),
 	)
 
@@ -35,12 +38,12 @@ func TestInsertBasic(t *testing.T) {
 }
 
 func TestInsertWith(t *testing.T) {
-	expectedQuery := "WITH city(city_id) AS (SELECT city FROM users WHERE id = ?) INSERT INTO users (id, name) VALUES (?, ?)"
+	expectedQuery := "WITH city(city_id) AS (SELECT city FROM users WHERE id = ?1) INSERT INTO users (id, name) VALUES (?2, ?3)"
 	expectedArgs := []any{2, 15, "John"}
 
-	query := mysql.Insert(
+	query := sqlite.Insert(
 		With("city", "city_id").As(
-			mysql.Select(
+			sqlite.Select(
 				sm.Columns("city"),
 				sm.From("users"),
 				sm.WhereClause("id = ?", 2),
@@ -54,12 +57,12 @@ func TestInsertWith(t *testing.T) {
 }
 
 func TestInsertApply(t *testing.T) {
-	expectedQuery := "INSERT INTO users (id, name) VALUES (?, ?), (?, ?)"
+	expectedQuery := "INSERT INTO users (id, name) VALUES (?1, ?2), (?3, ?4)"
 	expectedArgs := []any{15, "John", 16, "Mary"}
 
-	query := mysql.Insert(
+	query := sqlite.Insert(
 		Into("users", "id", "name"),
-		Apply(func(a mysql.InsertModApply) {
+		Apply(func(a sqlite.InsertModApply) {
 			a.Apply(
 				Values(15, "John"),
 			)
@@ -67,22 +70,6 @@ func TestInsertApply(t *testing.T) {
 				Values(16, "Mary"),
 			)
 		}),
-	)
-
-	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)
-}
-
-func TestInsertOnDuplicateKey(t *testing.T) {
-	expectedQuery := "INSERT INTO users (id, name) VALUES (?, ?), (?, ?) ON DUPLICATE KEY UPDATE name = ?, age = ? RETURNING id"
-	expectedArgs := []any{15, "John", 16, "Mary", "Ron", 19}
-
-	query := mysql.Insert(
-		Into("users", "id", "name"),
-		Values(15, "John"),
-		Values(16, "Mary"),
-		OnDuplicateKeySet("name", "Ron"),
-		OnDuplicateKeySet("age", 19),
-		Returning("id"),
 	)
 
 	testutils.TestQuery(t, query, expectedQuery, expectedArgs...)
