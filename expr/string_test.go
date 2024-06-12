@@ -25,8 +25,3 @@ func TestStringListQuote(t *testing.T) {
 	ex := StringListQuote([]string{"test_me1", "test_me2"})
 	testutils.TestExpressionSlice(t, ex, `"test_me1""test_me2"`)
 }
-
-func TestStringListQuoteCheck(t *testing.T) {
-	ex := StringListQuoteCheck([]string{"test_me1", "test me2"})
-	testutils.TestExpressionSlice(t, ex, `test_me1"test me2"`)
-}

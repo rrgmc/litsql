@@ -1,8 +1,6 @@
 package mysql
 
 import (
-	"strings"
-
 	"github.com/rrgmc/litsql"
 )
 
@@ -23,12 +21,4 @@ func (d dialect) WriteQuoted(w litsql.Writer, s string) {
 	w.Write(backtick)
 	w.Write(s)
 	w.Write(backtick)
-}
-
-func (d dialect) WriteCheckQuoted(w litsql.Writer, s string) {
-	if !strings.ContainsAny(s, " ") {
-		w.Write(s)
-		return
-	}
-	d.WriteQuoted(w, s)
 }

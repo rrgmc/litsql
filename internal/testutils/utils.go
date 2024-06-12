@@ -89,11 +89,3 @@ func (d TestDialect) WriteQuoted(w litsql.Writer, s string) {
 	w.Write(s)
 	w.Write(`"`)
 }
-
-func (d TestDialect) WriteCheckQuoted(w litsql.Writer, s string) {
-	if !strings.ContainsAny(s, " ") {
-		w.Write(s)
-		return
-	}
-	d.WriteQuoted(w, s)
-}
