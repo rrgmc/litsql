@@ -2,13 +2,12 @@
 
 [![Test Status](https://github.com/rrgmc/litsql/actions/workflows/go.yml/badge.svg)](https://github.com/rrgmc/litsql/actions/workflows/go.yml) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/rrgmc/litsql) [![Go Reference](https://pkg.go.dev/badge/github.com/rrgmc/litsql.svg)](https://pkg.go.dev/github.com/rrgmc/litsql) [![Go Report Card](https://goreportcard.com/badge/github.com/rrgmc/litsql)](https://goreportcard.com/report/github.com/rrgmc/litsql) ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/rrgmc/litsql) [![Coverage Status](https://coveralls.io/repos/github/rrgmc/litsql/badge.svg)](https://coveralls.io/github/rrgmc/litsql)
 
-`litsql` is a Golang string concatenation library **disguised** as an SQL query builder.
+`litsql` is a Golang string concatenation library **disguised as an SQL query builder**.
 
 Ok, it really is an SQL query builder, but it aims to be an **easier-to-use replacement for raw SQL strings**.
 
 Each `litsql` statement must be directly related to an SQL output, **including whitespace** (backed by whitespace tests), 
-which must be obvious to the user of the library. The output will be exactly the passed values, so the library won't 
-prevent invalid SQL from being generated.
+which must be obvious to the user of the library. The output will be exactly the passed values.
 
 ```go
 func ExampleSelect_literalSimple() {
@@ -51,7 +50,7 @@ func ExampleSelect_literalSimple() {
 }
 ```
 
-The library will do:
+This library will do:
 
  * ensure clause ordering
  * enforce some kind of code structure
@@ -59,7 +58,7 @@ The library will do:
  * guarantee whitespace. **extra whitespace is considered a bug**
  * output correct argument characters for each database dialect
 
-The library won't do:
+This library won't do:
 
  * prevent invalid SQL from being output
  * quoting
