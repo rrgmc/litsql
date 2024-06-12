@@ -3,7 +3,6 @@ package ichain
 import (
 	"testing"
 
-	"github.com/rrgmc/litsql/expr"
 	"github.com/rrgmc/litsql/internal/iclause"
 	"github.com/rrgmc/litsql/internal/testutils"
 	"gotest.tools/v3/assert"
@@ -19,7 +18,7 @@ func TestWindowChain(t *testing.T) {
 		From("from_test").
 		PartitionBy("p1").
 		OrderBy("o1").
-		Frame(expr.Raw("ROWS UNBOUNDED PRECEDING"))
+		Frame("ROWS UNBOUNDED PRECEDING")
 
 	assert.Equal(t, "from_test", chain.NamedWindow.Definition.From)
 	assert.Assert(t, len(chain.NamedWindow.Definition.PartitionBy) == 1)

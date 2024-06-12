@@ -37,16 +37,9 @@ type WindowChain interface {
 	PartitionByExpr(condition ...litsql.Expression) WindowChain
 	OrderBy(order ...string) WindowChain
 	OrderByExpr(order ...litsql.Expression) WindowChain
-	Range() WindowChain
-	Rows() WindowChain
-	FromUnboundedPreceding() WindowChain
-	FromPreceding(exp litsql.Expression) WindowChain
-	FromCurrentRow() WindowChain
-	FromFollowing(exp litsql.Expression) WindowChain
-	ToPreceding(exp litsql.Expression) WindowChain
-	ToCurrentRow(count int) WindowChain
-	ToFollowing(exp litsql.Expression) WindowChain
-	ToUnboundedFollowing() WindowChain
+	Frame(frame string) WindowChain
+	FrameExpr(frame litsql.Expression) WindowChain
+	FrameClause(query string, args ...any) WindowChain
 }
 
 type WithChain interface {
