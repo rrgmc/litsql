@@ -10,7 +10,7 @@ import (
 )
 
 func TestDelete(t *testing.T) {
-	expectedQuery := "DELETE FROM users WHERE id = $1"
+	expectedQuery := "DELETE FROM users WHERE id = ?"
 	expectedArgs := []any{15}
 
 	query := mysql.Delete(
@@ -22,7 +22,7 @@ func TestDelete(t *testing.T) {
 }
 
 func TestDeleteBasic(t *testing.T) {
-	expectedQuery := "DELETE FROM ONLY users WHERE id = $1 RETURNING id"
+	expectedQuery := "DELETE FROM ONLY users WHERE id = ? RETURNING id"
 	expectedArgs := []any{15}
 
 	query := mysql.Delete(
@@ -50,7 +50,7 @@ func TestDeleteUsing(t *testing.T) {
 }
 
 func TestDeleteUsingQuery(t *testing.T) {
-	expectedQuery := "DELETE FROM users USING (SELECT address, city, state FROM address WHERE id IN ($1, $2, $3)) AS adr WHERE users.address_id = adr.address_id"
+	expectedQuery := "DELETE FROM users USING (SELECT address, city, state FROM address WHERE id IN (?, ?, ?)) AS adr WHERE users.address_id = adr.address_id"
 	expectedArgs := []any{15, 16, 17}
 
 	query := mysql.Delete(
@@ -69,7 +69,7 @@ func TestDeleteUsingQuery(t *testing.T) {
 }
 
 func TestDeleteWith(t *testing.T) {
-	expectedQuery := "WITH city(city_id) AS (SELECT city FROM users WHERE id = $1) DELETE FROM users WHERE id = $2"
+	expectedQuery := "WITH city(city_id) AS (SELECT city FROM users WHERE id = ?) DELETE FROM users WHERE id = ?"
 	expectedArgs := []any{2, 15}
 
 	query := mysql.Delete(
@@ -88,7 +88,7 @@ func TestDeleteWith(t *testing.T) {
 }
 
 func TestDeleteApply(t *testing.T) {
-	expectedQuery := "DELETE FROM users WHERE id = $1"
+	expectedQuery := "DELETE FROM users WHERE id = ?"
 	expectedArgs := []any{15}
 
 	query := mysql.Delete(
