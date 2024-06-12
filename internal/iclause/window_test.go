@@ -114,13 +114,7 @@ func TestWindowFrame(t *testing.T) {
 			{
 				Name: "window_test",
 				Definition: WindowDef{
-					Frame: Frame{
-						Defined:   true,
-						Mode:      "ROWS",
-						Start:     expr.Raw("UNBOUNDED PRECEDING"),
-						End:       expr.Raw("CURRENT ROW"),
-						Exclusion: "EXCLUDE GROUP",
-					},
+					Frame: expr.Raw("ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW EXCLUDE EXCLUDE GROUP"),
 				},
 			},
 		},

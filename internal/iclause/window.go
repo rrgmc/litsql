@@ -11,7 +11,7 @@ type WindowDef struct {
 	From        string // an existing window name
 	OrderBy     []litsql.Expression
 	PartitionBy []litsql.Expression
-	Frame
+	Frame       litsql.Expression
 }
 
 func (wd *WindowDef) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]any, error) {
@@ -30,7 +30,7 @@ func (wd *WindowDef) WriteSQL(w litsql.Writer, d litsql.Dialect, start int) ([]a
 	b.ExpressSlice(wd.OrderBy, expr.PrefixIf(prefixCond, expr.Space, expr.Raw("ORDER BY ")), expr.CommaSpace, nil)
 	prefixCond = prefixCond || len(wd.OrderBy) > 0
 
-	b.ExpressIf(&wd.Frame, wd.Frame.Defined, expr.If(prefixCond, expr.Space), nil)
+	b.ExpressIf(wd.Frame, wd.Frame != nil, expr.If(prefixCond, expr.Space), nil)
 
 	return b.Result()
 }
@@ -45,6 +45,10 @@ func (wd *WindowDef) AddPartitionBy(condition ...litsql.Expression) {
 
 func (wd *WindowDef) AddOrderBy(order ...litsql.Expression) {
 	wd.OrderBy = append(wd.OrderBy, order...)
+}
+
+func (wd *WindowDef) SetFrame(frame litsql.Expression) {
+	wd.Frame = frame
 }
 
 type NamedWindow struct {
