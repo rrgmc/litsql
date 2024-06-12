@@ -31,8 +31,6 @@ tasks:
     internal: true
     prompt: "Creating and pushing tag {{.VERSION}}. Are you sure?"
     cmds:
-      - 'git tag sq/structargs/{{.VERSION}}'
-      - 'git tag sq/reflectxargs/{{.VERSION}}'
       - 'git tag {{.VERSION}}'
       - 'git push --tags'
     requires:
