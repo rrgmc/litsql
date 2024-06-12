@@ -88,6 +88,10 @@ library heavily discourages.
 * [MySQL](https://pkg.go.dev/github.com/rrgmc/litsql/dialect/mysql)
 * [SQLite](https://pkg.go.dev/github.com/rrgmc/litsql/dialect/sqlite)
 
+## Related
+
+* [libsql-db](https://github.com/rrgmc/litsql-db): wrappers for running `litsql` queries directly in databases.
+
 ## Examples
 
 ```go
