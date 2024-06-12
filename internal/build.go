@@ -12,7 +12,7 @@ func BuildQuery(q litsql.Query, options ...BuildQueryOption) (string, []any, err
 	for _, opt := range options {
 		opt(&optns)
 	}
-	if optns.argValues == nil && optns.rawArgValues != nil {
+	if optns.parseArgs && optns.argValues == nil {
 		var err error
 		optns.argValues, err = GetArgValuesInstance(optns.rawArgValues, optns.getArgValuesInstanceOption...)
 		if err != nil {

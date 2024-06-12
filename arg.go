@@ -36,6 +36,13 @@ func (m MapArgValues) Get(s string) (any, bool) {
 	return v, ok
 }
 
+// ArgValuesFunc is a functional implementation of ArgValues.
+type ArgValuesFunc func(string) (any, bool)
+
+func (f ArgValuesFunc) Get(s string) (any, bool) {
+	return f(s)
+}
+
 // helpers
 
 type ArgumentBase struct{}

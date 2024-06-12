@@ -41,6 +41,7 @@ func GetArgValuesInstance(values any, options ...GetArgValuesInstanceOption) (li
 type GetArgValuesInstanceOption func(*getArgValuesInstanceOptions)
 
 // WithGetArgValuesInstanceOptionCustom adds a custom [litsql.ArgValues] detector.
+// The passed values instance can be nil.
 func WithGetArgValuesInstanceOptionCustom(custom func(values any) (litsql.ArgValues, error)) GetArgValuesInstanceOption {
 	return func(options *getArgValuesInstanceOptions) {
 		options.custom = append(options.custom, custom)
