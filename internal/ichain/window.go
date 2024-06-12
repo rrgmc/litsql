@@ -14,7 +14,9 @@ type Window[T any] interface {
 	PartitionByExpr(condition ...litsql.Expression) Window[T]
 	OrderBy(order ...string) Window[T]
 	OrderByExpr(order ...litsql.Expression) Window[T]
-	Frame(frame litsql.Expression) Window[T]
+	Frame(frame string) Window[T]
+	FrameExpr(frame litsql.Expression) Window[T]
+	FrameClause(query string, args ...any) Window[T]
 }
 
 func NewWindowChain[T, CHAIN any](chain *WindowChain[T, CHAIN]) *WindowChain[T, CHAIN] {
@@ -60,7 +62,17 @@ func (f *WindowChain[T, CHAIN]) OrderByExpr(order ...litsql.Expression) CHAIN {
 	return f.Self.(CHAIN)
 }
 
-func (f *WindowChain[T, CHAIN]) Frame(frame litsql.Expression) CHAIN {
+func (f *WindowChain[T, CHAIN]) Frame(frame string) CHAIN {
+	f.NamedWindow.Definition.SetFrame(expr.String(frame))
+	return f.Self.(CHAIN)
+}
+
+func (f *WindowChain[T, CHAIN]) FrameExpr(frame litsql.Expression) CHAIN {
 	f.NamedWindow.Definition.SetFrame(frame)
+	return f.Self.(CHAIN)
+}
+
+func (f *WindowChain[T, CHAIN]) FrameClause(query string, args ...any) CHAIN {
+	f.NamedWindow.Definition.SetFrame(expr.Clause(query, args...))
 	return f.Self.(CHAIN)
 }
