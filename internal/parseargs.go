@@ -31,15 +31,19 @@ func ParseArgs(args []any, values litsql.ArgValues) ([]any, error) {
 		if isatname {
 			var nok bool
 			var v any
+			var err error
 
 			if values == nil {
 				nok = false
 			} else {
-				v, nok = values.Get(atname)
+				v, nok, err = values.Get(atname)
+			}
+			if err != nil {
+				return nil, fmt.Errorf("%w: %w", litsql.ErrParseArgs, err)
 			}
 			if !nok {
 				if !isvalued {
-					return nil, fmt.Errorf("value for argument '%s' not found", atname)
+					return nil, fmt.Errorf("%w: value for argument '%s' not found", litsql.ErrParseArgs, atname)
 				}
 			} else {
 				if isatdbnamed {

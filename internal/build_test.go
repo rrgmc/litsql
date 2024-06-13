@@ -91,14 +91,14 @@ func TestBuildQuery(t *testing.T) {
 				}, nil
 			},
 			options: []internal.BuildQueryOption{
-				internal.WithBuildQueryParseArgs(litsql.ArgValuesFunc(func(s string) (any, bool) {
+				internal.WithBuildQueryParseArgs(litsql.ArgValuesFunc(func(s string) (any, bool, error) {
 					switch s {
 					case "first":
-						return 55, true
+						return 55, true, nil
 					case "second":
-						return 66, true
+						return 66, true, nil
 					default:
-						return nil, false
+						return nil, false, nil
 					}
 				})),
 			},

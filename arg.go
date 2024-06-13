@@ -25,13 +25,13 @@ type DBNamedArgument interface {
 
 // ArgValues is the supplier of values for named arguments.
 type ArgValues interface {
-	Get(string) (any, bool)
+	Get(string) (any, bool, error)
 }
 
 // ArgValuesFunc is a functional implementation of ArgValues.
-type ArgValuesFunc func(string) (any, bool)
+type ArgValuesFunc func(string) (any, bool, error)
 
-func (f ArgValuesFunc) Get(s string) (any, bool) {
+func (f ArgValuesFunc) Get(s string) (any, bool, error) {
 	return f(s)
 }
 

@@ -68,7 +68,8 @@ func TestReflect(t *testing.T) {
 		},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			v, ok := a.Get(test.name)
+			v, ok, err := a.Get(test.name)
+			assert.NilError(t, err)
 			if test.expectedNotFound {
 				assert.Assert(t, !ok)
 			} else {
@@ -131,7 +132,8 @@ func TestReflectDeref(t *testing.T) {
 		},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			v, ok := a.Get(test.name)
+			v, ok, err := a.Get(test.name)
+			assert.NilError(t, err)
 			if test.expectedNotFound {
 				assert.Assert(t, !ok)
 			} else {
@@ -190,7 +192,8 @@ func TestReflectEmptyTagName(t *testing.T) {
 		},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			v, ok := a.Get(test.name)
+			v, ok, err := a.Get(test.name)
+			assert.NilError(t, err)
 			if test.expectedNotFound {
 				assert.Assert(t, !ok)
 			} else {
@@ -282,7 +285,8 @@ func TestReflectMapperFunc(t *testing.T) {
 		},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			v, ok := a.Get(test.name)
+			v, ok, err := a.Get(test.name)
+			assert.NilError(t, err)
 			if test.expectedNotFound {
 				assert.Assert(t, !ok)
 			} else {
@@ -381,7 +385,8 @@ func TestReflectEmbedPtrNil(t *testing.T) {
 		},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			v, ok := a.Get(test.name)
+			v, ok, err := a.Get(test.name)
+			assert.NilError(t, err)
 			if test.expected == nil {
 				assert.Assert(t, !ok)
 			} else {
@@ -415,7 +420,8 @@ func reflectValuesTest(t *testing.T, a litsql.ArgValues) {
 		},
 	} {
 		t.Run(test.name, func(t *testing.T) {
-			v, ok := a.Get(test.name)
+			v, ok, err := a.Get(test.name)
+			assert.NilError(t, err)
 			assert.Assert(t, ok)
 			assert.DeepEqual(t, test.expected, v)
 		})

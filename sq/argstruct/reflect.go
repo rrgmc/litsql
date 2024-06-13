@@ -1,6 +1,7 @@
 package argstruct
 
 import (
+	"fmt"
 	"reflect"
 	"strings"
 )
@@ -26,7 +27,7 @@ func (s *argValues) getStructFieldByName(value reflect.Value, fieldName string) 
 				return eval, true
 			}
 		} else {
-			tagValue := f.Tag.Get(s.tagName)
+			tagValue := f.Tag.Get(s.options.tagName)
 			keyName := f.Name
 
 			// Determine the name of the key in the map
@@ -45,8 +46,8 @@ func (s *argValues) getStructFieldByName(value reflect.Value, fieldName string) 
 				keyName = tagValue
 			}
 
-			if s.mapperFunc != nil {
-				keyName = s.mapperFunc(keyName)
+			if s.options.mapperFunc != nil {
+				keyName = s.options.mapperFunc(keyName)
 			}
 
 			if keyName != fieldName {
@@ -57,7 +58,7 @@ func (s *argValues) getStructFieldByName(value reflect.Value, fieldName string) 
 				// avoid sending a pointer to a nil
 				return nil, true
 			}
-			if s.derefPointer {
+			if s.options.derefPointer {
 				return deref(v), true
 			}
 			return v.Interface(), true
@@ -67,13 +68,13 @@ func (s *argValues) getStructFieldByName(value reflect.Value, fieldName string) 
 	return nil, false
 }
 
-func getReflectValue(value any) reflect.Value {
+func getReflectValue(value any) (reflect.Value, error) {
 	v := reflect.ValueOf(value)
 	v = reflect.Indirect(v)
 	if k := v.Kind(); k != reflect.Struct {
-		return reflect.Value{}
+		return reflect.Value{}, fmt.Errorf("value must be an struct but is %T", value)
 	}
-	return v
+	return v, nil
 }
 
 func deref(v reflect.Value) any {

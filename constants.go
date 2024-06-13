@@ -5,5 +5,6 @@ import (
 )
 
 var (
-	ErrClause = errors.New("clause error")
+	ErrClause    = errors.New("clause error")
+	ErrParseArgs = errors.New("parse args error")
 )

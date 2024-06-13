@@ -38,9 +38,9 @@ func ArgFunc(fn func() (any, error)) litsql.Argument {
 // MapArgValues is a [litsql.ArgValues] backed from a map[string]any.
 type MapArgValues map[string]any
 
-func (m MapArgValues) Get(s string) (any, bool) {
+func (m MapArgValues) Get(s string) (any, bool, error) {
 	v, ok := m[s]
-	return v, ok
+	return v, ok, nil
 }
 
 // ParseArgs replaces all [litsql.Argument] instances in args with named values.
