@@ -45,7 +45,7 @@ func TestHandler(t *testing.T) {
 			expectedQuery: "TEST QUERY WITH PARSED ARGUMENTS",
 			expectedArgs:  []any{22, 44},
 			options: []BuildOption{
-				WithParseArgs(litsql.MapArgValues{
+				WithParseArgs(MapArgValues{
 					"first":  22,
 					"second": 44,
 				}),

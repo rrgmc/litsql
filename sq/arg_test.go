@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
-	"github.com/rrgmc/litsql"
 	"gotest.tools/v3/assert"
 )
 
@@ -20,7 +19,7 @@ func TestParseArgValues(t *testing.T) {
 			return "in-func", nil
 		}),
 	}
-	pargs, err := ParseArgs(args, litsql.MapArgValues{
+	pargs, err := ParseArgs(args, MapArgValues{
 		"first": 99,
 		"third": 45,
 	})

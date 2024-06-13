@@ -3,7 +3,6 @@ package psql_test
 import (
 	"fmt"
 
-	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/dialect/psql"
 	"github.com/rrgmc/litsql/dialect/psql/sm"
 	"github.com/rrgmc/litsql/expr"
@@ -29,7 +28,7 @@ func ExampleSelect_literalSimple() {
 		sm.OrderBy("u.name ASC", "u.age DESC"),
 	)
 	qs, args, err := q.Build(
-		sq.WithParseArgs(litsql.MapArgValues{
+		sq.WithParseArgs(sq.MapArgValues{
 			"city_id": 66,
 		}),
 	)

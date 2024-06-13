@@ -1,9 +1,11 @@
-package internal
+package internal_test
 
 import (
 	"testing"
 
 	"github.com/rrgmc/litsql"
+	"github.com/rrgmc/litsql/internal"
+	"github.com/rrgmc/litsql/sq"
 	"gotest.tools/v3/assert"
 )
 
@@ -13,7 +15,7 @@ func TestBuildQuery(t *testing.T) {
 		f             func(w litsql.Writer, start int) (args []any, err error)
 		expectedQuery string
 		expectedArgs  []any
-		options       []BuildQueryOption
+		options       []internal.BuildQueryOption
 	}{
 		{
 			name: "query only",
@@ -38,14 +40,14 @@ func TestBuildQuery(t *testing.T) {
 			f: func(w litsql.Writer, start int) (args []any, err error) {
 				w.Write("TEST QUERY WITH PARSED ARGUMENTS")
 				return []any{
-					&NamedArgument{ArgName: "first"},
-					&NamedArgument{ArgName: "second"},
+					&internal.NamedArgument{ArgName: "first"},
+					&internal.NamedArgument{ArgName: "second"},
 				}, nil
 			},
 			expectedQuery: "TEST QUERY WITH PARSED ARGUMENTS",
 			expectedArgs:  []any{22, 44},
-			options: []BuildQueryOption{
-				WithBuildQueryParseArgs(litsql.MapArgValues{
+			options: []internal.BuildQueryOption{
+				internal.WithBuildQueryParseArgs(sq.MapArgValues{
 					"first":  22,
 					"second": 44,
 				}),
@@ -59,9 +61,9 @@ func TestBuildQuery(t *testing.T) {
 				return nil, nil
 			},
 			expectedQuery: "TEST QUERY WITH WRITER OPTIONS\n",
-			options: []BuildQueryOption{
-				WithBuildQueryWriterOptions(
-					WithWriterUseNewLine(true),
+			options: []internal.BuildQueryOption{
+				internal.WithBuildQueryWriterOptions(
+					internal.WithWriterUseNewLine(true),
 				),
 			},
 		},
@@ -73,9 +75,9 @@ func TestBuildQuery(t *testing.T) {
 				return nil, nil
 			},
 			expectedQuery: "TEST QUERY WITH WRITER OPTIONS",
-			options: []BuildQueryOption{
-				WithBuildQueryWriterOptions(
-					WithWriterUseNewLine(false),
+			options: []internal.BuildQueryOption{
+				internal.WithBuildQueryWriterOptions(
+					internal.WithWriterUseNewLine(false),
 				),
 			},
 		},
@@ -84,12 +86,12 @@ func TestBuildQuery(t *testing.T) {
 			f: func(w litsql.Writer, start int) (args []any, err error) {
 				w.Write("TEST QUERY WITH FIXED ARGVALUES")
 				return []any{
-					&NamedArgument{ArgName: "first"},
-					&NamedArgument{ArgName: "second"},
+					&internal.NamedArgument{ArgName: "first"},
+					&internal.NamedArgument{ArgName: "second"},
 				}, nil
 			},
-			options: []BuildQueryOption{
-				WithBuildQueryParseArgs(litsql.ArgValuesFunc(func(s string) (any, bool) {
+			options: []internal.BuildQueryOption{
+				internal.WithBuildQueryParseArgs(litsql.ArgValuesFunc(func(s string) (any, bool) {
 					switch s {
 					case "first":
 						return 55, true
@@ -106,7 +108,7 @@ func TestBuildQuery(t *testing.T) {
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			query := litsql.QueryFunc(nil, nil, test.f)
-			queryStr, args, err := BuildQuery(query, test.options...)
+			queryStr, args, err := internal.BuildQuery(query, test.options...)
 			assert.NilError(t, err)
 			assert.Equal(t, test.expectedQuery, queryStr)
 			assert.DeepEqual(t, test.expectedArgs, args)
