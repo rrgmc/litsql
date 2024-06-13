@@ -12,13 +12,6 @@ func BuildQuery(q litsql.Query, options ...BuildQueryOption) (string, []any, err
 	for _, opt := range options {
 		opt(&optns)
 	}
-	if optns.parseArgs && optns.argValues == nil {
-		var err error
-		optns.argValues, err = GetArgValuesInstance(optns.rawArgValues, optns.getArgValuesInstanceOption...)
-		if err != nil {
-			return "", nil, err
-		}
-	}
 
 	var b bytes.Buffer
 	w := NewWriter(&b, optns.writerOptions...)
@@ -31,7 +24,7 @@ func BuildQuery(q litsql.Query, options ...BuildQueryOption) (string, []any, err
 	}
 
 	if optns.parseArgs {
-		args, err = ParseArgValues(args, optns.argValues)
+		args, err = ParseArgs(args, optns.argValues)
 		if err != nil {
 			return "", nil, err
 		}
@@ -43,11 +36,9 @@ func BuildQuery(q litsql.Query, options ...BuildQueryOption) (string, []any, err
 type BuildQueryOption func(options *buildQueryOptions)
 
 type buildQueryOptions struct {
-	writerOptions              []WriterOption
-	getArgValuesInstanceOption []GetArgValuesInstanceOption
-	parseArgs                  bool
-	rawArgValues               any
-	argValues                  litsql.ArgValues
+	writerOptions []WriterOption
+	parseArgs     bool
+	argValues     litsql.ArgValues
 }
 
 // WithBuildQueryWriterOptions adds writer options.
@@ -57,23 +48,8 @@ func WithBuildQueryWriterOptions(writerOptions ...WriterOption) BuildQueryOption
 	}
 }
 
-// WithBuildQueryGetArgValuesInstanceOptions adds query parse args options.
-func WithBuildQueryGetArgValuesInstanceOptions(options ...GetArgValuesInstanceOption) BuildQueryOption {
-	return func(o *buildQueryOptions) {
-		o.getArgValuesInstanceOption = append(o.getArgValuesInstanceOption, options...)
-	}
-}
-
 // WithBuildQueryParseArgs adds named argument values.
-func WithBuildQueryParseArgs(argValues any) BuildQueryOption {
-	return func(o *buildQueryOptions) {
-		o.parseArgs = true
-		o.rawArgValues = argValues
-	}
-}
-
-// WithBuildQueryParseArgValues adds named argument values.
-func WithBuildQueryParseArgValues(argValues litsql.ArgValues) BuildQueryOption {
+func WithBuildQueryParseArgs(argValues litsql.ArgValues) BuildQueryOption {
 	return func(options *buildQueryOptions) {
 		options.parseArgs = true
 		options.argValues = argValues

@@ -36,7 +36,7 @@ func TestArgStruct(t *testing.T) {
 		sq.NamedArg("O"),
 		sq.NamedArg("P"),
 	}
-	pargs, err := sq.ParseArgs(args, value, WithGetArgsValuesOption(WithTagName("r")))
+	pargs, err := sq.ParseArgs(args, Values(value, WithTagName("r")))
 	assert.NilError(t, err)
 
 	assert.DeepEqual(t, []any{

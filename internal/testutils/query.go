@@ -20,7 +20,7 @@ func TestQueryParseArgs(t *testing.T, query litsql.Query, expected string, argVa
 	t.Helper()
 	queryStr, args, err := internal.BuildQuery(query,
 		internal.WithBuildQueryWriterOptions(internal.WithWriterUseNewLine(false)),
-		internal.WithBuildQueryParseArgs(argValues),
+		internal.WithBuildQueryParseArgs(litsql.MapArgValues(argValues)),
 	)
 	assert.NilError(t, err)
 	assert.Equal(t, expected, queryStr)

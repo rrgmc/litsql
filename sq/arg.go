@@ -36,36 +36,16 @@ func ArgFunc(fn func() (any, error)) litsql.Argument {
 }
 
 // ParseArgs replaces all [litsql.Argument] instances in args with named values.
-func ParseArgs(args []any, values any, options ...GetArgValuesInstanceOption) ([]any, error) {
-	return internal.ParseArgs(args, values, options...)
-}
-
-// ParseArgValues replaces all [litsql.Argument] instances in args with named values.
-func ParseArgValues(args []any, values litsql.ArgValues) ([]any, error) {
-	return internal.ParseArgValues(args, values)
-}
-
-type GetArgValuesInstanceOption = internal.GetArgValuesInstanceOption
-
-// GetArgValuesInstance gets the [litsql.ArgValues] instance from the passed parameter.
-func GetArgValuesInstance(values any, options ...GetArgValuesInstanceOption) (litsql.ArgValues, error) {
-	return internal.GetArgValuesInstance(values, options...)
-}
-
-// WithGetArgValuesInstanceOptionCustom sets a custom [litsql.ArgValues] detector.
-func WithGetArgValuesInstanceOptionCustom(custom func(values any) (litsql.ArgValues, error)) GetArgValuesInstanceOption {
-	return internal.WithGetArgValuesInstanceOptionCustom(custom)
+// Use [litsql.MapArgValues] to use a "map[string]any" as source.
+func ParseArgs(args []any, values litsql.ArgValues) ([]any, error) {
+	return internal.ParseArgs(args, values)
 }
 
 // ArgsParser wraps parseable argument results.
 type ArgsParser []any
 
-func (a ArgsParser) Parse(values any) ([]any, error) {
+func (a ArgsParser) Parse(values litsql.ArgValues) ([]any, error) {
 	return internal.ParseArgs(a, values)
-}
-
-func (a ArgsParser) ParseValues(values litsql.ArgValues) ([]any, error) {
-	return internal.ParseArgValues(a, values)
 }
 
 type ArgOption func(options *argOptions)

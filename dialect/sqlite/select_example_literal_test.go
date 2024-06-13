@@ -3,6 +3,7 @@ package sqlite_test
 import (
 	"fmt"
 
+	"github.com/rrgmc/litsql"
 	"github.com/rrgmc/litsql/dialect/sqlite"
 	"github.com/rrgmc/litsql/dialect/sqlite/sm"
 	"github.com/rrgmc/litsql/expr"
@@ -28,7 +29,7 @@ func ExampleSelect_literalSimple() {
 		sm.OrderBy("u.name ASC", "u.age DESC"),
 	)
 	qs, args, err := q.Build(
-		sq.WithParseArgs(map[string]any{
+		sq.WithParseArgs(litsql.MapArgValues{
 			"city_id": 66,
 		}),
 	)

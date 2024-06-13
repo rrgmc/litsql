@@ -6,8 +6,8 @@ import (
 	"github.com/rrgmc/litsql"
 )
 
-// New returns a [litsql.ArgValues] from struct fields. If value is not a struct, returns nil.
-func New(value any, options ...Option) litsql.ArgValues {
+// Values returns a [litsql.ArgValues] from struct fields. If value is not a struct, returns nil.
+func Values(value any, options ...Option) litsql.ArgValues {
 	v := getReflectValue(value)
 	if !v.IsValid() {
 		return nil

@@ -45,7 +45,7 @@ func TestBuildQuery(t *testing.T) {
 			expectedQuery: "TEST QUERY WITH PARSED ARGUMENTS",
 			expectedArgs:  []any{22, 44},
 			options: []BuildQueryOption{
-				WithBuildQueryParseArgs(map[string]any{
+				WithBuildQueryParseArgs(litsql.MapArgValues{
 					"first":  22,
 					"second": 44,
 				}),
@@ -80,37 +80,6 @@ func TestBuildQuery(t *testing.T) {
 			},
 		},
 		{
-			name: "query with custom ArgValues",
-			f: func(w litsql.Writer, start int) (args []any, err error) {
-				w.Write("TEST QUERY WITH CUSTOM ARGVALUES")
-				return []any{
-					&NamedArgument{ArgName: "first"},
-					&NamedArgument{ArgName: "second"},
-				}, nil
-			},
-			options: []BuildQueryOption{
-				WithBuildQueryGetArgValuesInstanceOptions(
-					WithGetArgValuesInstanceOptionCustom(func(values any) (litsql.ArgValues, error) {
-						// for this test we are ignoring the input values
-						return litsql.ArgValuesFunc(func(s string) (any, bool) {
-							switch s {
-							case "first":
-								return 89, true
-							case "second":
-								return 61, true
-							default:
-								return nil, false
-							}
-						}), nil
-					}),
-				),
-				// for this test we are ignoring the input values
-				WithBuildQueryParseArgs(nil),
-			},
-			expectedQuery: "TEST QUERY WITH CUSTOM ARGVALUES",
-			expectedArgs:  []any{89, 61},
-		},
-		{
 			name: "query with fixed ArgValues",
 			f: func(w litsql.Writer, start int) (args []any, err error) {
 				w.Write("TEST QUERY WITH FIXED ARGVALUES")
@@ -120,7 +89,7 @@ func TestBuildQuery(t *testing.T) {
 				}, nil
 			},
 			options: []BuildQueryOption{
-				WithBuildQueryParseArgValues(litsql.ArgValuesFunc(func(s string) (any, bool) {
+				WithBuildQueryParseArgs(litsql.ArgValuesFunc(func(s string) (any, bool) {
 					switch s {
 					case "first":
 						return 55, true

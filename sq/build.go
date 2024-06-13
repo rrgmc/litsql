@@ -17,17 +17,7 @@ func WithWriterOptions(writerOptions ...WriterOption) BuildOption {
 	return internal.WithBuildQueryWriterOptions(writerOptions...)
 }
 
-// WithGetArgValuesInstanceOptions adds query parse args options.
-func WithGetArgValuesInstanceOptions(options ...GetArgValuesInstanceOption) BuildOption {
-	return internal.WithBuildQueryGetArgValuesInstanceOptions(options...)
-}
-
 // WithParseArgs adds named argument values.
-func WithParseArgs(argValues any) BuildOption {
+func WithParseArgs(argValues litsql.ArgValues) BuildOption {
 	return internal.WithBuildQueryParseArgs(argValues)
-}
-
-// WithParseArgValues adds named argument values.
-func WithParseArgValues(argValues litsql.ArgValues) BuildOption {
-	return internal.WithBuildQueryParseArgValues(argValues)
 }

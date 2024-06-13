@@ -27,7 +27,7 @@ func TestReflect(t *testing.T) {
 		O: &oval,
 	}
 
-	a := New(value, WithTagName("r"))
+	a := Values(value, WithTagName("r"))
 
 	for _, test := range []struct {
 		name             string
@@ -102,7 +102,7 @@ func TestReflectDeref(t *testing.T) {
 		L: &lval2,
 	}
 
-	a := New(value, WithDerefPointer(true))
+	a := Values(value, WithDerefPointer(true))
 
 	for _, test := range []struct {
 		name             string
@@ -157,7 +157,7 @@ func TestReflectEmptyTagName(t *testing.T) {
 		M: 91,
 	}
 
-	a := New(value)
+	a := Values(value)
 
 	for _, test := range []struct {
 		name             string
@@ -218,7 +218,7 @@ func TestReflectMapperFunc(t *testing.T) {
 		N: 40,
 	}
 
-	a := New(value, WithTagName("r"), WithMapperFunc(func(s string) string {
+	a := Values(value, WithTagName("r"), WithMapperFunc(func(s string) string {
 		switch s {
 		case "H":
 			return "hmapped"
@@ -314,7 +314,7 @@ func TestReflectEmbed(t *testing.T) {
 		J: 11,
 	}
 
-	reflectValuesTest(t, New(value))
+	reflectValuesTest(t, Values(value))
 }
 
 func TestReflectEmbedPtr(t *testing.T) {
@@ -338,7 +338,7 @@ func TestReflectEmbedPtr(t *testing.T) {
 		J: 11,
 	}
 
-	reflectValuesTest(t, New(value))
+	reflectValuesTest(t, Values(value))
 }
 
 func TestReflectEmbedPtrNil(t *testing.T) {
@@ -359,7 +359,7 @@ func TestReflectEmbedPtrNil(t *testing.T) {
 		J:      11,
 	}
 
-	a := New(value)
+	a := Values(value)
 
 	for _, test := range []struct {
 		name     string
