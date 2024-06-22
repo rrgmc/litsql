@@ -6,7 +6,7 @@
 
 Ok, it really is an SQL query builder, but it aims to be an **easier-to-use replacement for raw SQL strings**.
 
-Each `litsql` statement must be directly related to an SQL output, **including whitespace** (backed by whitespace tests), 
+Each `litsql` statement **must** be directly related to an SQL output, **including whitespace** (backed by whitespace tests), 
 which must be obvious to the user of the library. The output will be exactly the passed values.
 
 ```go
@@ -65,6 +65,8 @@ This library won't do:
  * execute queries in databases
  * provide helper expressions to build things like "IsEQ()", "Not(expression)", "LT(value)". These are expected to be written as strings
  * be an ORM (**never**)
+
+The different SQL dialects uses code generation to add/remove things that are dialect specific.
 
 ## Installation
 
