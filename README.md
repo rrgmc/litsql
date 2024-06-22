@@ -29,7 +29,7 @@ func ExampleSelect_literalSimple() {
         sm.OrderBy("u.name ASC", "u.age DESC"),
     )
     qs, args, err := q.Build(
-        sq.WithParseArgs(litsql.MapArgValues{
+        sq.WithParseArgs(sq.MapArgValues{
             "city_id": 66,
         }),
     )
@@ -251,6 +251,15 @@ query := psql.Select(
 )
 ```
 
+```sql
+SELECT id, name, age
+FROM (
+  SELECT id, name, age
+  FROM users
+  WHERE age > 10
+)
+```
+
 #### WHERE value IN
 
 ```go
@@ -259,6 +268,21 @@ query := psql.Select(
     sm.From("users"),
     sm.WhereClause("age IN (?)", expr.In([]any{15, 30, 45})),
 )
+```
+
+```sql
+SELECT id, name, age
+FROM users
+WHERE age IN ($1, $2, $3)
+```
+
+```
+--------------- QUERY ARGS ---------------
+([]interface {}) (len=3 cap=3) {
+ (int) 15,
+ (int) 30,
+ (int) 45
+}
 ```
 
 #### WHERE value IN using named arguments
@@ -274,12 +298,27 @@ query := psql.Select(
     })),
 )
 qs, args, err := query.Build(
-    sq.WithParseArgs(litsql.MapArgValues{
+    sq.WithParseArgs(sq.MapArgValues{
         "first":  15,
         "second": 30,
         "third":  45,
     }),
 )
+```
+
+```sql
+SELECT id, name, age
+FROM users
+WHERE age IN ($1, $2, $3)
+```
+
+```
++++++++++++++++ PARSED ARGS +++++++++++++++
+([]interface {}) (len=3 cap=4) {
+ (int) 15,
+ (int) 30,
+ (int) 45
+}
 ```
 
 #### WHERE value IN subselect
@@ -294,6 +333,15 @@ query := psql.Select(
             sm.From("top_regions"),
         ),
     ),
+)
+```
+
+```sql
+SELECT id, name, age
+FROM users
+WHERE region IN (
+  SELECT region
+  FROM top_regions
 )
 ```
 
@@ -319,6 +367,19 @@ query := psql.Select(
 )
 ```
 
+```sql
+SELECT id, name, age
+FROM users
+WHERE age > $1
+```
+
+```
+--------------- QUERY ARGS ---------------
+([]interface {}) (len=1 cap=1) {
+ (int) 30
+}
+```
+
 #### Add clauses in inline callback
 
 ```go
@@ -331,6 +392,12 @@ query := psql.Select(
         )
     }),
 )
+```
+
+```sql
+SELECT id, name, age
+FROM users
+WHERE age > 10
 ```
 
 #### Use IS NULL or a condition depending on a flag
@@ -347,6 +414,19 @@ query := psql.Select(
 )
 ```
 
+```sql
+SELECT id, name, age
+FROM users
+WHERE u.age > $1
+```
+
+```
+--------------- QUERY ARGS ---------------
+([]interface {}) (len=1 cap=1) {
+ (int) 32
+}
+```
+
 #### OR expression
 
 ```go
@@ -354,12 +434,27 @@ query := psql.Select(
     sm.Columns("id", "name", "age"),
     sm.From("users"),
     sm.WhereExpr(
-        expr.Or(
-            "(age > 10 AND city_id = 12)",
-            "(age < 10 AND city_id = 15)",
+        expr.OrExpr(
+            expr.Clause("(age > ? AND city_id = ?)", 10, 12),
+            expr.Clause("(age < ? AND city_id = ?)", 10, 15),
         ),
     ),
 )
+```
+
+```sql
+SELECT id, name, age
+FROM users
+WHERE (age > $1 AND city_id = $2) OR (age < $3 AND city_id = $4)
+```
+
+```
+([]interface {}) (len=4 cap=4) {
+ (int) 10,
+ (int) 12,
+ (int) 10,
+ (int) 15
+}
 ```
 
 #### UNION
@@ -377,16 +472,48 @@ query := psql.Select(
 )
 ```
 
+```sql
+SELECT id, name, age
+FROM users
+WHERE age < 10
+UNION (
+  SELECT id, name, age
+  FROM users
+  WHERE age > 50
+)
+```
+
 #### Full raw query (the query and parameters will be returned as-is)
 
 ```go
 query := psql.SelectRaw("select * from users where user_id = $1", 55)
 ```
 
+```sql
+select * from users where user_id = $1
+```
+
+```
+([]interface {}) (len=1 cap=1) {
+ (int) 55
+}
+```
+
 #### Full raw query (with clause processing)
 
 ```go
 query := psql.SelectRawExpr(expr.Clause("select * from users where user_id = ?", 55))
+```
+
+```sql
+select * from users where user_id = $1
+```
+
+```
+--------------- QUERY ARGS ---------------
+([]interface {}) (len=1 cap=1) {
+ (int) 55
+}
 ```
 
 #### Prepared statements
